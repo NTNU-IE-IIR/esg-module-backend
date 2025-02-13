@@ -2,12 +2,21 @@ package no.ntnu.idata2900.project.esg_module_backend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.ApplicationPidFileWriter;
 
+/**
+ * The EsgModuleBackendApplication class represents the runner class for the application.
+ * 
+ * @author Group 14
+ * @version v0.0.1 (2025.02.13)
+ */
 @SpringBootApplication
 public class EsgModuleBackendApplication {
-
 	public static void main(String[] args) {
+		// Create PID file for application
+		SpringApplication springApplication = new SpringApplication(EsgModuleBackendApplication.class);
+		springApplication.addListeners(new ApplicationPidFileWriter("esgmodule.pid"));
+		// Run application
 		SpringApplication.run(EsgModuleBackendApplication.class, args);
 	}
-
 }
