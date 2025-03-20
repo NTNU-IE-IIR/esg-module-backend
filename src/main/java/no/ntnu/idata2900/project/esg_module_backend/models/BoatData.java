@@ -10,6 +10,25 @@ public class BoatData {
     private double speed;
     private String timestamp;
 
+    public double getFishAmount() {
+        return fishAmount;
+    }
+
+    public void setFishAmount(double fishAmount) {
+        this.fishAmount = fishAmount;
+    }
+
+    public double getFuelLevel() {
+        return fuelLevel;
+    }
+
+    public void setFuelLevel(double fuelLevel) {
+        this.fuelLevel = fuelLevel;
+    }
+
+    private double fishAmount;
+    private double fuelLevel;
+
     public BoatData() {
     }
 
