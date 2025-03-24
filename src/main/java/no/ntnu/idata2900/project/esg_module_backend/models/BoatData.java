@@ -10,6 +10,23 @@ public class BoatData {
     private double speed;
     private String timestamp;
 
+    private double fishAmount;
+
+    private double fuelLevel;
+    public BoatData() {
+    }
+
+    public BoatData(int id, String name, double lat, double lng, double heading, double course, double speed, String timestamp) {
+        this.id = id;
+        this.name = name;
+        this.lat = lat;
+        this.lng = lng;
+        this.heading = heading;
+        this.course = course;
+        this.speed = speed;
+        this.timestamp = timestamp;
+    }
+
     public double getFishAmount() {
         return fishAmount;
     }
@@ -24,23 +41,6 @@ public class BoatData {
 
     public void setFuelLevel(double fuelLevel) {
         this.fuelLevel = fuelLevel;
-    }
-
-    private double fishAmount;
-    private double fuelLevel;
-
-    public BoatData() {
-    }
-
-    public BoatData(int id, String name, double lat, double lng, double heading, double course, double speed, String timestamp) {
-        this.id = id;
-        this.name = name;
-        this.lat = lat;
-        this.lng = lng;
-        this.heading = heading;
-        this.course = course;
-        this.speed = speed;
-        this.timestamp = timestamp;
     }
 
     public int getId() {
