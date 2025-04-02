@@ -34,6 +34,7 @@ public class WeatherData {
   private double windGust;
   private double windSpeed;
   private int windDirection;
+  // Marine weather data
   private double waveHeight;
   private int waveDirection;
   private double windWaveHeight;
