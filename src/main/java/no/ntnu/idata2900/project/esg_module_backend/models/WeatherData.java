@@ -1,180 +1,353 @@
 package no.ntnu.idata2900.project.esg_module_backend.models;
 
 /**
- * The WeatherData class represents various weather data useful for marine operations. The data is
- * based off of weather and marine weather data fetched from
- * <a href="https://open-meteo.com/en/docs">Weather Forecast API</a> and
- * <a href="https://open-meteo.com/en/docs/marine-weather-api">Marine Weather API</a> respectively,
- * distributed by <a href="https://open-meteo.com/">Open-meteo</a>.
+ * The WeatherData class represents various weather data relevant for marine operations. The data is
+ * based off of forecast data from <a href="https://api.windy.com/">Windy API</a> distributed by
+ * <a href="https://www.windy.com/">Windy</a>.
  * 
- * <p>The data include the following attributes:</p>
+ * <p>
+ *   The <code>oceanCurrentVelocity</code> and <code>oceanCurrentDirection</code> parameteres are
+ *   based off of marine forecast data from
+ *   <a href="https://open-meteo.com/en/docs/marine-weather-api">Marine Weather API</a> distributed
+ *   by <a href="https://open-meteo.com/">Open-meteo</a>.
+ * </p>
+ * 
+ * <p>The data include the following parameters:</p>
  * 
  * <ul>
- *  <li>Timestamp</li>
- *  <li>Wind gust (10 m)</li>
- *  <li>Wind speed (10 m)</li>
- *  <li>Wind direction (10 m)</li>
- *  <li>Wave height</li>
- *  <li>Wave direction</li>
- *  <li>Wind wave height</li>
- *  <li>Wind wave direction</li>
- *  <li>Swell wave height</li>
- *  <li>Swell wave direction</li>
- *  <li>Ocean current velocity</li>
- *  <li>Ocean current direction</li>
+ *   <li>
+ *     <code>windU</code> (<code>m/s</code>): Wind speed and direction defined by a vector
+ *     <code>u</code> (West towards East)
+ *   </li>
+ *   <li>
+ *     <code>windV</code> (<code>m/s</code>): Wind speed and direction defined by a vector
+ *     <code>v</code> (South towards North)
+ *   </li>
+ *   <li>
+ *     <code>gust</code> (<code>m/s</code>): Speed of wind at gusts
+ *   </li>
+ *   <li>
+ *     <code>wavesHeight</code> (<code>m</code>): Height of waves
+ *   </li>
+ *   <li>
+ *     <code>wavesDirection</code> (<code>deg</code>): Direction* of waves
+ *   </li>
+ *   <li>
+ *     <code>wavesPeriod</code> (<code>s</code>): Period** of waves
+ *   </li>
+ *   <li>
+ *     <code>wwavesHeight</code> (<code>m</code>): Height of wind waves
+ *   </li>
+ *   <li>
+ *     <code>wwavesDirection</code> (<code>deg</code>): Direction* of wind waves
+ *   </li>
+ *   <li>
+ *     <code>wwavesPeriod</code> (<code>s</code>): Period** of wind waves
+ *   </li>
+ *   <li>
+ *     <code>swell1Height</code> (<code>m</code>): Height of class 1 swell waves
+ *   </li>
+ *   <li>
+ *     <code>swell1Direction</code> (<code>deg</code>): Direction* of class 1 swell waves
+ *   </li>
+ *   <li>
+ *     <code>swell1Period</code> (<code>s</code>): Period** of class 1 swell waves
+ *   </li>
+ *   <li>
+ *     <code>swell2Height</code> (<code>m</code>): Height of class 2 swell waves
+ *   </li>
+ *   <li>
+ *     <code>swell2Direction</code> (<code>deg</code>): Direction* of class 2 swell waves
+ *   </li>
+ *   <li>
+ *     <code>swell2Period</code> (<code>s</code>): Period** of class 2 swell waves
+ *   </li>
+ *   <li>
+ *     <code>oceanCurrentVelocity</code> (<code>m/s</code>): Velocity of ocean current
+ *   </li>
+ *   <li>
+ *     <code>oceanCurrentDirection</code> (<code>deg</code>): Direction* of ocean current
+ *   </li>
  * </ul>
  * 
+ * <p>
+ *   * Direction defines where the parameter comes from (0 = North, 90 = East, 180 = South,
+ *   270 = West).
+ * </p>
+ * 
+ * <p>
+ *   ** Period defines the time interval between arrival of consecutive crests at a stationary
+ *   point.
+ * </p>
+ * 
+ * <p>
+ *   For further documentation of parameters from <a href="https://api.windy.com/">Windy API</a>,
+ *   see <a href="https://api.windy.com/point-forecast/docs">Windy API documentation</a>.
+ * </p>
+ * 
  * @author Group 14
- * @version v0.0.1 (2025.04.02)
+ * @version v0.1.1 (2025.04.07)
  */
 public class WeatherData {
   // General data
-  private String timestamp;
-  // Weather data
-  private double windGust;
-  private double windSpeed;
-  private int windDirection;
-  // Marine weather data
-  private double waveHeight;
-  private int waveDirection;
-  private double windWaveHeight;
-  private int windWaveDirection;
-  private double swellWaveHeight;
-  private int swellWaveDirection;
-  private double oceanCurrentVelocity;
-  private int oceanCurrentDirection;
+  private float lat;
+  private float lng;
+  private long ts;
+
+  // GFS
+  private float windU;
+  private float windV;
+  private float gust;
+
+  // GFS Wave
+  private float wavesHeight;
+  private float wavesDirection;
+  private float wavesPeriod;
+
+  private float wwavesHeight;
+  private float wwavesDirection;
+  private float wwavesPeriod;
+
+  private float swell1Height;
+  private float swell1Direction;
+  private float swell1Period;
+
+  private float swell2Height;
+  private float swell2Direction;
+  private float swell2Period;
+
+  // Marine Weather API
+  private float oceanCurrentVelocity;
+  private float oceanCurrentDirection;
 
   /**
    * Constructor for WeatherData class.
    * 
-   * @param timestamp The specified timestamp
-   * @param windGust The specified wind gust
-   * @param windSpeed The specified wind speed
-   * @param windDirection The specified wind direction
-   * @param waveHeight The specified wave height
-   * @param waveDirection The specified wave direction
-   * @param windWaveHeight The specified wind wave height
-   * @param windWaveDirection The specified wind wave direction
-   * @param swellWaveHeight The specified swell wave height
-   * @param swellWaveDirection The specified swell wave direction
+   * @param lat The specified latitude
+   * @param lng The specified longitude
+   * @param ts The specified Unix timestamp
+   * @param windU The specified wind <code>u</code> vector
+   * @param windV The specified wind <code>v</code> vector
+   * @param gust The specified wind gusts speed
+   * @param wavesHeight The specified waves height
+   * @param wavesDirection The specified waves direction
+   * @param wavesPeriod The specified waves period
+   * @param wwavesHeight The specified wind waves height
+   * @param wwavesDirection The specified wind waves direction
+   * @param wwavesPeriod The specified wind waves period
+   * @param swell1Height The specified class 1 swell waves height
+   * @param swell1Direction The specified class 1 swell waves direction
+   * @param swell1Period The specified class 1 swell waves period
+   * @param swell2Height The specified class 2 swell waves height
+   * @param swell2Direction The speicifed class 2 swell waves direction
+   * @param swell2Period The specified class 2 swell waves period
    * @param oceanCurrentVelocity The specified ocean current velocity
    * @param oceanCurrentDirection The specified ocean current direction
    */
   public WeatherData(
-    String timestamp,
-    double windGust,
-    double windSpeed,
-    int windDirection,
-    double waveHeight,
-    int waveDirection,
-    double windWaveHeight,
-    int windWaveDirection,
-    double swellWaveHeight,
-    int swellWaveDirection,
-    double oceanCurrentVelocity,
-    int oceanCurrentDirection
+    float lat,
+    float lng,
+    long ts,
+    float windU,
+    float windV,
+    float gust,
+    float wavesHeight,
+    float wavesDirection,
+    float wavesPeriod,
+    float wwavesHeight,
+    float wwavesDirection,
+    float wwavesPeriod,
+    float swell1Height,
+    float swell1Direction,
+    float swell1Period,
+    float swell2Height,
+    float swell2Direction,
+    float swell2Period,
+    float oceanCurrentVelocity,
+    float oceanCurrentDirection
   ) {
-    this.timestamp = timestamp;
-    this.windGust = windGust;
-    this.windSpeed = windSpeed;
-    this.windDirection = windDirection;
-    this.waveHeight = waveHeight;
-    this.waveDirection = waveDirection;
-    this.windWaveHeight = windWaveHeight;
-    this.swellWaveHeight = swellWaveHeight;
-    this.swellWaveDirection = swellWaveDirection;
+    this.lat = lat;
+    this.lng = lng;
+    this.ts = ts;
+    this.windU = windU;
+    this.windV = windV;
+    this.gust = gust;
+    this.wavesHeight = wavesHeight;
+    this.wavesDirection = wavesDirection;
+    this.wavesPeriod = wavesPeriod;
+    this.wwavesHeight = wwavesHeight;
+    this.wwavesDirection = wwavesDirection;
+    this.wwavesPeriod = wwavesPeriod;
+    this.swell1Height = swell1Height;
+    this.swell1Direction = swell1Direction;
+    this.swell1Period = swell1Period;
+    this.swell2Height = swell2Height;
+    this.swell2Direction = swell2Direction;
+    this.swell2Period = swell2Period;
     this.oceanCurrentVelocity = oceanCurrentVelocity;
     this.oceanCurrentDirection = oceanCurrentDirection;
   }
 
   /**
-   * Getter for timestamp.
+   * Getter for latitude.
    * 
-   * @return Timestamp
+   * @return Latitude
    */
-  public String getTimestamp() {
-    return this.timestamp;
+  public float getLat() {
+    return this.lat;
   }
 
   /**
-   * Getter for wind gust.
+   * Getter for longitude.
    * 
-   * @return Wind gust
+   * @return Longitude
    */
-  public double getWindGust() {
-    return this.windGust;
+  public float getLng() {
+    return this.lng;
   }
 
   /**
-   * Getter for wind speed.
+   * Getter for Unix timestamp
    * 
-   * @return Wind speed
+   * @return Unix timestamp
    */
-  public double getWindSpeed() {
-    return this.windSpeed;
+  public long getTs() {
+    return this.ts;
   }
 
   /**
-   * Getter for wind direction.
+   * Getter for wind <code>u</code> vector.
    * 
-   * @return Wind direction
+   * @return Wind <code>u</code> vector
    */
-  public int getWindDirection() {
-    return this.windDirection;
+  public float getWindU() {
+    return this.windU;
   }
 
   /**
-   * Getter for wave height.
+   * Getter for wind <code>v</code> vector.
    * 
-   * @return Wave height
+   * @return Wind <code>v</code> vector
    */
-  public double getWaveHeight() {
-    return this.waveHeight;
+  public float getWindV() {
+    return this.windV;
   }
 
   /**
-   * Getter for wave direction.
+   * Getter for wind gusts speed.
    * 
-   * @return Wave direction
+   * @return Wind gusts speed
    */
-  public int getWaveDirection() {
-    return this.waveDirection;
+  public float getGust() {
+    return this.gust;
   }
 
   /**
-   * Getter for wind wave height.
+   * Getter for waves height.
    * 
-   * @return Wind wave height
+   * @return Waves height
    */
-  public double getWindWaveHeight() {
-    return this.windWaveHeight;
+  public float getWavesHeight() {
+    return this.wavesHeight;
   }
 
   /**
-   * Getter for wind wave direction.
+   * Getter for waves direction.
    * 
-   * @return Wind wave direction
+   * @return Waves direction
    */
-  public int getWindWaveDirection() {
-    return this.windWaveDirection;
+  public float getWavesDirection() {
+    return this.wavesDirection;
   }
 
   /**
-   * Getter for swell wave height.
+   * Getter for waves period.
    * 
-   * @return Swell wave height
+   * @return Waves period
    */
-  public double getSwellWaveHeight() {
-    return this.swellWaveHeight;
+  public float getWavesPeriod() {
+    return this.wavesPeriod;
   }
 
   /**
-   * Getter for swell wave direction.
+   * Getter for wind waves height.
    * 
-   * @return Swell wave direction
+   * @return Wind waves height
    */
-  public int getSwellWaveDirection() {
-    return this.swellWaveDirection;
+  public float getWwavesHeight() {
+    return this.wwavesHeight;
+  }
+
+  /**
+   * Getter for wind waves direction.
+   * 
+   * @return Wind waves direction
+   */
+  public float getWwavesDirection() {
+    return this.wwavesDirection;
+  }
+
+  /**
+   * Getter for wind waves period.
+   * 
+   * @return Wind waves period
+   */
+  public float getWwavesPeriod() {
+    return this.wwavesPeriod;
+  }
+
+  /**
+   * Getter for class 1 swell waves height.
+   * 
+   * @return Class 1 swell waves height
+   */
+  public float getSwell1Height() {
+    return this.swell1Height;
+  }
+
+  /**
+   * Getter for class 1 swell waves direction.
+   * 
+   * @return Class 1 swell waves direction
+   */
+  public float getSwell1Direction() {
+    return this.swell1Direction;
+  }
+
+  /**
+   * Getter for class 1 swell waves period.
+   * 
+   * @return Class 1 swell waves period
+   */
+  public float getSwell1Period() {
+    return this.swell1Period;
+  }
+
+  /**
+   * Getter for class 2 swell waves height.
+   * 
+   * @return Class 2 swell waves height
+   */
+  public float getSwell2Height() {
+    return this.swell2Height;
+  }
+
+  /**
+   * Getter for class 2 swell waves direction.
+   * 
+   * @return Class 2 swell waves direction
+   */
+  public float getSwell2Direction() {
+    return this.swell2Direction;
+  }
+
+  /**
+   * Getter for class 2 swell waves period.
+   * 
+   * @return Class 2 swell waves period
+   */
+  public float getSwell2Period() {
+    return this.swell2Period;
   }
 
   /**
@@ -182,7 +355,7 @@ public class WeatherData {
    * 
    * @return Ocean current velocity
    */
-  public double getOceanCurrentVelocity() {
+  public float oceanCurrentVelocity() {
     return this.oceanCurrentVelocity;
   }
 
@@ -191,7 +364,7 @@ public class WeatherData {
    * 
    * @return Ocean current direction
    */
-  public int getOceanCurrentDirection() {
+  public float oceanCurrentDirection() {
     return this.oceanCurrentDirection;
   }
 }
