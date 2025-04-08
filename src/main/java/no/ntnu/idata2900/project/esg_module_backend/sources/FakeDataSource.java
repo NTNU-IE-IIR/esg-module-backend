@@ -3,9 +3,14 @@ package no.ntnu.idata2900.project.esg_module_backend.sources;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import no.ntnu.idata2900.project.esg_module_backend.dtos.BoatDataDto;
 import no.ntnu.idata2900.project.esg_module_backend.models.BoatData;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -15,15 +20,19 @@ public class FakeDataSource implements DataSource {
     private DataListener listener;
     private int i = 0;
 
-    private BoatData fakeBoatData;
-    private ZonedDateTime timestamp;
+    private BoatDataDto fakeBoatData;
+    private long ts;
+    private ZoneOffset offset;
     private Random random = new Random();
 
     @Override
     public void start() {
-        i = 0;
+        ts = 1739438130;
+        // Add time zone offset to timestamp
+        offset = ZoneOffset.ofHours(1);
+
         fakeBoatData = createInitialBoatData();
-        timestamp = ZonedDateTime.parse("2025-02-13T10:15:30Z");
+
         timer = new Timer();
         TimerTask task = new TimerTask() {
             @Override
@@ -44,22 +53,80 @@ public class FakeDataSource implements DataSource {
         System.out.println("FakeDataSource started");
     }
 
-    private BoatData createInitialBoatData() {
-        return new BoatData(1, "Boat1", 61.6031484, 5.0445668, 90.0, 85.0, 12.5,
-                "2025-02-13T10:15:30Z", 0.0, 500.0, 0.0);
+    private BoatDataDto createInitialBoatData() {
+        BoatData boatData = new BoatData(
+            1, 
+            "Boat1", 
+            61.6031484f, 
+            5.0445668f, 
+            90.0, 
+            85.0, 
+            12.5,
+            ts,
+            100.0, 
+            500.0, 
+            0.0);
+
+        return new BoatDataDto(
+            boatData.getId(),
+            boatData.getName(),
+            boatData.getHeading(),
+            boatData.getCourse(),
+            boatData.getSpeed(),
+            boatData.getLat(),
+            boatData.getLng(),
+            // UNIX timestamp in seconds
+            ZonedDateTime
+                .of(
+                    LocalDateTime.ofEpochSecond(boatData.getTs(), 0, offset),
+                    ZoneId.ofOffset("UTC", offset)
+                )
+                .format(DateTimeFormatter.ISO_ZONED_DATE_TIME),
+            boatData.getFishAmount(),
+            boatData.getTotalDistance()
+        );
     }
 
-    private BoatData generateBoatData() {
-        double lat = fakeBoatData.getLat() + (random.nextDouble() * 0.01 - 0.005);
-        double lng = fakeBoatData.getLng() + (random.nextDouble() * 0.01 - 0.005);
-        timestamp = timestamp.plusMinutes(1);
-        String timestampStr = timestamp.format(DateTimeFormatter.ISO_ZONED_DATE_TIME);
+    private BoatDataDto generateBoatData() {
+        float lat = fakeBoatData.getLat() + (random.nextFloat() * 0.01f - 0.005f);
+        float lng = fakeBoatData.getLng() + (random.nextFloat() * 0.01f - 0.005f);
+        // Increment timestamp by 1 minute
+        ts += 60;
         double fishAmount = fakeBoatData.getFishAmount() + (random.nextDouble() * 10);
         double fuelLevel = fakeBoatData.getFuelLevel() - (random.nextDouble() * 4);
         double totalDistance = fakeBoatData.getTotalDistance() + (random.nextDouble() * 10);
 
-        return new BoatData(1, "Boat1", lat, lng, 90.0, 85.0, 12.5,
-                timestampStr, fishAmount, fuelLevel, totalDistance);
+        BoatData boatData = new BoatData(
+            1,
+            "Boat1",
+            lat,
+            lng,
+            90.0,
+            85.0,
+            12.5,
+            ts,
+            fishAmount,
+            fuelLevel,
+            totalDistance
+        );
+
+        return new BoatDataDto(
+            boatData.getId(),
+            boatData.getName(),
+            boatData.getHeading(),
+            boatData.getCourse(),
+            boatData.getSpeed(),
+            boatData.getLat(),
+            boatData.getLng(),
+            // UNIX timestamp in seconds
+            ZonedDateTime
+                .of(
+                    LocalDateTime.ofEpochSecond(boatData.getTs(), 0, offset),
+                    ZoneId.ofOffset("UTC", offset)
+                )
+                .format(DateTimeFormatter.ISO_ZONED_DATE_TIME),
+            boatData.getFishAmount(),
+            boatData.getTotalDistance());
     }
 
     @Override
