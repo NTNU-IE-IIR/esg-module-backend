@@ -1,9 +1,13 @@
 package no.ntnu.idata2900.project.esg_module_backend.models;
 
 /**
- * The WeatherData class represents various weather data relevant for marine operations. The data is
- * based off of forecast data from <a href="https://api.windy.com/">Windy API</a> distributed by
- * <a href="https://www.windy.com/">Windy</a>.
+ * The WeatherData class represents various weather data collected from different weather APIs. The
+ * class is part of the data packaged into a {@link DataPoint data point}.
+ * 
+ * <p>
+ *   The data is based off of forecast data from <a href="https://api.windy.com/">Windy API</a>
+ *   distributed by <a href="https://www.windy.com/">Windy</a>.
+ * </p>
  * 
  * <p>
  *   The <code>oceanCurrentVelocity</code> and <code>oceanCurrentDirection</code> parameteres are
@@ -85,12 +89,13 @@ package no.ntnu.idata2900.project.esg_module_backend.models;
  *   see <a href="https://api.windy.com/point-forecast/docs">Windy API documentation</a>.
  * </p>
  * 
- * <p>The class inherits the {@link Data} class.</p>
- * 
  * @author Group 14
- * @version v0.1.3 (2025.04.08)
+ * @version v0.2.0 (2025.04.08)
  */
-public class WeatherData extends Data {
+public class Weather {
+  // TODO Change to automatically generated ID
+  private int id;
+
   // GFS
   private float windU;
   private float windV;
@@ -120,9 +125,7 @@ public class WeatherData extends Data {
   /**
    * Constructor for WeatherData class.
    * 
-   * @param lat The specified latitude
-   * @param lng The specified longitude
-   * @param ts The specified Unix timestamp
+   * @param id The specified ID
    * @param windU The specified wind <code>u</code> vector
    * @param windV The specified wind <code>v</code> vector
    * @param gust The specified wind gusts speed
@@ -141,10 +144,8 @@ public class WeatherData extends Data {
    * @param oceanCurrentVelocity The specified ocean current velocity
    * @param oceanCurrentDirection The specified ocean current direction
    */
-  public WeatherData(
-    float lat,
-    float lng,
-    long ts,
+  public Weather(
+    int id,
     float windU,
     float windV,
     float gust,
@@ -163,7 +164,7 @@ public class WeatherData extends Data {
     float oceanCurrentVelocity,
     float oceanCurrentDirection
   ) {
-    super(new Position(lat, lng), ts);
+    this.id = id;
     this.windU = windU;
     this.windV = windV;
     this.gust = gust;
@@ -181,6 +182,15 @@ public class WeatherData extends Data {
     this.swell2Period = swell2Period;
     this.oceanCurrentVelocity = oceanCurrentVelocity;
     this.oceanCurrentDirection = oceanCurrentDirection;
+  }
+
+  /**
+   * Getter for ID.
+   * 
+   * @return ID
+   */
+  public int getId() {
+    return this.id;
   }
 
   /**
