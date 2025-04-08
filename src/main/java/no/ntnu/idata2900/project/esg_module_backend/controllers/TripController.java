@@ -50,4 +50,32 @@ public class TripController {
         tripLogRepository.save(tripService.getCurrentTrip().toTripLog(comments, area));
         return "Trip stopped";
     }
+
+    @PutMapping("/edit/{id}")
+    public String editComments(@PathVariable int id, @RequestBody Map<String, String> requestBody) {
+        String comments = requestBody.get("comments");
+        if (tripLogRepository.existsById(id)) {
+            TripLog tripLog = tripLogRepository.findById(id).orElse(null);
+            if (tripLog != null) {
+                tripLog.setComments(comments);
+                tripLogRepository.save(tripLog);
+                logger.info("Updated comments for trip log with ID: {}", id);
+                return "Comments updated for trip log with ID: " + id;
+            }
+        }
+        logger.info("Trip log with ID: {} not found", id);
+        return "Trip log with ID: " + id + " not found";
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public String deleteTrip(@PathVariable int id) {
+        if (tripLogRepository.existsById(id)) {
+            tripLogRepository.deleteById(id);
+            logger.info("Deleted trip log with ID: {}", id);
+            return "Trip log deleted";
+        } else {
+            logger.info("Trip log with ID: {} not found", id);
+            return "Trip log not found";
+        }
+    }
 }

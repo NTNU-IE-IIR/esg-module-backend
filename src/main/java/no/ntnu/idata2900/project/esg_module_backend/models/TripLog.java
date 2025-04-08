@@ -31,6 +31,10 @@ public class TripLog {
     public TripLog() {
     }
 
+    public void setComments(String comments) {
+        this.comments = comments;
+    }
+
     public int getId() {
         return id;
     }
