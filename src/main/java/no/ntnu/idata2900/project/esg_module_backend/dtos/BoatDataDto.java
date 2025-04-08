@@ -10,18 +10,18 @@ package no.ntnu.idata2900.project.esg_module_backend.dtos;
 public class BoatDataDto {
   private int id;
   private String name;
-  private double heading;
-  private double course;
-  private double speed;
+  private float heading;
+  private float course;
+  private float speed;
 
   private float lat;
   private float lng;
   private String timestamp;
 
-  private double fishAmount;
+  private float fishAmount;
 
-  private double fuelLevel;
-  private double totalDistance;
+  private float fuelLevel;
+  private float totalDistance;
 
   /**
    * Constructor for BoatDataDto class.
@@ -40,14 +40,14 @@ public class BoatDataDto {
   public BoatDataDto(
     int id,
     String name,
-    double heading,
-    double course,
-    double speed,
+    float heading,
+    float course,
+    float speed,
     float lat,
     float lng,
     String timestamp,
-    double fishAmount,
-    double totalDistance
+    float fishAmount,
+    float totalDistance
   ) {
     this.id = id;
     this.name = name;
@@ -84,7 +84,7 @@ public class BoatDataDto {
    * 
    * @return Heading
    */
-  public double getHeading() {
+  public float getHeading() {
     return heading;
   }
 
@@ -93,7 +93,7 @@ public class BoatDataDto {
    * 
    * @return Course
    */
-  public double getCourse() {
+  public float getCourse() {
     return course;
   }
 
@@ -102,7 +102,7 @@ public class BoatDataDto {
    * 
    * @return Speed
    */
-  public double getSpeed() {
+  public float getSpeed() {
     return speed;
   }
 
@@ -138,7 +138,7 @@ public class BoatDataDto {
    * 
    * @return Fish amount
    */
-  public double getFishAmount() {
+  public float getFishAmount() {
     return fishAmount;
   }
 
@@ -147,7 +147,7 @@ public class BoatDataDto {
    * 
    * @return Fuel level
    */
-  public double getFuelLevel() {
+  public float getFuelLevel() {
     return fuelLevel;
   }
 
@@ -156,7 +156,7 @@ public class BoatDataDto {
    * 
    * @return Total distance
    */
-  public double getTotalDistance() {
+  public float getTotalDistance() {
     return totalDistance;
   }
 }
