@@ -27,6 +27,10 @@ public class Trip {
         summarizeTrip();
     }
 
+    public TripLog toTripLog(String comments, String area) {
+        return new TripLog(fishCaught, fuelConsumed, tripDistance, comments, area, startDate.toString(), endDate.toString());
+    }
+
     private void summarizeTrip() {
         this.tripDistance = calculateTotalDistance();
         this.fishCaught += boatData.getLast().getFishAmount();
