@@ -88,7 +88,7 @@ package no.ntnu.idata2900.project.esg_module_backend.models;
  * <p>The class inherits the {@link Data} class.</p>
  * 
  * @author Group 14
- * @version v0.1.2 (2025.04.08)
+ * @version v0.1.3 (2025.04.08)
  */
 public class WeatherData extends Data {
   // GFS
@@ -163,7 +163,7 @@ public class WeatherData extends Data {
     float oceanCurrentVelocity,
     float oceanCurrentDirection
   ) {
-    super(lat, lng, ts);
+    super(new Position(lat, lng), ts);
     this.windU = windU;
     this.windV = windV;
     this.gust = gust;

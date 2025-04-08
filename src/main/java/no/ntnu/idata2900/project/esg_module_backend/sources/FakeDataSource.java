@@ -73,8 +73,8 @@ public class FakeDataSource implements DataSource {
             boatData.getHeading(),
             boatData.getCourse(),
             boatData.getSpeed(),
-            boatData.getLat(),
-            boatData.getLng(),
+            boatData.getPos().getLat(),
+            boatData.getPos().getLng(),
             // UNIX timestamp in seconds
             ZonedDateTime
                 .of(
@@ -116,8 +116,8 @@ public class FakeDataSource implements DataSource {
             boatData.getHeading(),
             boatData.getCourse(),
             boatData.getSpeed(),
-            boatData.getLat(),
-            boatData.getLng(),
+            boatData.getPos().getLat(),
+            boatData.getPos().getLng(),
             // UNIX timestamp in seconds
             ZonedDateTime
                 .of(
