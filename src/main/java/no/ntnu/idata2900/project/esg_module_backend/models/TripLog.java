@@ -10,6 +10,7 @@ public class TripLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     private double fish;
     private double fuel;
     private double nm;
@@ -17,7 +18,6 @@ public class TripLog {
     private String area;
     private String startDate;
     private String endDate;
-
     public TripLog(double fish, double fuel, double nm, String comments, String area, String startDate, String endDate) {
         this.fish = fish;
         this.fuel = fuel;
@@ -29,5 +29,37 @@ public class TripLog {
     }
 
     public TripLog() {
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public double getFish() {
+        return fish;
+    }
+
+    public double getFuel() {
+        return fuel;
+    }
+
+    public double getNm() {
+        return nm;
+    }
+
+    public String getComments() {
+        return comments;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
     }
 }

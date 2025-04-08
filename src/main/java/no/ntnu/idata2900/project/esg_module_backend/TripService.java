@@ -2,7 +2,6 @@ package no.ntnu.idata2900.project.esg_module_backend;
 
 import no.ntnu.idata2900.project.esg_module_backend.models.BoatData;
 import no.ntnu.idata2900.project.esg_module_backend.models.Trip;
-import no.ntnu.idata2900.project.esg_module_backend.models.TripLog;
 import no.ntnu.idata2900.project.esg_module_backend.sources.DataListener;
 import no.ntnu.idata2900.project.esg_module_backend.sources.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +31,6 @@ public class TripService implements DataListener {
     public void stopTrip() {
         dataSource.stop();
         currentTrip.end();
-        dataSource.stop();
         // Stop trip
     }
 

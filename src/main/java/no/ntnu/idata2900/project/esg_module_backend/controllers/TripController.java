@@ -3,7 +3,10 @@ package no.ntnu.idata2900.project.esg_module_backend.controllers;
 import java.util.List;
 import java.util.Map;
 import no.ntnu.idata2900.project.esg_module_backend.TripService;
+import no.ntnu.idata2900.project.esg_module_backend.models.TripLog;
 import no.ntnu.idata2900.project.esg_module_backend.repositories.TripLogRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/trip")
 public class TripController {
+    private Logger logger = LoggerFactory.getLogger(TripController.class);
     private TripService tripService;
     private final TripLogRepository tripLogRepository;
 
@@ -21,7 +25,13 @@ public class TripController {
     }
 
     @GetMapping("/all")
-    public List getAllTripLogs() {
+    public List<TripLog> getAllTripLogs() {
+        List<TripLog> tripLogs = tripLogRepository.findAll();
+        logger.info("Found {} trip logs", tripLogs.size());
+        for (TripLog tripLog : tripLogs) {
+            logger.info("Trip log: {}", tripLog);
+            logger.info("Trip log area: {}", tripLog.getArea());
+        }
         return tripLogRepository.findAll();
     }
 
