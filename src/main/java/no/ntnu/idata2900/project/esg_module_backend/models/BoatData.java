@@ -3,17 +3,17 @@ package no.ntnu.idata2900.project.esg_module_backend.models;
 public class BoatData extends Data {
     private int id;
     private String name;
-    private double heading;
-    private double course;
-    private double speed;
+    private float heading;
+    private float course;
+    private float speed;
 
-    private double fishAmount;
+    private float fishAmount;
 
-    private double fuelLevel;
-    private double totalDistance;
+    private float fuelLevel;
+    private float totalDistance;
 
-    public BoatData(int id, String name, float lat, float lng, double heading, double course,
-                    double speed, long ts, double fishAmount, double fuelLevel, double totalDistance) {
+    public BoatData(int id, String name, float lat, float lng, float heading, float course,
+                    float speed, long ts, float fishAmount, float fuelLevel, float totalDistance) {
         super(new Position(lat, lng), ts);
         this.id = id;
         this.name = name;
@@ -25,11 +25,11 @@ public class BoatData extends Data {
         this.totalDistance = totalDistance;
     }
 
-    public double getFishAmount() {
+    public float getFishAmount() {
         return fishAmount;
     }
 
-    public double getFuelLevel() {
+    public float getFuelLevel() {
         return fuelLevel;
     }
 
@@ -41,19 +41,19 @@ public class BoatData extends Data {
         return id;
     }
 
-    public double getHeading() {
+    public float getHeading() {
         return heading;
     }
 
-    public double getCourse() {
+    public float getCourse() {
         return course;
     }
 
-    public double getSpeed() {
+    public float getSpeed() {
         return speed;
     }
 
-    public double getTotalDistance() {
+    public float getTotalDistance() {
         return totalDistance;
     }
 }

@@ -11,9 +11,9 @@ import no.ntnu.idata2900.project.esg_module_backend.dtos.BoatDataDto;
 public class Trip {
     private Instant startDate;
     private Instant endDate;
-    private double tripDistance;
-    private double fishCaught;
-    private double fuelConsumed;
+    private float tripDistance;
+    private float fishCaught;
+    private float fuelConsumed;
     private ArrayList<BoatDataDto> boatData;
 
     public Trip() {
@@ -39,28 +39,29 @@ public class Trip {
         this.boatData.add(boatData);
     }
 
-    private double calculateTotalDistance() {
-        double distance = 0;
+    private float calculateTotalDistance() {
+        float distance = 0;
         for (int i = 0; i < boatData.size() - 1; i++) {
             distance += calculateDistance(boatData.get(i), boatData.get(i + 1));
         }
         return distance;
     }
 
-    private double calculateDistance(BoatDataDto bd1, BoatDataDto bd2) {
-        double lat1 = bd1.getLat();
-        double lon1 = bd1.getLng();
-        double lat2 = bd2.getLat();
-        double lon2 = bd2.getLng();
+    private float calculateDistance(BoatDataDto bd1, BoatDataDto bd2) {
+        float lat1 = bd1.getLat();
+        float lon1 = bd1.getLng();
+        float lat2 = bd2.getLat();
+        float lon2 = bd2.getLng();
 
-        double theta = lon1 - lon2;
-        double dist = Math.sin(Math.toRadians(lat1)) * Math.sin(Math.toRadians(lat2)) + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) * Math.cos(Math.toRadians(theta));
+        float theta = lon1 - lon2;
+        double dist = Math.sin(Math.toRadians(Double.parseDouble(Float.toString(lat1)))) * Math.sin(Math.toRadians(Double.parseDouble(Float.toString(lat2)))) + Math.cos(Math.toRadians(Double.parseDouble(Float.toString(lat1)))) * Math.cos(Math.toRadians(Double.parseDouble(Float.toString(lat2)))) * Math.cos(Math.toRadians(Double.parseDouble(Float.toString(theta))));
         dist = Math.acos(dist);
         dist = Math.toDegrees(dist);
         dist = dist * 60 * 1.1515;
         dist = dist * 0.8684;
 
-        return dist;
+        dist = Float.parseFloat(Double.toString(dist));
+
+        return (float) dist;
     }
 }
-

@@ -59,13 +59,13 @@ public class FakeDataSource implements DataSource {
             "Boat1", 
             61.6031484f, 
             5.0445668f, 
-            90.0, 
-            85.0, 
-            12.5,
+            90.0f, 
+            85.0f, 
+            12.5f,
             ts,
-            100.0, 
-            500.0, 
-            0.0);
+            100.0f, 
+            500.0f, 
+            0.0f);
 
         return new BoatDataDto(
             boatData.getId(),
@@ -92,18 +92,18 @@ public class FakeDataSource implements DataSource {
         float lng = fakeBoatData.getLng() + (random.nextFloat() * 0.0001f - 0.00005f);
         // Increment timestamp by 1 minute
         ts += 60;
-        double fishAmount = fakeBoatData.getFishAmount() + (random.nextDouble() * 10 - 5);
-        double fuelLevel = fakeBoatData.getFuelLevel() - (random.nextDouble() * 4);
-        double totalDistance = fakeBoatData.getTotalDistance() + (random.nextDouble() * 10);
+        float fishAmount = fakeBoatData.getFishAmount() + (random.nextFloat() * 10 - 5);
+        float fuelLevel = fakeBoatData.getFuelLevel() - (random.nextFloat() * 4);
+        float totalDistance = fakeBoatData.getTotalDistance() + (random.nextFloat() * 10);
 
         BoatData boatData = new BoatData(
             1,
             "Boat1",
             lat,
             lng,
-            90.0,
-            85.0,
-            12.5,
+            90.0f,
+            85.0f,
+            12.5f,
             ts,
             fishAmount,
             fuelLevel,
