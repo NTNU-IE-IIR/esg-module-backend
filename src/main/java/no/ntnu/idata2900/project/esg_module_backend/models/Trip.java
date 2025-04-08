@@ -2,66 +2,160 @@ package no.ntnu.idata2900.project.esg_module_backend.models;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.List;
 
-import no.ntnu.idata2900.project.esg_module_backend.dtos.BoatDataDto;
+import no.ntnu.idata2900.project.esg_module_backend.dtos.ShipDto;
 
+// TODO Refactor class to contain a list of data points instead of ship DTOs
 /**
- * The Trip class represents a fishing trip. The class will contain a list of BoatData objects.
+ * The Trip class represents a fishing trip. The class contain a list of
+ * {@link ShipDto ship data}.
+ * 
+ * @author Group 14
+ * @version v0.1.0 (2025.04.08)
  */
 public class Trip {
-    private Instant startDate;
-    private Instant endDate;
-    private float tripDistance;
-    private float fishCaught;
-    private float fuelConsumed;
-    private ArrayList<BoatDataDto> boatData;
+  private Instant startDate;
+  private Instant endDate;
+  private float tripDistance;
+  private float fuelConsumed;
+  private float fishCaught;
+  private List<ShipDto> shipData;
 
-    public Trip() {
-        this.boatData = new ArrayList<>();
+  /**
+   * Constructor for the Trip class.
+   */
+  public Trip() {
+    this.shipData = new ArrayList<>();
+  }
+
+  /**
+   * Starts a fishing trip.
+   */
+  public void start() {
+    this.startDate = Instant.now();
+  }
+
+  /**
+   * Ends a fishing trip an intitializes a summarization.
+   */
+  public void end() {
+    this.endDate = Instant.now();
+    this.summarizeTrip();
+  }
+
+  /**
+   * Summarizes a trip by calculating various key numbers like <code>tripDistance</code>.
+   */
+  private void summarizeTrip() {
+    this.tripDistance = this.calculateTotalDistance();
+    this.fishCaught += shipData.getLast().getFishAmount();
+    this.fuelConsumed += shipData.getFirst().getFuelLevel() - shipData.getLast().getFuelLevel();
+  }
+
+  /**
+   * Returns the calculated total distance traveled during the trip. This is done by calculating
+   * the distance between each data point and adding them together.
+   * 
+   * @return Calculated total distance traveled
+   */
+  private float calculateTotalDistance() {
+    float distance = 0;
+    for (int i = 0; i < shipData.size() - 1; i++) {
+      distance += calculateDistance(shipData.get(i), shipData.get(i + 1));
     }
+    return distance;
+  }
 
-    public void start() {
-        this.startDate = Instant.now();
-    }
+  /**
+   * Returns the calculated geographical distance between two individual data points.
+   * 
+   * @param dp1 The specified first data point
+   * @param dp2 The specified second data point
+   * @return Calculated geograpical distance between two points
+   */
+  private float calculateDistance(ShipDto dp1, ShipDto dp2) {
+    float lat1 = dp1.getLat();
+    float lon1 = dp1.getLng();
+    float lat2 = dp2.getLat();
+    float lon2 = dp2.getLng();
 
-    public void end() {
-        this.endDate = Instant.now();
-        summarizeTrip();
-    }
+    float theta = lon1 - lon2;
 
-    private void summarizeTrip() {
-        this.tripDistance = calculateTotalDistance();
-        this.fishCaught += boatData.getLast().getFishAmount();
-        this.fuelConsumed += boatData.getFirst().getFuelLevel() - boatData.getLast().getFuelLevel();
-    }
+    double dist =
+      Math.sin(Math.toRadians(lat1)) *
+      Math.sin(Math.toRadians(lat2)) +
+      Math.cos(Math.toRadians(lat1)) *
+      Math.cos(Math.toRadians(lat2)) *
+      Math.cos(Math.toRadians(theta));
+    dist = Math.acos(dist);
+    dist = Math.toDegrees(dist);
+    dist = dist * 60 * 1.1515;
+    dist = dist * 0.8684;
 
-    public void addBoatData(BoatDataDto boatData) {
-        this.boatData.add(boatData);
-    }
+    return (float) dist;
+  }
 
-    private float calculateTotalDistance() {
-        float distance = 0;
-        for (int i = 0; i < boatData.size() - 1; i++) {
-            distance += calculateDistance(boatData.get(i), boatData.get(i + 1));
-        }
-        return distance;
-    }
+  /**
+   * Getter for start date.
+   * 
+   * @return Start date
+   */
+  public Instant getStartDate() {
+    return this.startDate;
+  }
 
-    private float calculateDistance(BoatDataDto bd1, BoatDataDto bd2) {
-        float lat1 = bd1.getLat();
-        float lon1 = bd1.getLng();
-        float lat2 = bd2.getLat();
-        float lon2 = bd2.getLng();
+  /**
+   * Getter for end date.
+   * 
+   * @return End date
+   */
+  public Instant getEndDate() {
+    return this.endDate;
+  }
 
-        float theta = lon1 - lon2;
-        double dist = Math.sin(Math.toRadians(Double.parseDouble(Float.toString(lat1)))) * Math.sin(Math.toRadians(Double.parseDouble(Float.toString(lat2)))) + Math.cos(Math.toRadians(Double.parseDouble(Float.toString(lat1)))) * Math.cos(Math.toRadians(Double.parseDouble(Float.toString(lat2)))) * Math.cos(Math.toRadians(Double.parseDouble(Float.toString(theta))));
-        dist = Math.acos(dist);
-        dist = Math.toDegrees(dist);
-        dist = dist * 60 * 1.1515;
-        dist = dist * 0.8684;
+  /**
+   * Getter for total trip distance.
+   * 
+   * @return Total trip distance
+   */
+  public float getTripDistance() {
+    return this.tripDistance;
+  }
 
-        dist = Float.parseFloat(Double.toString(dist));
+  /**
+   * Getter for total fuel consumed.
+   * 
+   * @return Total fuel consumed
+   */
+  public float getFuelConsumed() {
+    return this.fuelConsumed;
+  }
 
-        return (float) dist;
-    }
+  /**
+   * Getter for total fish caught.
+   * 
+   * @return Total fish caught
+   */
+  public float getFishCaught() {
+    return this.fishCaught;
+  }
+
+  /**
+   * Getter for list of ship data
+   * 
+   * @return List of ship data
+   */
+  public List<ShipDto> getShipData() {
+    return this.shipData;
+  }
+
+  /**
+   * Adds the specified ship data to the list of ship data.
+   * 
+   * @param ship The specified ship data
+   */
+  public void addShipData(ShipDto ship) {
+    this.shipData.add(ship);
+  }
 }

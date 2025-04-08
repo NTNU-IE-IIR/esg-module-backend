@@ -1,27 +1,25 @@
 package no.ntnu.idata2900.project.esg_module_backend.dtos;
 
 /**
- * The BoatDataDto class represents a data transfer object (DTO) for transfering data on a suitable
- * format to the frontend.
+ * The ShipDto class represents a data transfer object (DTO) for transfering ship data on a
+ * suitable format for the frontend.
  * 
  * @author Group 14
- * @version v0.0.1 (2025.04.08)
+ * @version v0.1.0 (2025.04.08)
  */
-public class BoatDataDto {
+public class ShipDto {
   private int id;
   private String name;
   private float heading;
   private float course;
   private float speed;
+  private float fuelLevel;
+  private float fishAmount;
+  private float totalDistance;
 
   private float lat;
   private float lng;
   private String timestamp;
-
-  private float fishAmount;
-
-  private float fuelLevel;
-  private float totalDistance;
 
   /**
    * Constructor for BoatDataDto class.
@@ -31,34 +29,34 @@ public class BoatDataDto {
    * @param heading The specified heading
    * @param course The specified course
    * @param speed The specified speed
+   * @param fishAmount The specified fish amount
+   * @param totalDistance The specified total distance
    * @param lat The specified latitude
    * @param lng The specified longitude
    * @param ts The specifed timestamp
-   * @param fishAmount The specified fish amount
-   * @param totalDistance The specified total distance
    */
-  public BoatDataDto(
+  public ShipDto(
     int id,
     String name,
     float heading,
     float course,
     float speed,
+    float fishAmount,
+    float totalDistance,
     float lat,
     float lng,
-    String timestamp,
-    float fishAmount,
-    float totalDistance
+    String timestamp
   ) {
     this.id = id;
     this.name = name;
     this.heading = heading;
     this.course = course;
     this.speed = speed;
+    this.fishAmount = fishAmount;
+    this.totalDistance = totalDistance;
     this.lat = lat;
     this.lng = lng;
     this.timestamp = timestamp;
-    this.fishAmount = fishAmount;
-    this.totalDistance = totalDistance;
   }
 
   /**
@@ -107,33 +105,6 @@ public class BoatDataDto {
   }
 
   /**
-   * Getter for latitude.
-   * 
-   * @return Latitude
-   */
-  public float getLat() {
-    return lat;
-  }
-
-  /**
-   * Getter for longitude.
-   * 
-   * @return Longitude
-   */
-  public float getLng() {
-    return lng;
-  }
-
-  /**
-   * Getter for timestamp.
-   * 
-   * @return Timestamp
-   */
-  public String getTimestamp() {
-    return timestamp;
-  }
-
-  /**
    * Getter for fish amount.
    * 
    * @return Fish amount
@@ -158,5 +129,32 @@ public class BoatDataDto {
    */
   public float getTotalDistance() {
     return totalDistance;
+  }
+
+  /**
+   * Getter for latitude.
+   * 
+   * @return Latitude
+   */
+  public float getLat() {
+    return lat;
+  }
+
+  /**
+   * Getter for longitude.
+   * 
+   * @return Longitude
+   */
+  public float getLng() {
+    return lng;
+  }
+
+  /**
+   * Getter for timestamp.
+   * 
+   * @return Timestamp
+   */
+  public String getTimestamp() {
+    return timestamp;
   }
 }

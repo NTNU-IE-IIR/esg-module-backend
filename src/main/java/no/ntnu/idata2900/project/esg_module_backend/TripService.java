@@ -1,6 +1,6 @@
 package no.ntnu.idata2900.project.esg_module_backend;
 
-import no.ntnu.idata2900.project.esg_module_backend.dtos.BoatDataDto;
+import no.ntnu.idata2900.project.esg_module_backend.dtos.ShipDto;
 import no.ntnu.idata2900.project.esg_module_backend.models.Trip;
 import no.ntnu.idata2900.project.esg_module_backend.sources.DataListener;
 import no.ntnu.idata2900.project.esg_module_backend.sources.DataSource;
@@ -36,10 +36,10 @@ public class TripService implements DataListener {
 
 
     @Override
-    public void onDataReceived(BoatDataDto data) {
+    public void onDataReceived(ShipDto data) {
         System.out.println("Data received: " + data);
         if (currentTrip != null) {
-            currentTrip.addBoatData(data);
+            currentTrip.addShipData(data);
         }
         if (boatDataHandler.isConnected())
             boatDataHandler.sendBoatData(data);
