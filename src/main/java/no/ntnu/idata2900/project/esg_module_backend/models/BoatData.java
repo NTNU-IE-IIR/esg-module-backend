@@ -14,7 +14,7 @@ public class BoatData extends Data {
 
     public BoatData(int id, String name, float lat, float lng, double heading, double course,
                     double speed, long ts, double fishAmount, double fuelLevel, double totalDistance) {
-        super(lat, lng, ts);
+        super(new Position(lat, lng), ts);
         this.id = id;
         this.name = name;
         this.heading = heading;
