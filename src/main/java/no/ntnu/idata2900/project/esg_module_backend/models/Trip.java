@@ -3,6 +3,8 @@ package no.ntnu.idata2900.project.esg_module_backend.models;
 import java.time.Instant;
 import java.util.ArrayList;
 
+import no.ntnu.idata2900.project.esg_module_backend.dtos.BoatDataDto;
+
 /**
  * The Trip class represents a fishing trip. The class will contain a list of BoatData objects.
  */
@@ -12,7 +14,7 @@ public class Trip {
     private double tripDistance;
     private double fishCaught;
     private double fuelConsumed;
-    private ArrayList<BoatData> boatData;
+    private ArrayList<BoatDataDto> boatData;
 
     public Trip() {
         this.boatData = new ArrayList<>();
@@ -33,7 +35,7 @@ public class Trip {
         this.fuelConsumed += boatData.getFirst().getFuelLevel() - boatData.getLast().getFuelLevel();
     }
 
-    public void addBoatData(BoatData boatData) {
+    public void addBoatData(BoatDataDto boatData) {
         this.boatData.add(boatData);
     }
 
@@ -45,7 +47,7 @@ public class Trip {
         return distance;
     }
 
-    private double calculateDistance(BoatData bd1, BoatData bd2) {
+    private double calculateDistance(BoatDataDto bd1, BoatDataDto bd2) {
         double lat1 = bd1.getLat();
         double lon1 = bd1.getLng();
         double lat2 = bd2.getLat();

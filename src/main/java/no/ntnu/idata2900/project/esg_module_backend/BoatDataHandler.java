@@ -1,7 +1,8 @@
 package no.ntnu.idata2900.project.esg_module_backend;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import no.ntnu.idata2900.project.esg_module_backend.models.BoatData;
+
+import no.ntnu.idata2900.project.esg_module_backend.dtos.BoatDataDto;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -12,7 +13,7 @@ public class BoatDataHandler extends TextWebSocketHandler {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private WebSocketSession session;
 
-    public void sendBoatData(BoatData boatData) {
+    public void sendBoatData(BoatDataDto boatData) {
         try {
             if (session != null && session.isOpen()) {
                 session.sendMessage(new TextMessage(objectMapper.writeValueAsString(boatData)));
