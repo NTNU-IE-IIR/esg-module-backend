@@ -85,15 +85,12 @@ package no.ntnu.idata2900.project.esg_module_backend.models;
  *   see <a href="https://api.windy.com/point-forecast/docs">Windy API documentation</a>.
  * </p>
  * 
+ * <p>The class inherits the {@link Data} class.</p>
+ * 
  * @author Group 14
- * @version v0.1.1 (2025.04.07)
+ * @version v0.1.2 (2025.04.08)
  */
-public class WeatherData {
-  // General data
-  private float lat;
-  private float lng;
-  private long ts;
-
+public class WeatherData extends Data {
   // GFS
   private float windU;
   private float windV;
@@ -166,9 +163,7 @@ public class WeatherData {
     float oceanCurrentVelocity,
     float oceanCurrentDirection
   ) {
-    this.lat = lat;
-    this.lng = lng;
-    this.ts = ts;
+    super(lat, lng, ts);
     this.windU = windU;
     this.windV = windV;
     this.gust = gust;
@@ -186,33 +181,6 @@ public class WeatherData {
     this.swell2Period = swell2Period;
     this.oceanCurrentVelocity = oceanCurrentVelocity;
     this.oceanCurrentDirection = oceanCurrentDirection;
-  }
-
-  /**
-   * Getter for latitude.
-   * 
-   * @return Latitude
-   */
-  public float getLat() {
-    return this.lat;
-  }
-
-  /**
-   * Getter for longitude.
-   * 
-   * @return Longitude
-   */
-  public float getLng() {
-    return this.lng;
-  }
-
-  /**
-   * Getter for Unix timestamp
-   * 
-   * @return Unix timestamp
-   */
-  public long getTs() {
-    return this.ts;
   }
 
   /**
