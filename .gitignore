@@ -31,3 +31,8 @@ build/
 
 ### VS Code ###
 .vscode/
+
+#database stuff
+data
+.data/
+data/

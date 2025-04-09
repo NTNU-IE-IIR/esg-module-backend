@@ -21,6 +21,7 @@ public class FakeDataSource implements DataSource {
 
     @Override
     public void start() {
+        i = 0;
         fakeBoatData = createInitialBoatData();
         timestamp = ZonedDateTime.parse("2025-02-13T10:15:30Z");
         timer = new Timer();
@@ -45,15 +46,15 @@ public class FakeDataSource implements DataSource {
 
     private BoatData createInitialBoatData() {
         return new BoatData(1, "Boat1", 61.6031484, 5.0445668, 90.0, 85.0, 12.5,
-                "2025-02-13T10:15:30Z", 100.0, 500.0, 0.0);
+                "2025-02-13T10:15:30Z", 0.0, 500.0, 0.0);
     }
 
     private BoatData generateBoatData() {
-        double lat = fakeBoatData.getLat() + (random.nextDouble() * 0.0001 - 0.00005);
-        double lng = fakeBoatData.getLng() + (random.nextDouble() * 0.0001 - 0.00005);
+        double lat = fakeBoatData.getLat() + (random.nextDouble() * 0.01 - 0.005);
+        double lng = fakeBoatData.getLng() + (random.nextDouble() * 0.01 - 0.005);
         timestamp = timestamp.plusMinutes(1);
         String timestampStr = timestamp.format(DateTimeFormatter.ISO_ZONED_DATE_TIME);
-        double fishAmount = fakeBoatData.getFishAmount() + (random.nextDouble() * 10 - 5);
+        double fishAmount = fakeBoatData.getFishAmount() + (random.nextDouble() * 10);
         double fuelLevel = fakeBoatData.getFuelLevel() - (random.nextDouble() * 4);
         double totalDistance = fakeBoatData.getTotalDistance() + (random.nextDouble() * 10);
 
@@ -67,6 +68,8 @@ public class FakeDataSource implements DataSource {
             timer.cancel();
             timer = null;
         }
+
+        i = 0;
         System.out.println("FakeDataSource stopped");
     }
 

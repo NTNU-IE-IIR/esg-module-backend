@@ -34,6 +34,10 @@ public class TripService implements DataListener {
         // Stop trip
     }
 
+    public Trip getCurrentTrip() {
+        return currentTrip;
+    }
+
 
     @Override
     public void onDataReceived(BoatData data) {
