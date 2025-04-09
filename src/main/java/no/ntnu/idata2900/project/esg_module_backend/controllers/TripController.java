@@ -46,6 +46,17 @@ public class TripController {
     public String stopTrip(@RequestBody Map<String, String> requestBody) {
         String comments = requestBody.get("comments");
         String area = requestBody.get("area");
+
+        if (area == null || area.isEmpty()) {
+            return "Area must be specified";
+        }
+
+        area = area.strip();
+
+        if (comments != null && !comments.isEmpty()) {
+            comments = comments.strip();
+        }
+
         tripService.stopTrip();
         tripLogRepository.save(tripService.getCurrentTrip().toTripLog(comments, area));
         return "Trip stopped";
@@ -54,6 +65,11 @@ public class TripController {
     @PutMapping("/edit/{id}")
     public String editComments(@PathVariable int id, @RequestBody Map<String, String> requestBody) {
         String comments = requestBody.get("comments");
+
+        if (comments != null && !comments.isEmpty()) {
+            comments = comments.strip();
+        }
+
         if (tripLogRepository.existsById(id)) {
             TripLog tripLog = tripLogRepository.findById(id).orElse(null);
             if (tripLog != null) {
