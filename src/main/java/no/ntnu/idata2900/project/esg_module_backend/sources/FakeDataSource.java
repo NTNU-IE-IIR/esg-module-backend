@@ -16,6 +16,14 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * The FakeDataSource class simulates a data source to produce boat-related data at intervals.
+ * It implements the DataSource interface and sends generated ship data to a DataListener.
+ * This class is primarily designed for testing or simulation purposes where no actual data source exists.
+ *
+ * @author Group 14
+ * @version v0.1.0 (2025.04.22)
+ */
 @Component
 public class FakeDataSource implements DataSource {
     private Timer timer;
@@ -27,6 +35,34 @@ public class FakeDataSource implements DataSource {
     private ZoneOffset offset;
     private Random random = new Random();
 
+    /**
+     * Starts the fake data source to simulate real-time ship data generation and communication.
+     * This method initializes required variables, sets up a periodic task using a timer,
+     * and sends generated data to the assigned {@link DataListener} at a fixed interval.
+     *
+     * <ul>
+     * The method performs the following actions:
+     * - Initializes the initial ship data using {@code createInitialShipData()}.
+     * - Configures a periodic job via {@code TimerTask} to generate and send simulated ship data.
+     * - Propagates data to a registered listener through {@code listener.onDataReceived()} if a listener is present.
+     * - Stops data generation automatically after 50 cycles.
+     * - Logs a message indicating that the fake data source has started.
+     *
+     * Notes:
+     * - Data is generated in intervals of 15 seconds.
+     * - Timestamp is incremented per generation to maintain continuity.
+     *
+     * Preconditions:
+     * - A listener must be set using {@link #setDataListener(DataListener)} to receive data.
+     *
+     * Postconditions:
+     * - Simulated ship data is sent periodically to the registered listener.
+     * - The timer and task terminate after completing the defined data transmission cycles.
+     *
+     * See also:
+     * - {@link #stop()} for stopping the data generation process manually.
+     * - {@code createInitialShipData()} and {@code generateBoatData()} for data generation logic.
+     */
     @Override
     public void start() {
         ts = 1739438130;
@@ -55,6 +91,12 @@ public class FakeDataSource implements DataSource {
         System.out.println("FakeDataSource started");
     }
 
+    /**
+     * Creates and initializes a ship data object containing information about a ship's
+     * current state, position, and timestamp.
+     *
+     * @return A {@link ShipDto} object representing the initial ship data.
+     */
     private ShipDto createInitialShipData() {
         DataPoint dp = new DataPoint(new Position(61.6031484f, 5.0445668f), ts);
 
@@ -70,6 +112,7 @@ public class FakeDataSource implements DataSource {
             dp.getShip().getTotalDistance(),
             dp.getPos().getLat(),
             dp.getPos().getLng(),
+            dp.getShip().getFuelLevel(),
             // UNIX timestamp in seconds
             ZonedDateTime
                 .of(
@@ -80,6 +123,14 @@ public class FakeDataSource implements DataSource {
         );
     }
 
+    /**
+     * Generates a new {@link ShipDto} object with updated data including position, timestamp,
+     * fuel level, fish amount, and total distance. The method simulates real-time changes in
+     * ship data by slightly modifying the latitude, longitude, and other attributes based on
+     * random values and fixed increments.
+     *
+     * @return A {@link ShipDto} object representing the updated ship data with simulated changes.
+     */
     private ShipDto generateBoatData() {
         float lat = fakeBoatData.getLat() + (random.nextFloat() * 0.01f - 0.005f);
         float lng = fakeBoatData.getLng() + (random.nextFloat() * 0.01f - 0.005f);
@@ -105,6 +156,7 @@ public class FakeDataSource implements DataSource {
             dp.getShip().getTotalDistance(),
             dp.getPos().getLat(),
             dp.getPos().getLng(),
+            dp.getShip().getFuelLevel(),
             // UNIX timestamp in seconds
             ZonedDateTime
                 .of(
@@ -115,6 +167,22 @@ public class FakeDataSource implements DataSource {
             );
     }
 
+    /**
+     * Stops the fake data source and cancels any ongoing data generation tasks.
+     *
+     * This method performs the following actions:
+     * - Cancels the running {@code Timer} task, if initialized.
+     * - Resets the {@code Timer} object to {@code null}.
+     * - Resets the generation cycle counter {@code i} to 0.
+     * - Logs a message indicating that the fake data source has stopped.
+     *
+     * Preconditions:
+     * - The data source must be running and have an active {@code Timer} instance.
+     *
+     * Postconditions:
+     * - The data generation process is interrupted and stopped.
+     * - Any scheduled {@code Timer} tasks are cleared.
+     */
     @Override
     public void stop() {
         if (timer != null) {
@@ -126,6 +194,15 @@ public class FakeDataSource implements DataSource {
         System.out.println("FakeDataSource stopped");
     }
 
+    /**
+     * Sets the data listener for this data source.
+     * This listener will be notified whenever new data, such as a {@link ShipDto},
+     * is generated by the fake data source. The assigned listener must implement
+     * the {@link DataListener} interface, with its {@code onDataReceived} method
+     * being invoked upon data updates.
+     *
+     * @param listener The {@link DataListener} instance to receive updated ship data.
+     */
     @Override
     public void setDataListener(DataListener listener) {
         this.listener = listener;

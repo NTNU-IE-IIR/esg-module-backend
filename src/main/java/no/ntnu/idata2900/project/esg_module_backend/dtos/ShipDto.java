@@ -33,25 +33,26 @@ public class ShipDto {
    * @param totalDistance The specified total distance
    * @param lat The specified latitude
    * @param lng The specified longitude
-   * @param ts The specifed timestamp
+   * @param timestamp The specified timestamp
    */
   public ShipDto(
-    int id,
-    String name,
-    float heading,
-    float course,
-    float speed,
-    float fishAmount,
-    float totalDistance,
-    float lat,
-    float lng,
-    String timestamp
+      int id,
+      String name,
+      float heading,
+      float course,
+      float speed, float fuelLevel,
+      float fishAmount,
+      float totalDistance,
+      float lat,
+      float lng,
+      String timestamp
   ) {
     this.id = id;
     this.name = name;
     this.heading = heading;
     this.course = course;
     this.speed = speed;
+    this.fuelLevel = fuelLevel;
     this.fishAmount = fishAmount;
     this.totalDistance = totalDistance;
     this.lat = lat;

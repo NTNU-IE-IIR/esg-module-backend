@@ -1,5 +1,9 @@
 package no.ntnu.idata2900.project.esg_module_backend.models;
 
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
 /**
  * The Ship class represents various ship data collected from different sources. The class is part
  * of the data packaged into a {@link DataPoint data point}.
@@ -8,7 +12,8 @@ package no.ntnu.idata2900.project.esg_module_backend.models;
  * @version v0.2.0 (2025.04.08)
  */
 public class Ship {
-  // TODO Change to automatically generated ID
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
   private String name;
   private float heading;
