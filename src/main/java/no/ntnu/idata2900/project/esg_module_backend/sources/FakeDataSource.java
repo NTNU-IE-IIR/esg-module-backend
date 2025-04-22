@@ -1,9 +1,10 @@
 package no.ntnu.idata2900.project.esg_module_backend.sources;
 
 import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import no.ntnu.idata2900.project.esg_module_backend.dtos.ShipDto;
 import no.ntnu.idata2900.project.esg_module_backend.models.DataPoint;
 import no.ntnu.idata2900.project.esg_module_backend.models.Position;
@@ -26,7 +27,7 @@ import java.time.format.DateTimeFormatter;
  */
 @Component
 public class FakeDataSource implements DataSource {
-    private Timer timer;
+    private ScheduledExecutorService scheduler;
     private DataListener listener;
     private int i = 0;
 
@@ -47,18 +48,14 @@ public class FakeDataSource implements DataSource {
      * - Propagates data to a registered listener through {@code listener.onDataReceived()} if a listener is present.
      * - Stops data generation automatically after 50 cycles.
      * - Logs a message indicating that the fake data source has started.
-     *
+     * <hr>
      * Notes:
      * - Data is generated in intervals of 15 seconds.
      * - Timestamp is incremented per generation to maintain continuity.
-     *
-     * Preconditions:
      * - A listener must be set using {@link #setDataListener(DataListener)} to receive data.
-     *
-     * Postconditions:
      * - Simulated ship data is sent periodically to the registered listener.
      * - The timer and task terminate after completing the defined data transmission cycles.
-     *
+     * <hr>
      * See also:
      * - {@link #stop()} for stopping the data generation process manually.
      * - {@code createInitialShipData()} and {@code generateBoatData()} for data generation logic.
@@ -71,23 +68,25 @@ public class FakeDataSource implements DataSource {
 
         fakeBoatData = createInitialShipData();
 
-        timer = new Timer();
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                if (i < 50) {
-                    if (listener != null) {
-                        fakeBoatData = generateBoatData();
-                        listener.onDataReceived(fakeBoatData);
-                    }
-                    i = (i + 1);
-                } else {
-                    stop();
-                }
-            }
-        };
+        // Make sure any existing scheduler is shut down
+        if (scheduler != null && !scheduler.isShutdown()) {
+            scheduler.shutdownNow();
+        }
 
-        timer.schedule(task, 0, 15000);
+        scheduler = Executors.newSingleThreadScheduledExecutor();
+
+        scheduler.scheduleAtFixedRate(() -> {
+            if (i < 50) {
+                if (listener != null) {
+                    fakeBoatData = generateBoatData();
+                    listener.onDataReceived(fakeBoatData);
+                }
+                i = (i + 1);
+            } else {
+                stop();
+            }
+        }, 0, 15, TimeUnit.SECONDS);
+
         System.out.println("FakeDataSource started");
     }
 
@@ -168,26 +167,24 @@ public class FakeDataSource implements DataSource {
     }
 
     /**
-     * Stops the fake data source and cancels any ongoing data generation tasks.
-     *
+     * Stops the fake data source and terminates any ongoing tasks or scheduled operations.
+     * <hr>
      * This method performs the following actions:
-     * - Cancels the running {@code Timer} task, if initialized.
-     * - Resets the {@code Timer} object to {@code null}.
-     * - Resets the generation cycle counter {@code i} to 0.
-     * - Logs a message indicating that the fake data source has stopped.
-     *
-     * Preconditions:
-     * - The data source must be running and have an active {@code Timer} instance.
-     *
-     * Postconditions:
-     * - The data generation process is interrupted and stopped.
-     * - Any scheduled {@code Timer} tasks are cleared.
+     * - Shuts down the scheduler immediately if it is initialized and running.
+     * - Resets the scheduler reference to null.
+     * - Resets the internal iteration counter to zero.
+     * - Logs a message indicating that the fake data source has been stopped.
+     * <hr>
+     * Notes:
+     * - Calling this method ensures that no further data generation or dispatching occurs.
+     * - It is typically used to clean up after the {@link #start()} method has initiated the data source.
+     * - Repeated calls to this method after stopping the scheduler have no additional effect.
      */
     @Override
     public void stop() {
-        if (timer != null) {
-            timer.cancel();
-            timer = null;
+        if (scheduler != null && !scheduler.isShutdown()) {
+            scheduler.shutdownNow();
+            scheduler = null;
         }
 
         i = 0;
