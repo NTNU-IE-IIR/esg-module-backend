@@ -3,14 +3,14 @@ package no.ntnu.idata2900.project.esg_module_backend.models;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-
 import no.ntnu.idata2900.project.esg_module_backend.dtos.ShipDto;
 
 // TODO Refactor class to contain a list of data points instead of ship DTOs
+
 /**
  * The Trip class represents a fishing trip. The class contain a list of
  * {@link ShipDto ship data}.
- * 
+ *
  * @author Group 14
  * @version v0.1.0 (2025.04.08)
  */
@@ -56,7 +56,7 @@ public class Trip {
   /**
    * Returns the calculated total distance traveled during the trip. This is done by calculating
    * the distance between each data point and adding them together.
-   * 
+   *
    * @return Calculated total distance traveled
    */
   private float calculateTotalDistance() {
@@ -69,7 +69,7 @@ public class Trip {
 
   /**
    * Returns the calculated geographical distance between two individual data points.
-   * 
+   *
    * @param dp1 The specified first data point
    * @param dp2 The specified second data point
    * @return Calculated geograpical distance between two points
@@ -83,11 +83,11 @@ public class Trip {
     float theta = lon1 - lon2;
 
     double dist =
-      Math.sin(Math.toRadians(lat1)) *
-      Math.sin(Math.toRadians(lat2)) +
-      Math.cos(Math.toRadians(lat1)) *
-      Math.cos(Math.toRadians(lat2)) *
-      Math.cos(Math.toRadians(theta));
+        Math.sin(Math.toRadians(lat1)) *
+            Math.sin(Math.toRadians(lat2)) +
+            Math.cos(Math.toRadians(lat1)) *
+                Math.cos(Math.toRadians(lat2)) *
+                Math.cos(Math.toRadians(theta));
     dist = Math.acos(dist);
     dist = Math.toDegrees(dist);
     dist = dist * 60 * 1.1515;
@@ -98,19 +98,20 @@ public class Trip {
 
   /**
    * Returns a trip log derived from the fishing trip.
-   * 
+   *
    * @param comments The specified comments
-   * @param area The specified area
+   * @param area     The specified area
    * @return A trip log of the fishing trip
    * @see TripLog
    */
   public TripLog toTripLog(String comments, String area) {
-    return new TripLog(fishCaught, fuelConsumed, tripDistance, comments, area, startDate.toString(), endDate.toString());
-}
+    return new TripLog(fishCaught, fuelConsumed, tripDistance, comments, area, startDate.toString(),
+        endDate.toString());
+  }
 
   /**
    * Getter for start date.
-   * 
+   *
    * @return Start date
    */
   public Instant getStartDate() {
@@ -119,7 +120,7 @@ public class Trip {
 
   /**
    * Getter for end date.
-   * 
+   *
    * @return End date
    */
   public Instant getEndDate() {
@@ -128,7 +129,7 @@ public class Trip {
 
   /**
    * Getter for total trip distance.
-   * 
+   *
    * @return Total trip distance
    */
   public float getTripDistance() {
@@ -137,7 +138,7 @@ public class Trip {
 
   /**
    * Getter for total fuel consumed.
-   * 
+   *
    * @return Total fuel consumed
    */
   public float getFuelConsumed() {
@@ -146,7 +147,7 @@ public class Trip {
 
   /**
    * Getter for total fish caught.
-   * 
+   *
    * @return Total fish caught
    */
   public float getFishCaught() {
@@ -155,7 +156,7 @@ public class Trip {
 
   /**
    * Getter for list of ship data
-   * 
+   *
    * @return List of ship data
    */
   public List<ShipDto> getShipData() {
@@ -164,7 +165,7 @@ public class Trip {
 
   /**
    * Adds the specified ship data to the list of ship data.
-   * 
+   *
    * @param ship The specified ship data
    */
   public void addShipData(ShipDto ship) {
