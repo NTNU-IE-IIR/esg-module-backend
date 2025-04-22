@@ -36,8 +36,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/trip")
 @Tag(name = "Trip Controller", description = "API for managing fishing trip logs")
 public class TripController {
-  private Logger logger = LoggerFactory.getLogger(TripController.class);
-  private TripService tripService;
+  private final Logger logger = LoggerFactory.getLogger(TripController.class);
+  private final TripService tripService;
   private final TripLogRepository tripLogRepository;
 
   @Autowired
