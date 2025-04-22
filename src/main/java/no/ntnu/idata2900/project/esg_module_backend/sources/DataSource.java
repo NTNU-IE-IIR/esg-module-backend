@@ -11,9 +11,9 @@ package no.ntnu.idata2900.project.esg_module_backend.sources;
  * @version v0.0.1 (2025.04.22)
  */
 public interface DataSource {
-    void start();
+  void start();
 
-    void stop();
+  void stop();
 
-    void setDataListener(DataListener listener);
+  void setDataListener(DataListener listener);
 }

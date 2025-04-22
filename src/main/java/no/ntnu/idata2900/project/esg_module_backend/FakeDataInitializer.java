@@ -3,19 +3,19 @@ package no.ntnu.idata2900.project.esg_module_backend;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
 import no.ntnu.idata2900.project.esg_module_backend.models.DataPoint;
 import no.ntnu.idata2900.project.esg_module_backend.models.Position;
 import no.ntnu.idata2900.project.esg_module_backend.models.Ship;
 import no.ntnu.idata2900.project.esg_module_backend.models.Weather;
 
 // TODO Refactor class to use trips
+
 /**
  * The FakeDataInitializer class represents a data initializer for simulated data. The simulated
  * data is randomly generated, but in an attempt to ensure that the relationships within the data
  * is somewhat realistic, the randomness may be slightly manipulated. See method documentation for
  * further information.
- * 
+ *
  * @author Group 14
  * @version v0.0.1 (2025.04.10)
  */
@@ -86,7 +86,7 @@ public class FakeDataInitializer {
 
   /**
    * Returns a list of fake data points containing random data.
-   * 
+   *
    * @return A list of fake data points
    */
   public List<DataPoint> init() {
@@ -112,7 +112,7 @@ public class FakeDataInitializer {
    * Returns a position with a random latitude and longitude. The values are based off of the
    * previously set latitude and longitude. If either of the values exceed their respective
    * boundaries, they are reset and produced over until they become valid.
-   * 
+   *
    * @return A position with a random latitude and longitude
    * @see Position
    */
@@ -150,7 +150,7 @@ public class FakeDataInitializer {
    * Returns weather data containing randomly generated parameters. The values are based off of the
    * previously set parameters. If any of the values exceed their respective boundaries, they are
    * either corrected or reset until become valid.
-   * 
+   *
    * @param id The specified ID
    * @return Randomly generated weather data
    * @see Weather
@@ -364,24 +364,24 @@ public class FakeDataInitializer {
     }
 
     return new Weather(
-      id,
-      windU,
-      windV,
-      gust,
-      wavesHeight,
-      wavesDirection,
-      wavesPeriod,
-      wwavesHeight,
-      wwavesDirection,
-      wwavesPeriod,
-      swell1Height,
-      swell2Direction,
-      swell1Period,
-      swell2Height,
-      swell2Direction,
-      swell2Period,
-      oceanCurrentVelocity,
-      oceanCurrentDirection
+        id,
+        windU,
+        windV,
+        gust,
+        wavesHeight,
+        wavesDirection,
+        wavesPeriod,
+        wwavesHeight,
+        wwavesDirection,
+        wwavesPeriod,
+        swell1Height,
+        swell2Direction,
+        swell1Period,
+        swell2Height,
+        swell2Direction,
+        swell2Period,
+        oceanCurrentVelocity,
+        oceanCurrentDirection
     );
   }
 
@@ -389,7 +389,7 @@ public class FakeDataInitializer {
    * Returns ship data containing randomly generated parameters. The values are based off of the
    * previously set parameters. If any of the values exceed their respective boundaries, they are
    * either corrected or reset until become valid.
-   * 
+   *
    * @param id The specified ID
    * @return Randomly generated ship data
    * @see Ship
@@ -434,38 +434,38 @@ public class FakeDataInitializer {
       fishAmount += RAN.nextFloat(50);
     }
 
-    return new Ship (
-      id,
-      "Ship " + id,
-      heading,
-      course,
-      speed,
-      calculateFuelLevel(),
-      fishAmount,
-      calculateTotalDistance()
+    return new Ship(
+        id,
+        "Ship " + id,
+        heading,
+        course,
+        speed,
+        calculateFuelLevel(),
+        fishAmount,
+        calculateTotalDistance()
     );
   }
 
   /**
    * Returns the calculated fuel level based on the direction of various parameters included in the
    * {@link Weather weather data}.
-   * 
+   *
    * <p><b>How it works:</b></p>
-   * 
+   *
    * <p>First, an interval angle is defined to define the area of which parameters can attack a
    * ship from the front and the rear. Second, this interval is used to define the upper and lower
    * bounds for positive and negative resistance.</p>
-   * 
+   *
    * <p>Positive resistance represents the front attack area, and all parameters who falls within
    * this area applies a resistance on the ship. Negative resistance on the other hand represents
    * the rear attack area, and all parameters who boosts the ship forward, and thus applies a
    * negative resistance, goes under here.</p>
-   * 
+   *
    * <p>The amount of parameters who go under either of the resistance types makes up a resistance
    * factor. The factor is used to define the interval of which random fuel consumption can be
    * generated (e.g. bigger resistance factor implies greater fuel consumption). This consumption
    * is in the end used to decrease the total fuel level on the ship.</p>
-   * 
+   *
    * @return Calculated fuel level based on directional weather parameters
    */
   private float calculateFuelLevel() {
@@ -512,8 +512,7 @@ public class FakeDataInitializer {
     for (float param : resistParams) {
       if (param <= upperPositive || param >= lowerPositive) {
         resist++;
-      }
-      else if (param <= upperNegative || param >= lowerNegative) {
+      } else if (param <= upperNegative || param >= lowerNegative) {
         resist--;
       }
     }
@@ -572,10 +571,10 @@ public class FakeDataInitializer {
   /**
    * Returns the calculated wind direction based on the two-dimensional vector derived from the
    * wind <code>u</code> and <code>v</code> values.
-   * 
+   *
    * <p>A two-dimensional reference vector is used to calculated the appropriate angle. The
    * reference vector is pointed directly towards North.</p>
-   * 
+   *
    * @return The calculated wind direction
    */
   private float calculateWindDirection() {
@@ -584,8 +583,8 @@ public class FakeDataInitializer {
     float refV = 1.0f;
 
     double cos = (refU * windU + refV * windV) / (
-      Math.sqrt(Math.pow(refU, 2) + Math.pow(refV, 2)) *
-      Math.sqrt(Math.pow(windU, 2) + Math.pow(windV, 2))
+        Math.sqrt(Math.pow(refU, 2) + Math.pow(refV, 2)) *
+            Math.sqrt(Math.pow(windU, 2) + Math.pow(windV, 2))
     );
     double ang = Math.acos(cos);
 
@@ -599,10 +598,10 @@ public class FakeDataInitializer {
   /**
    * Returns the calculated total distance traveled during the trip. This is done by calculating
    * the distance between each data point and adding them together.
-   * 
+   *
    * <p><b>NB!</b> This method is a duplicate from the {@link Trip trip model}. Consider
    * refactoring the fake data initializer to avoid this.</p>
-   * 
+   *
    * @return Calculated total distance traveled
    */
   private float calculateTotalDistance() {
@@ -615,10 +614,10 @@ public class FakeDataInitializer {
 
   /**
    * Returns the calculated geographical distance between two individual data points.
-   * 
+   *
    * <p><b>NB!</b> This method is a duplicate from the {@link Trip trip model}. Consider
    * refactoring the fake data initializer to avoid this.</p>
-   * 
+   *
    * @param dp1 The specified first data point
    * @param dp2 The specified second data point
    * @return Calculated geograpical distance between two points
@@ -632,11 +631,11 @@ public class FakeDataInitializer {
     float theta = lon1 - lon2;
 
     double dist =
-      Math.sin(Math.toRadians(lat1)) *
-      Math.sin(Math.toRadians(lat2)) +
-      Math.cos(Math.toRadians(lat1)) *
-      Math.cos(Math.toRadians(lat2)) *
-      Math.cos(Math.toRadians(theta));
+        Math.sin(Math.toRadians(lat1)) *
+            Math.sin(Math.toRadians(lat2)) +
+            Math.cos(Math.toRadians(lat1)) *
+                Math.cos(Math.toRadians(lat2)) *
+                Math.cos(Math.toRadians(theta));
     dist = Math.acos(dist);
     dist = Math.toDegrees(dist);
     dist = dist * 60 * 1.1515;

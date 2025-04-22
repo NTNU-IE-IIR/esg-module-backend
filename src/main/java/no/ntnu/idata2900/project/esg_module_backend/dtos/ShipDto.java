@@ -3,7 +3,7 @@ package no.ntnu.idata2900.project.esg_module_backend.dtos;
 /**
  * The ShipDto class represents a data transfer object (DTO) for transfering ship data on a
  * suitable format for the frontend.
- * 
+ *
  * @author Group 14
  * @version v0.1.0 (2025.04.08)
  */
@@ -23,24 +23,25 @@ public class ShipDto {
 
   /**
    * Constructor for BoatDataDto class.
-   * 
-   * @param id The specified ID
-   * @param name The specified name
-   * @param heading The specified heading
-   * @param course The specified course
-   * @param speed The specified speed
-   * @param fishAmount The specified fish amount
+   *
+   * @param id            The specified ID
+   * @param name          The specified name
+   * @param heading       The specified heading
+   * @param course        The specified course
+   * @param speed         The specified speed
+   * @param fishAmount    The specified fish amount
    * @param totalDistance The specified total distance
-   * @param lat The specified latitude
-   * @param lng The specified longitude
-   * @param timestamp The specified timestamp
+   * @param lat           The specified latitude
+   * @param lng           The specified longitude
+   * @param timestamp     The specified timestamp
    */
   public ShipDto(
       int id,
       String name,
       float heading,
       float course,
-      float speed, float fuelLevel,
+      float speed,
+      float fuelLevel,
       float fishAmount,
       float totalDistance,
       float lat,
@@ -62,7 +63,7 @@ public class ShipDto {
 
   /**
    * Getter for ID.
-   * 
+   *
    * @return ID
    */
   public int getId() {
@@ -71,7 +72,7 @@ public class ShipDto {
 
   /**
    * Getter for name.
-   * 
+   *
    * @return Name
    */
   public String getName() {
@@ -80,7 +81,7 @@ public class ShipDto {
 
   /**
    * Getter for heading.
-   * 
+   *
    * @return Heading
    */
   public float getHeading() {
@@ -89,7 +90,7 @@ public class ShipDto {
 
   /**
    * Getter for course.
-   * 
+   *
    * @return Course
    */
   public float getCourse() {
@@ -98,7 +99,7 @@ public class ShipDto {
 
   /**
    * Getter for speed.
-   * 
+   *
    * @return Speed
    */
   public float getSpeed() {
@@ -107,7 +108,7 @@ public class ShipDto {
 
   /**
    * Getter for fish amount.
-   * 
+   *
    * @return Fish amount
    */
   public float getFishAmount() {
@@ -116,7 +117,7 @@ public class ShipDto {
 
   /**
    * Getter for fuel level.
-   * 
+   *
    * @return Fuel level
    */
   public float getFuelLevel() {
@@ -125,7 +126,7 @@ public class ShipDto {
 
   /**
    * Getter for total distance.
-   * 
+   *
    * @return Total distance
    */
   public float getTotalDistance() {
@@ -134,7 +135,7 @@ public class ShipDto {
 
   /**
    * Getter for latitude.
-   * 
+   *
    * @return Latitude
    */
   public float getLat() {
@@ -143,7 +144,7 @@ public class ShipDto {
 
   /**
    * Getter for longitude.
-   * 
+   *
    * @return Longitude
    */
   public float getLng() {
@@ -152,7 +153,7 @@ public class ShipDto {
 
   /**
    * Getter for timestamp.
-   * 
+   *
    * @return Timestamp
    */
   public String getTimestamp() {

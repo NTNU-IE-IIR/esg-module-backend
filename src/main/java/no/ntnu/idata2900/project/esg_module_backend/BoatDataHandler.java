@@ -1,7 +1,6 @@
 package no.ntnu.idata2900.project.esg_module_backend;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import no.ntnu.idata2900.project.esg_module_backend.dtos.ShipDto;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
@@ -18,43 +17,43 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
  */
 @Component
 public class BoatDataHandler extends TextWebSocketHandler {
-    private final ObjectMapper objectMapper = new ObjectMapper();
-    private WebSocketSession session;
+  private final ObjectMapper objectMapper = new ObjectMapper();
+  private WebSocketSession session;
 
-    /**
-     * Sends boat data to the connected WebSocket client.
-     * The method converts the boat data to JSON and sends it as a text message.
-     * If no session is established or the session is closed, the message is not sent.
-     *
-     * @param boatData The boat data to be sent to the client
-     */
-    public void sendBoatData(ShipDto boatData) {
-        try {
-            if (session != null && session.isOpen()) {
-                session.sendMessage(new TextMessage(objectMapper.writeValueAsString(boatData)));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+  /**
+   * Sends boat data to the connected WebSocket client.
+   * The method converts the boat data to JSON and sends it as a text message.
+   * If no session is established or the session is closed, the message is not sent.
+   *
+   * @param boatData The boat data to be sent to the client
+   */
+  public void sendBoatData(ShipDto boatData) {
+    try {
+      if (session != null && session.isOpen()) {
+        session.sendMessage(new TextMessage(objectMapper.writeValueAsString(boatData)));
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
     }
+  }
 
-    /**
-     * Called after a new WebSocket connection has been established.
-     * This method stores the session for later use when sending boat data.
-     *
-     * @param session The WebSocket session that has been established
-     */
-    @Override
-    public void afterConnectionEstablished(WebSocketSession session) {
-        this.session = session;
-    }
+  /**
+   * Called after a new WebSocket connection has been established.
+   * This method stores the session for later use when sending boat data.
+   *
+   * @param session The WebSocket session that has been established
+   */
+  @Override
+  public void afterConnectionEstablished(WebSocketSession session) {
+    this.session = session;
+  }
 
-    /**
-     * Checks if there is an active WebSocket connection.
-     *
-     * @return true if a WebSocket session exists and is open, false otherwise
-     */
-    public boolean isConnected() {
-        return session != null && session.isOpen();
-    }
+  /**
+   * Checks if there is an active WebSocket connection.
+   *
+   * @return true if a WebSocket session exists and is open, false otherwise
+   */
+  public boolean isConnected() {
+    return session != null && session.isOpen();
+  }
 }
