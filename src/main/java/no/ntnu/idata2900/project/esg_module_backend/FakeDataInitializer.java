@@ -355,9 +355,6 @@ public class FakeDataInitializer {
       }
     }
 
-    // Reset guard condition
-    valid = false;
-
     // Random ocean current direction
     oceanCurrentDirection += RAN.nextFloat(0.005f) - 0.0025f;
     if (oceanCurrentDirection > 360.0f) {
