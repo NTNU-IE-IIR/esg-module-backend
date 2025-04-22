@@ -13,5 +13,12 @@ import no.ntnu.idata2900.project.esg_module_backend.dtos.ShipDto;
  * @version v0.0.1 (2025.04.22)
  */
 public interface DataListener {
+  /**
+   * Handles the event when data is received. This method is invoked with a
+   * ShipDto object containing information about a specific ship.
+   * Implementations of this method define how the received data is processed.
+   *
+   * @param ship a ShipDto object representing the received ship data
+   */
   void onDataReceived(ShipDto ship);
 }
