@@ -1,13 +1,20 @@
 package no.ntnu.idata2900.project.esg_module_backend.models;
 
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
 /**
  * The DataPoint class represents a single data point containing {@link Ship ship} and
  * {@link Weather weather} data, as well as {@link Position position} data.
  *
  * @author Group 14
- * @version v0.2.0 (2025.04.08)
+ * @version v0.2.1 (2025.04.24)
  */
 public class DataPoint {
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
   private Position pos;
   private long ts;
   private Ship ship;
@@ -24,6 +31,15 @@ public class DataPoint {
     this.ts = ts;
     this.ship = null;
     this.weather = null;
+  }
+
+  /**
+   * Getter for ID.
+   * 
+   * @return ID
+   */
+  public Long getId() {
+    return this.id;
   }
 
   /**

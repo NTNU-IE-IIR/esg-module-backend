@@ -21,8 +21,8 @@ import no.ntnu.idata2900.project.esg_module_backend.models.Weather;
  */
 public class FakeDataInitializer {
   private final List<DataPoint> data;
-  // Number of data points to initialize
-  private static final int NUM = 540;
+  private final int num;
+
   private static final Random RAN = new Random();
 
   // Initial values
@@ -53,8 +53,9 @@ public class FakeDataInitializer {
   private float fuelLevel;
   private float fishAmount;
 
-  public FakeDataInitializer() {
+  public FakeDataInitializer(int num) {
     this.data = new ArrayList<>();
+    this.num = num;
 
     this.lat = 61.60314f;
     this.lng = 5.044566f;
@@ -93,11 +94,11 @@ public class FakeDataInitializer {
     // UNIX timestamp in seconds
     int ts = 1739438130;
 
-    for (int i = 1; i <= NUM; i++) {
+    for (int i = 1; i <= num; i++) {
       DataPoint dp = new DataPoint(initPositionData(), ts);
 
-      dp.setWeather(initWeatherData(i));
-      dp.setShip(initShipData(i));
+      dp.setWeather(initWeatherData());
+      dp.setShip(initShipData());
 
       data.add(dp);
 
@@ -155,7 +156,7 @@ public class FakeDataInitializer {
    * @return Randomly generated weather data
    * @see Weather
    */
-  private Weather initWeatherData(int id) {
+  private Weather initWeatherData() {
     boolean valid = false;
 
     // Random wind U vector
@@ -364,7 +365,6 @@ public class FakeDataInitializer {
     }
 
     return new Weather(
-        id,
         windU,
         windV,
         gust,
@@ -394,7 +394,7 @@ public class FakeDataInitializer {
    * @return Randomly generated ship data
    * @see Ship
    */
-  private Ship initShipData(int id) {
+  private Ship initShipData() {
     boolean valid = false;
 
     // Random heading
@@ -435,8 +435,7 @@ public class FakeDataInitializer {
     }
 
     return new Ship(
-        id,
-        "Ship " + id,
+        "Ship",
         heading,
         course,
         speed,

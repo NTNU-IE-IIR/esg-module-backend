@@ -97,10 +97,10 @@ public class FakeDataSource implements DataSource {
   private ShipDto createInitialShipData() {
     DataPoint dp = new DataPoint(new Position(61.6031484f, 5.0445668f), ts);
 
-    dp.setShip(new Ship(1, "Ship1", 90.0f, 85.0f, 12.5f, 500.0f, 100.0f));
+    dp.setShip(new Ship("Ship1", 90.0f, 85.0f, 12.5f, 500.0f, 100.0f));
 
     return new ShipDto(
-        dp.getShip().getId(),
+        1,
         dp.getShip().getName(),
         dp.getShip().getHeading(),
         dp.getShip().getCourse(),
@@ -140,11 +140,11 @@ public class FakeDataSource implements DataSource {
     DataPoint dp = new DataPoint(new Position(lat, lng), ts);
 
     dp.setShip(
-        new Ship(1, "Ship1", 90.0f, 85.0f, 12.5f, fuelLevel, fishAmount)
+        new Ship("Ship1", 90.0f, 85.0f, 12.5f, fuelLevel, fishAmount)
     );
 
     return new ShipDto(
-        dp.getShip().getId(),
+        1,
         dp.getShip().getName(),
         dp.getShip().getHeading(),
         dp.getShip().getCourse(),

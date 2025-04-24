@@ -12,14 +12,13 @@ import jakarta.persistence.Id;
  * This is a persistence entity mapped to a database table.
  *
  * @author Group 14
- * @version v0.1.0 (2025.04.22)
+ * @version v0.1.1 (2025.04.24)
  */
 @Entity
 public class TripLog {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int id;
-
+  private Long id;
   private double fish;
   private double fuel;
   private double nm;
@@ -97,7 +96,7 @@ public class TripLog {
    *
    * @return the unique identifier of the TripLog as an integer.
    */
-  public int getId() {
+  public Long getId() {
     return id;
   }
 
@@ -106,7 +105,7 @@ public class TripLog {
    *
    * @param id the unique identifier of the TripLog as an integer.
    */
-  public void setId(int id) {
+  public void setId(Long id) {
     this.id = id;
   }
 

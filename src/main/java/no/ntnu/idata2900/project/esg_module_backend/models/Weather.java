@@ -1,7 +1,11 @@
 package no.ntnu.idata2900.project.esg_module_backend.models;
 
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
 /**
- * The WeatherData class represents various weather data collected from different weather APIs. The
+ * The Weather class represents various weather data collected from different weather APIs. The
  * class is part of the data packaged into a {@link DataPoint data point}.
  *
  * <p>
@@ -90,11 +94,12 @@ package no.ntnu.idata2900.project.esg_module_backend.models;
  * </p>
  *
  * @author Group 14
- * @version v0.2.0 (2025.04.08)
+ * @version v0.2.1 (2025.04.24)
  */
 public class Weather {
-  // TODO Change to automatically generated ID
-  private int id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
   // GFS
   private float windU;
@@ -123,9 +128,8 @@ public class Weather {
   private float oceanCurrentDirection;
 
   /**
-   * Constructor for WeatherData class.
+   * Constructor for Weather class.
    *
-   * @param id                    The specified ID
    * @param windU                 The specified wind <code>u</code> vector
    * @param windV                 The specified wind <code>v</code> vector
    * @param gust                  The specified wind gusts speed
@@ -145,7 +149,6 @@ public class Weather {
    * @param oceanCurrentDirection The specified ocean current direction
    */
   public Weather(
-      int id,
       float windU,
       float windV,
       float gust,
@@ -164,7 +167,6 @@ public class Weather {
       float oceanCurrentVelocity,
       float oceanCurrentDirection
   ) {
-    this.id = id;
     this.windU = windU;
     this.windV = windV;
     this.gust = gust;
@@ -189,7 +191,7 @@ public class Weather {
    *
    * @return ID
    */
-  public int getId() {
+  public Long getId() {
     return this.id;
   }
 

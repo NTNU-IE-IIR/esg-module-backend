@@ -1,13 +1,20 @@
 package no.ntnu.idata2900.project.esg_module_backend.models;
 
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
 /**
  * The Position class represents a position in the form of a coordinate, containing a latitude and
  * longitude.
  *
  * @author Group 14
- * @version v0.0.1 (2025.04.08)
+ * @version v0.1.2 (2025.04.24)
  */
 public class Position {
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
   private float lat;
   private float lng;
 
@@ -20,6 +27,15 @@ public class Position {
   public Position(float lat, float lng) {
     this.lat = lat;
     this.lng = lng;
+  }
+
+  /**
+   * Getter for ID.
+   * 
+   * @return ID
+   */
+  public Long getId() {
+    return this.id;
   }
 
   /**

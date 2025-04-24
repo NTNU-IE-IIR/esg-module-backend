@@ -9,12 +9,12 @@ import jakarta.persistence.Id;
  * of the data packaged into a {@link DataPoint data point}.
  *
  * @author Group 14
- * @version v0.2.1 (2025.04.24)
+ * @version v0.2.2 (2025.04.24)
  */
 public class Ship {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int id;
+  private Long id;
   private String name;
   private float heading;
   private float course;
@@ -25,7 +25,6 @@ public class Ship {
   /**
    * Constructor for the Ship class.
    *
-   * @param id          The specified ID
    * @param name        The specified ship name
    * @param heading     The specified heading
    * @param course      The specified course
@@ -34,7 +33,6 @@ public class Ship {
    * @param fishAmount  The specified amount
    */
   public Ship(
-      int id,
       String name,
       float heading,
       float course,
@@ -42,7 +40,6 @@ public class Ship {
       float fuelLevel,
       float fishAmount
   ) {
-    this.id = id;
     this.name = name;
     this.heading = heading;
     this.course = course;
@@ -53,11 +50,11 @@ public class Ship {
 
   /**
    * Getter for ID.
-   *
+   * 
    * @return ID
    */
-  public int getId() {
-    return id;
+  public Long getId() {
+    return this.id;
   }
 
   /**
