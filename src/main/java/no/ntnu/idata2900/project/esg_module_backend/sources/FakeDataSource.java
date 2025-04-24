@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
  * This class is primarily designed for testing or simulation purposes where no actual data source exists.
  *
  * @author Group 14
- * @version v0.1.0 (2025.04.22)
+ * @version v0.1.1 (2025.04.24)
  */
 @Component
 public class FakeDataSource implements DataSource {
@@ -97,7 +97,7 @@ public class FakeDataSource implements DataSource {
   private ShipDto createInitialShipData() {
     DataPoint dp = new DataPoint(new Position(61.6031484f, 5.0445668f), ts);
 
-    dp.setShip(new Ship(1, "Ship1", 90.0f, 85.0f, 12.5f, 500.0f, 100.0f, 0.0f));
+    dp.setShip(new Ship(1, "Ship1", 90.0f, 85.0f, 12.5f, 500.0f, 100.0f));
 
     return new ShipDto(
         dp.getShip().getId(),
@@ -105,11 +105,11 @@ public class FakeDataSource implements DataSource {
         dp.getShip().getHeading(),
         dp.getShip().getCourse(),
         dp.getShip().getSpeed(),
+        dp.getShip().getFuelLevel(),
         dp.getShip().getFishAmount(),
-        dp.getShip().getTotalDistance(),
+        0.0f,
         dp.getPos().getLat(),
         dp.getPos().getLng(),
-        dp.getShip().getFuelLevel(),
         // UNIX timestamp in seconds
         ZonedDateTime
             .of(
@@ -140,7 +140,7 @@ public class FakeDataSource implements DataSource {
     DataPoint dp = new DataPoint(new Position(lat, lng), ts);
 
     dp.setShip(
-        new Ship(1, "Ship1", 90.0f, 85.0f, 12.5f, fuelLevel, fishAmount, totalDistance)
+        new Ship(1, "Ship1", 90.0f, 85.0f, 12.5f, fuelLevel, fishAmount)
     );
 
     return new ShipDto(
@@ -149,11 +149,11 @@ public class FakeDataSource implements DataSource {
         dp.getShip().getHeading(),
         dp.getShip().getCourse(),
         dp.getShip().getSpeed(),
+        dp.getShip().getFuelLevel(),
         dp.getShip().getFishAmount(),
-        dp.getShip().getTotalDistance(),
+        totalDistance,
         dp.getPos().getLat(),
         dp.getPos().getLng(),
-        dp.getShip().getFuelLevel(),
         // UNIX timestamp in seconds
         ZonedDateTime
             .of(

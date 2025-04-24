@@ -17,7 +17,7 @@ import no.ntnu.idata2900.project.esg_module_backend.models.Weather;
  * further information.
  *
  * @author Group 14
- * @version v0.0.1 (2025.04.10)
+ * @version v0.1.2 (2025.04.24)
  */
 public class FakeDataInitializer {
   private final List<DataPoint> data;
@@ -441,8 +441,7 @@ public class FakeDataInitializer {
         course,
         speed,
         calculateFuelLevel(),
-        fishAmount,
-        calculateTotalDistance()
+        fishAmount
     );
   }
 
@@ -593,54 +592,5 @@ public class FakeDataInitializer {
     }
 
     return (float) ang;
-  }
-
-  /**
-   * Returns the calculated total distance traveled during the trip. This is done by calculating
-   * the distance between each data point and adding them together.
-   *
-   * <p><b>NB!</b> This method is a duplicate from the {@link Trip trip model}. Consider
-   * refactoring the fake data initializer to avoid this.</p>
-   *
-   * @return Calculated total distance traveled
-   */
-  private float calculateTotalDistance() {
-    float distance = 0;
-    for (int i = 0; i < data.size() - 1; i++) {
-      distance += calculateDistance(data.get(i), data.get(i + 1));
-    }
-    return distance;
-  }
-
-  /**
-   * Returns the calculated geographical distance between two individual data points.
-   *
-   * <p><b>NB!</b> This method is a duplicate from the {@link Trip trip model}. Consider
-   * refactoring the fake data initializer to avoid this.</p>
-   *
-   * @param dp1 The specified first data point
-   * @param dp2 The specified second data point
-   * @return Calculated geograpical distance between two points
-   */
-  private float calculateDistance(DataPoint dp1, DataPoint dp2) {
-    float lat1 = dp1.getPos().getLat();
-    float lon1 = dp1.getPos().getLng();
-    float lat2 = dp2.getPos().getLat();
-    float lon2 = dp2.getPos().getLng();
-
-    float theta = lon1 - lon2;
-
-    double dist =
-        Math.sin(Math.toRadians(lat1)) *
-            Math.sin(Math.toRadians(lat2)) +
-            Math.cos(Math.toRadians(lat1)) *
-                Math.cos(Math.toRadians(lat2)) *
-                Math.cos(Math.toRadians(theta));
-    dist = Math.acos(dist);
-    dist = Math.toDegrees(dist);
-    dist = dist * 60 * 1.1515;
-    dist = dist * 0.8684;
-
-    return (float) dist;
   }
 }
