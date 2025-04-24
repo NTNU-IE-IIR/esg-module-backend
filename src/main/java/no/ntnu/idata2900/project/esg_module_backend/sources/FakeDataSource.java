@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
  * This class is primarily designed for testing or simulation purposes where no actual data source exists.
  *
  * @author Group 14
- * @version v0.1.1 (2025.04.24)
+ * @version v0.1.2 (2025.04.24)
  */
 @Component
 public class FakeDataSource implements DataSource {
@@ -95,7 +95,7 @@ public class FakeDataSource implements DataSource {
    * @return A {@link ShipDto} object representing the initial ship data.
    */
   private ShipDto createInitialShipData() {
-    DataPoint dp = new DataPoint(new Position(61.6031484f, 5.0445668f), ts);
+    DataPoint dp = new DataPoint(ts, new Position(61.6031484f, 5.0445668f));
 
     dp.setShip(new Ship("Ship1", 90.0f, 85.0f, 12.5f, 500.0f, 100.0f));
 
@@ -137,7 +137,7 @@ public class FakeDataSource implements DataSource {
     float fuelLevel = fakeBoatData.getFuelLevel() - (random.nextFloat() * 4);
     float totalDistance = fakeBoatData.getTotalDistance() + (random.nextFloat() * 10);
 
-    DataPoint dp = new DataPoint(new Position(lat, lng), ts);
+    DataPoint dp = new DataPoint(ts, new Position(lat, lng));
 
     dp.setShip(
         new Ship("Ship1", 90.0f, 85.0f, 12.5f, fuelLevel, fishAmount)

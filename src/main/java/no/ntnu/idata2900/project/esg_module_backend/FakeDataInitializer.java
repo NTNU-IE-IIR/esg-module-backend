@@ -4,9 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import no.ntnu.idata2900.project.esg_module_backend.models.DataPoint;
+import no.ntnu.idata2900.project.esg_module_backend.models.MarineWeather;
 import no.ntnu.idata2900.project.esg_module_backend.models.Position;
 import no.ntnu.idata2900.project.esg_module_backend.models.Ship;
+import no.ntnu.idata2900.project.esg_module_backend.models.SwellWaves;
+import no.ntnu.idata2900.project.esg_module_backend.models.Waves;
 import no.ntnu.idata2900.project.esg_module_backend.models.Weather;
+import no.ntnu.idata2900.project.esg_module_backend.models.WindWaves;
 
 // TODO Refactor class to use trips
 
@@ -95,9 +99,10 @@ public class FakeDataInitializer {
     int ts = 1739438130;
 
     for (int i = 1; i <= num; i++) {
-      DataPoint dp = new DataPoint(initPositionData(), ts);
+      DataPoint dp = new DataPoint(ts, initPositionData());
 
       dp.setWeather(initWeatherData());
+      dp.setMarineWeather(initMarineWeatherData());
       dp.setShip(initShipData());
 
       data.add(dp);
@@ -198,8 +203,11 @@ public class FakeDataInitializer {
       }
     }
 
-    // Reset guard condition
-    valid = false;
+    return new Weather(windU, windV, gust);
+  }
+
+  private MarineWeather initMarineWeatherData() {
+    boolean valid = false;
 
     // Random waves height
     float tmpWavesHeight = wavesHeight;
@@ -233,6 +241,8 @@ public class FakeDataInitializer {
         valid = true;
       }
     }
+
+    Waves waves = new Waves(wavesHeight, wavesHeight, wavesPeriod);
 
     // Reset guard condition
     valid = false;
@@ -269,6 +279,8 @@ public class FakeDataInitializer {
         valid = true;
       }
     }
+
+    WindWaves wwaves = new WindWaves(wwavesHeight, wwavesHeight, wwavesPeriod);
 
     // Reset guard condition
     valid = false;
@@ -342,6 +354,15 @@ public class FakeDataInitializer {
       }
     }
 
+    SwellWaves swellWaves = new SwellWaves(
+      swell1Height,
+      swell1Height,
+      swell1Period,
+      swell2Height,
+      swell2Height,
+      swell2Period
+    );
+
     // Reset guard condition
     valid = false;
 
@@ -364,24 +385,12 @@ public class FakeDataInitializer {
       oceanCurrentDirection += 360.0f;
     }
 
-    return new Weather(
-        windU,
-        windV,
-        gust,
-        wavesHeight,
-        wavesDirection,
-        wavesPeriod,
-        wwavesHeight,
-        wwavesDirection,
-        wwavesPeriod,
-        swell1Height,
-        swell2Direction,
-        swell1Period,
-        swell2Height,
-        swell2Direction,
-        swell2Period,
-        oceanCurrentVelocity,
-        oceanCurrentDirection
+    return new MarineWeather(
+      waves,
+      wwaves,
+      swellWaves,
+      oceanCurrentVelocity,
+      oceanCurrentDirection
     );
   }
 
