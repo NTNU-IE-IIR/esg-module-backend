@@ -9,28 +9,30 @@ import jakarta.persistence.Id;
  * {@link Weather weather} data, as well as {@link Position position} data.
  *
  * @author Group 14
- * @version v0.2.1 (2025.04.24)
+ * @version v0.2.2 (2025.04.24)
  */
 public class DataPoint {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-  private Position pos;
   private long ts;
+  private Position pos;
   private Ship ship;
   private Weather weather;
+  private MarineWeather marineWeather;
 
   /**
    * Constructor for the DataPoint class.
    *
-   * @param pos The specified position data
    * @param ts  The specified timestamp
+   * @param pos The specified position data
    */
-  public DataPoint(Position pos, long ts) {
+  public DataPoint(long ts, Position pos) {
     this.pos = pos;
     this.ts = ts;
     this.ship = null;
     this.weather = null;
+    this.marineWeather = null;
   }
 
   /**
@@ -43,21 +45,21 @@ public class DataPoint {
   }
 
   /**
-   * Getter for position data.
-   *
-   * @return Position data
-   */
-  public Position getPos() {
-    return this.pos;
-  }
-
-  /**
    * Getter for timestamp.
    *
    * @return Timestamp
    */
   public long getTs() {
     return this.ts;
+  }
+
+  /**
+   * Getter for position data.
+   *
+   * @return Position data
+   */
+  public Position getPos() {
+    return this.pos;
   }
 
   /**
@@ -94,5 +96,23 @@ public class DataPoint {
    */
   public void setWeather(Weather weather) {
     this.weather = weather;
+  }
+
+  /**
+   * Getter for marine weather data.
+   * 
+   * @return Marine weather data
+   */
+  public MarineWeather getMarineWeather() {
+    return this.marineWeather;
+  }
+
+  /**
+   * Setter for marine weather.
+   * 
+   * @param marineWeather The specified marine weather data
+   */
+  public void setMarineWeather(MarineWeather marineWeather) {
+    this.marineWeather = marineWeather;
   }
 }
