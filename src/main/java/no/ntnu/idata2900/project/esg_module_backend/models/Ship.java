@@ -9,59 +9,52 @@ import jakarta.persistence.Id;
  * of the data packaged into a {@link DataPoint data point}.
  *
  * @author Group 14
- * @version v0.2.0 (2025.04.08)
+ * @version v0.2.2 (2025.04.24)
  */
 public class Ship {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int id;
+  private Long id;
   private String name;
   private float heading;
   private float course;
   private float speed;
   private float fuelLevel;
   private float fishAmount;
-  private float totalDistance;
 
   /**
    * Constructor for the Ship class.
    *
-   * @param id            The specified ID
-   * @param name          The specified ship name
-   * @param heading       The specified heading
-   * @param course        The specified course
-   * @param speed         The specified speed
-   * @param fuelLevel     The specified fuel level
-   * @param fishAmount    The specified amount
-   * @param totalDistance The specified total distance
+   * @param name        The specified ship name
+   * @param heading     The specified heading
+   * @param course      The specified course
+   * @param speed       The specified speed
+   * @param fuelLevel   The specified fuel level
+   * @param fishAmount  The specified amount
    */
   public Ship(
-      int id,
       String name,
       float heading,
       float course,
       float speed,
       float fuelLevel,
-      float fishAmount,
-      float totalDistance
+      float fishAmount
   ) {
-    this.id = id;
     this.name = name;
     this.heading = heading;
     this.course = course;
     this.speed = speed;
     this.fuelLevel = fuelLevel;
     this.fishAmount = fishAmount;
-    this.totalDistance = totalDistance;
   }
 
   /**
    * Getter for ID.
-   *
+   * 
    * @return ID
    */
-  public int getId() {
-    return id;
+  public Long getId() {
+    return this.id;
   }
 
   /**
@@ -116,14 +109,5 @@ public class Ship {
    */
   public float getFishAmount() {
     return fishAmount;
-  }
-
-  /**
-   * Getter for total distance traveled.
-   *
-   * @return Total distance traveled
-   */
-  public float getTotalDistance() {
-    return totalDistance;
   }
 }

@@ -1,38 +1,47 @@
 package no.ntnu.idata2900.project.esg_module_backend.models;
 
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
 /**
  * The DataPoint class represents a single data point containing {@link Ship ship} and
  * {@link Weather weather} data, as well as {@link Position position} data.
  *
  * @author Group 14
- * @version v0.2.0 (2025.04.08)
+ * @version v0.2.2 (2025.04.24)
  */
 public class DataPoint {
-  private Position pos;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
   private long ts;
+  private Position pos;
   private Ship ship;
   private Weather weather;
+  private MarineWeather marineWeather;
 
   /**
    * Constructor for the DataPoint class.
    *
-   * @param pos The specified position data
    * @param ts  The specified timestamp
+   * @param pos The specified position data
    */
-  public DataPoint(Position pos, long ts) {
+  public DataPoint(long ts, Position pos) {
     this.pos = pos;
     this.ts = ts;
     this.ship = null;
     this.weather = null;
+    this.marineWeather = null;
   }
 
   /**
-   * Getter for position data.
-   *
-   * @return Position data
+   * Getter for ID.
+   * 
+   * @return ID
    */
-  public Position getPos() {
-    return this.pos;
+  public Long getId() {
+    return this.id;
   }
 
   /**
@@ -42,6 +51,15 @@ public class DataPoint {
    */
   public long getTs() {
     return this.ts;
+  }
+
+  /**
+   * Getter for position data.
+   *
+   * @return Position data
+   */
+  public Position getPos() {
+    return this.pos;
   }
 
   /**
@@ -78,5 +96,23 @@ public class DataPoint {
    */
   public void setWeather(Weather weather) {
     this.weather = weather;
+  }
+
+  /**
+   * Getter for marine weather data.
+   * 
+   * @return Marine weather data
+   */
+  public MarineWeather getMarineWeather() {
+    return this.marineWeather;
+  }
+
+  /**
+   * Setter for marine weather.
+   * 
+   * @param marineWeather The specified marine weather data
+   */
+  public void setMarineWeather(MarineWeather marineWeather) {
+    this.marineWeather = marineWeather;
   }
 }

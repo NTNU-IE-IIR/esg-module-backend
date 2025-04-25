@@ -3,6 +3,10 @@ package no.ntnu.idata2900.project.esg_module_backend.models;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import no.ntnu.idata2900.project.esg_module_backend.dtos.ShipDto;
 
 // TODO Refactor class to contain a list of data points instead of ship DTOs
@@ -12,9 +16,12 @@ import no.ntnu.idata2900.project.esg_module_backend.dtos.ShipDto;
  * {@link ShipDto ship data}.
  *
  * @author Group 14
- * @version v0.1.0 (2025.04.08)
+ * @version v0.1.1 (2025.04.24)
  */
 public class Trip {
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
   private Instant startDate;
   private Instant endDate;
   private float tripDistance;
@@ -107,6 +114,15 @@ public class Trip {
   public TripLog toTripLog(String comments, String area) {
     return new TripLog(fishCaught, fuelConsumed, tripDistance, comments, area, startDate.toString(),
         endDate.toString());
+  }
+
+  /**
+   * Getter for ID.
+   * 
+   * @return ID
+   */
+  public Long getId() {
+    return this.id;
   }
 
   /**
