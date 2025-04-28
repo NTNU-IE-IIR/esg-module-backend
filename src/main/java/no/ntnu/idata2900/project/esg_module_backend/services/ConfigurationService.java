@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import no.ntnu.idata2900.project.esg_module_backend.dtos.ConfigurationDto;
 import no.ntnu.idata2900.project.esg_module_backend.models.Configuration;
 import no.ntnu.idata2900.project.esg_module_backend.repositories.ConfigurationRepository;
 
@@ -42,39 +43,37 @@ public class ConfigurationService {
    * Adds the specified configuration if it is valid.
    * 
    * @param configuration The specified configuraiton
-   * @return True if the configuration is valid or false otherwise
    * @throws IllegalArgumentException If the configuration is invalid
    */
-  public boolean add(Configuration configuration) {
+  public void add(Configuration configuration) {
     boolean valid = configuration.isValid();
     if(!valid) {
       throw new IllegalArgumentException("Configuration is invalid");
     }
     this.configurationRepository.save(configuration);
-    return valid;
   }
 
   /**
    * Updates the configuration with the specified registration mark with the specified
-   * configuration. The configuration is only updated if it exists and the specified configuration
-   * is valid.
+   * configuration data. The configuration is only updated if it exists and the specified
+   * configuration data is valid.
    * 
    * @param registrationMark The specified registration mark
-   * @param configuration The specified configuration
-   * @return True if the configuration exists and the update data is valid or false otherwise
-   * @throws IllegalArgumentException If the update data is invalid
+   * @param configurationDto The specified configuration data
+   * @return True if the configuration exists and the configuration data is valid or false otherwise
+   * @throws IllegalArgumentException If the configuration data is invalid
    */
-  public boolean update(String registrationMark, Configuration configuration) {
-    if (!configuration.isValid()) {
-      throw new IllegalArgumentException("Configuration is invalid");
+  public boolean update(String registrationMark, ConfigurationDto configurationDto) {
+    if (!configurationDto.isValid()) {
+      throw new IllegalArgumentException("Configuration data is invalid");
     }
-    Optional<Configuration> storedConfiguration =
+    Optional<Configuration> configuration =
         this.configurationRepository.findById(registrationMark);
-    boolean exist = storedConfiguration.isPresent();
+    boolean exist = configuration.isPresent();
     if (exist) {
-      Configuration existingConfiguration = storedConfiguration.get();
-      existingConfiguration.setName(configuration.getName());
-      existingConfiguration.setLevel1(configuration.isLevel1());
+      Configuration existingConfiguration = configuration.get();
+      existingConfiguration.setName(configurationDto.getName());
+      existingConfiguration.setLevel1(configurationDto.isLevel1());
     }
     return exist;
   }
