@@ -40,12 +40,30 @@ public class Configuration {
   }
 
   /**
+   * Setter for vessel name.
+   * 
+   * @param name The specified name
+   */
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  /**
    * Checks if the vessel is level 1.
    * 
    * @return True if level 1 or false otherwise
    */
   public boolean isLevel1() {
     return this.level1;
+  }
+
+  /**
+   * Setter for vessel level 1.
+   * 
+   * @param level1 The specified level 1
+   */
+  public void setLevel1(boolean level1) {
+    this.level1 = level1;
   }
 
   /**

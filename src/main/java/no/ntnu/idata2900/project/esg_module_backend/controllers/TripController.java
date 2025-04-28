@@ -9,9 +9,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import java.util.Map;
-import no.ntnu.idata2900.project.esg_module_backend.TripService;
+
 import no.ntnu.idata2900.project.esg_module_backend.dtos.ShipDto;
 import no.ntnu.idata2900.project.esg_module_backend.models.TripLog;
+import no.ntnu.idata2900.project.esg_module_backend.services.TripService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
