@@ -25,12 +25,6 @@ public class BoatDataHandler extends TextWebSocketHandler {
   private Logger logger = LoggerFactory.getLogger(BoatDataHandler.class);
   private final ObjectMapper objectMapper = new ObjectMapper();
   private WebSocketSession session;
-  private final TripManager tripManager;
-
-  @Autowired
-  public BoatDataHandler(TripManager tripManager) {
-    this.tripManager = tripManager;
-  }
 
   /**
    * Sends boat data to the connected WebSocket client.
@@ -59,16 +53,6 @@ public class BoatDataHandler extends TextWebSocketHandler {
   public void afterConnectionEstablished(WebSocketSession session) {
     this.session = session;
     logger.info("WebSocket connection established");
-
-    if (tripManager.tripIsActive()) {
-      Trip currentTrip = tripManager.getCurrentTrip();
-      if (currentTrip != null) {
-        List<ShipDto> shipData = currentTrip.getShipData();
-        for (ShipDto data : shipData) {
-          sendBoatData(data);
-        }
-      }
-    }
   }
 
   /**

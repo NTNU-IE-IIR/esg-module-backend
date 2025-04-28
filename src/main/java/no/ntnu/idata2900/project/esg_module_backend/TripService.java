@@ -27,8 +27,9 @@ public class TripService implements DataListener {
   private final Logger logger = LoggerFactory.getLogger(TripService.class);
   private final DataSource dataSource;
   private final BoatDataHandler boatDataHandler;
-  private final TripManager tripManager;
   private final TripLogRepository tripLogRepository;
+  private Trip currentTrip;
+  private boolean tripActive;
 
   /**
    * Constructs a new TripService with the required dependencies.
@@ -37,31 +38,17 @@ public class TripService implements DataListener {
    * @param boatDataHandler The handler for sending boat data to WebSocket clients
    */
   @Autowired
-  TripService(TripLogRepository tripLogRepository, DataSource dataSource, BoatDataHandler boatDataHandler, TripManager tripManager) {
+  TripService(TripLogRepository tripLogRepository, DataSource dataSource, BoatDataHandler boatDataHandler) {
     this.tripLogRepository = tripLogRepository;
     this.dataSource = dataSource;
     this.boatDataHandler = boatDataHandler;
-    this.tripManager = tripManager;
-  }
-
-  /**
-   * Starts a new fishing trip. This method creates a new Trip object,
-   * initializes it, sets up the data listener, and starts the data source
-   * to begin collecting ship data.
-   */
-  public void startTrip() {
-    tripManager.startTrip();
-    dataSource.setDataListener(this);
-    dataSource.start();
-    // Start trip
-    System.out.println("Trip started");
   }
 
   public List<TripLog> getAllTripLogs() {
     return tripLogRepository.findAll();
   }
 
-  public boolean editComments(String comments, int id) {
+  public boolean editComments(String comments, Long id) {
     boolean success = false;
     Optional<TripLog> tripLog = tripLogRepository.findById(id);
     if (tripLog.isPresent()) {
@@ -74,7 +61,7 @@ public class TripService implements DataListener {
     return success;
   }
 
-  public boolean deleteTripLog(int id) {
+  public boolean deleteTripLog(Long id) {
     boolean success = false;
     Optional<TripLog> tripLog = tripLogRepository.findById(id);
     if (tripLog.isPresent()) {
@@ -86,12 +73,12 @@ public class TripService implements DataListener {
   }
 
   public boolean isTripActive() {
-    return tripManager.tripIsActive();
+    return tripActive;
   }
 
   public List<ShipDto> getTripDataPoints() {
-    if (tripManager.tripIsActive()) {
-      return tripManager.getCurrentTripData();
+    if (tripActive) {
+      return currentTrip.getShipData();
     } else {
       throw new IllegalStateException("Could not find any data points for current trip");
     }
@@ -115,7 +102,8 @@ public class TripService implements DataListener {
    */
   public void stopTrip() {
     dataSource.stop();
-    tripManager.endTrip();
+    currentTrip.end();
+    tripActive = false;
     // Stop trip
   }
 
@@ -125,9 +113,24 @@ public class TripService implements DataListener {
    * @return The current Trip object, or null if no trip is active
    */
   public Trip getCurrentTrip() {
-    return tripManager.getCurrentTrip();
+    return currentTrip;
   }
 
+  /**
+   * Starts a new fishing trip. This method creates a new Trip object,
+   * initializes it, sets up the data listener, and starts the data source
+   * to begin collecting ship data.
+   */
+  public void startTrip() {
+    currentTrip = new Trip();
+    tripActive = true;
+    currentTrip.start();
+
+    dataSource.setDataListener(this);
+    dataSource.start();
+    // Start trip
+    System.out.println("Trip started");
+  }
 
   /**
    * Handles ship data received from the data source. This method is called
@@ -140,8 +143,8 @@ public class TripService implements DataListener {
   @Override
   public void onDataReceived(ShipDto data) {
     System.out.println("Data received: " + data);
-    if (tripManager.tripIsActive()) {
-      tripManager.getCurrentTrip().addShipData(data);
+    if (tripActive) {
+      currentTrip.addShipData(data);
     }
       if (boatDataHandler.isConnected()) {
           boatDataHandler.sendBoatData(data);

@@ -168,7 +168,7 @@ public class TripController {
   })
   @PutMapping("/edit/{id}")
   public ResponseEntity<String> editComments(
-      @Parameter(description = "ID of the trip log to edit", required = true) @PathVariable int id,
+      @Parameter(description = "ID of the trip log to edit", required = true) @PathVariable Long id,
       @Parameter(description = "Request body containing comments field", required = true)
       @RequestBody Map<String, String> requestBody) {
     String comments = requestBody.get("comments");
@@ -203,7 +203,7 @@ public class TripController {
   @DeleteMapping("/delete/{id}")
   public ResponseEntity<String> deleteTrip(
       @Parameter(description = "ID of the trip log to delete", required = true) @PathVariable
-      int id) {
+      Long id) {
     ResponseEntity<String> response;
     if (tripService.deleteTripLog(id)) {
       response = new ResponseEntity<>("Trip log deleted", HttpStatus.OK);
