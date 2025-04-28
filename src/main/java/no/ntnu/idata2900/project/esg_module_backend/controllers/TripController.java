@@ -10,11 +10,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import java.util.Map;
 import no.ntnu.idata2900.project.esg_module_backend.TripService;
+import no.ntnu.idata2900.project.esg_module_backend.dtos.ShipDto;
 import no.ntnu.idata2900.project.esg_module_backend.models.TripLog;
-import no.ntnu.idata2900.project.esg_module_backend.repositories.TripLogRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -38,12 +39,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class TripController {
   private final Logger logger = LoggerFactory.getLogger(TripController.class);
   private final TripService tripService;
-  private final TripLogRepository tripLogRepository;
 
   @Autowired
-  public TripController(TripLogRepository tripLogRepository, TripService tripService) {
+  public TripController(TripService tripService) {
     this.tripService = tripService;
-    this.tripLogRepository = tripLogRepository;
   }
 
   /**
@@ -59,13 +58,7 @@ public class TripController {
   })
   @GetMapping("/all")
   public List<TripLog> getAllTripLogs() {
-    List<TripLog> tripLogs = tripLogRepository.findAll();
-    logger.info("Found {} trip logs", tripLogs.size());
-    for (TripLog tripLog : tripLogs) {
-      logger.info("Trip log: {}", tripLog);
-      logger.info("Trip log area: {}", tripLog.getArea());
-    }
-    return tripLogRepository.findAll();
+    return tripService.getAllTripLogs();
   }
 
   /**
@@ -99,12 +92,16 @@ public class TripController {
           content = @Content(mediaType = "text/plain", schema = @Schema(type = "string")))
   })
   @PostMapping("/stop")
-  public String stopTrip(@RequestBody Map<String, String> requestBody) {
+  public ResponseEntity<String> stopTrip(@RequestBody Map<String, String> requestBody) {
     String comments = requestBody.get("comments");
     String area = requestBody.get("area");
 
+    ResponseEntity<String> response;
+
+
+    //guard clauses and cleaning data
     if (area == null || area.isEmpty()) {
-      return "Area must be specified";
+      return new ResponseEntity<>("Area must be specified", HttpStatus.BAD_REQUEST);
     }
 
     area = area.strip();
@@ -114,8 +111,45 @@ public class TripController {
     }
 
     tripService.stopTrip();
-    tripLogRepository.save(tripService.getCurrentTrip().toTripLog(comments, area));
-    return "Trip stopped";
+
+    if (tripService.saveTrip(tripService.getCurrentTrip().toTripLog(comments, area))) {
+      response = new ResponseEntity<>("Trip successfully saved", HttpStatus.OK);
+    } else {
+      response = new ResponseEntity<>("Trip could not be saved", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    return response;
+  }
+
+  /**
+   * Endpoint to check if a trip is active. Returns true if a trip is active, false otherwise.
+   *
+   * @return boolean indicating whether a trip is active or not.
+   */
+  @Operation(summary = "Check if a trip is active", description = "Checks if a fishing trip is currently in progress")
+  @ApiResponses(value = {
+
+  })
+  @GetMapping("/active")
+  public ResponseEntity<Boolean> isTripActive() {
+    return new ResponseEntity<>(tripService.isTripActive(), HttpStatus.OK);
+  }
+
+  @Operation(summary = "Get current trip data points", description = "Gets the current trip data points")
+  @ApiResponses(value = {
+
+  })
+  @GetMapping("/data")
+  public ResponseEntity<List<ShipDto>> getCurrentTripDataPoints() {
+    ResponseEntity<List<ShipDto>> response;
+
+    List<ShipDto> dataPoints = tripService.getTripDataPoints();
+    if (dataPoints.isEmpty()) {
+      response = new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    } else {
+      response = new ResponseEntity<>(dataPoints, HttpStatus.OK);
+    }
+    return response;
   }
 
   /**
@@ -133,27 +167,24 @@ public class TripController {
           content = @Content(mediaType = "text/plain", schema = @Schema(type = "string")))
   })
   @PutMapping("/edit/{id}")
-  public String editComments(
-      @Parameter(description = "ID of the trip log to edit", required = true) @PathVariable int id,
+  public ResponseEntity<String> editComments(
+      @Parameter(description = "ID of the trip log to edit", required = true) @PathVariable Long id,
       @Parameter(description = "Request body containing comments field", required = true)
       @RequestBody Map<String, String> requestBody) {
     String comments = requestBody.get("comments");
+    ResponseEntity<String> response;
 
     if (comments != null && !comments.isEmpty()) {
       comments = comments.strip();
     }
 
-    if (tripLogRepository.existsById(id)) {
-      TripLog tripLog = tripLogRepository.findById(id).orElse(null);
-      if (tripLog != null) {
-        tripLog.setComments(comments);
-        tripLogRepository.save(tripLog);
-        logger.info("Updated comments for trip log with ID: {}", id);
-        return "Comments updated for trip log with ID: " + id;
-      }
+    if (tripService.editComments(comments, id)) {
+      response = new ResponseEntity<>("Trip comment was updated", HttpStatus.OK);
+    } else {
+      response = new ResponseEntity<>("Trip log not found", HttpStatus.NOT_FOUND);
     }
-    logger.info("Trip log with ID: {} not found", id);
-    return "Trip log with ID: " + id + " not found";
+
+    return response;
   }
 
   /**
@@ -170,16 +201,17 @@ public class TripController {
           content = @Content(mediaType = "text/plain", schema = @Schema(type = "string")))
   })
   @DeleteMapping("/delete/{id}")
-  public String deleteTrip(
+  public ResponseEntity<String> deleteTrip(
       @Parameter(description = "ID of the trip log to delete", required = true) @PathVariable
-      int id) {
-    if (tripLogRepository.existsById(id)) {
-      tripLogRepository.deleteById(id);
+      Long id) {
+    ResponseEntity<String> response;
+    if (tripService.deleteTripLog(id)) {
+      response = new ResponseEntity<>("Trip log deleted", HttpStatus.OK);
       logger.info("Deleted trip log with ID: {}", id);
-      return "Trip log deleted";
     } else {
+      response = new ResponseEntity<>("Trip log not found", HttpStatus.NOT_FOUND);
       logger.info("Trip log with ID: {} not found", id);
-      return "Trip log not found";
     }
+    return response;
   }
 }

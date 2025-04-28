@@ -11,5 +11,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @author Group 14
  * @version v0.1.0 (2025.04.22)
  */
-public interface TripLogRepository extends JpaRepository<TripLog, Integer> {
+public interface TripLogRepository extends JpaRepository<TripLog, Long> {
 }
