@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import no.ntnu.idata2900.project.esg_module_backend.models.DataPoint;
+import no.ntnu.idata2900.project.esg_module_backend.models.Fuel;
 import no.ntnu.idata2900.project.esg_module_backend.models.MarineWeather;
 import no.ntnu.idata2900.project.esg_module_backend.models.Position;
 import no.ntnu.idata2900.project.esg_module_backend.models.Ship;
@@ -448,7 +449,7 @@ public class FakeDataInitializer {
         heading,
         course,
         speed,
-        calculateFuelLevel(),
+        calculateFuelConsumption(),
         fishAmount
     );
   }
@@ -475,7 +476,7 @@ public class FakeDataInitializer {
    *
    * @return Calculated fuel level based on directional weather parameters
    */
-  private float calculateFuelLevel() {
+  private Fuel calculateFuelConsumption() {
     float windDirection = calculateWindDirection();
 
     // Collect all resistance parameters in a single variable
@@ -524,55 +525,54 @@ public class FakeDataInitializer {
       }
     }
 
-    float fuelConsumption = 0.0f;
+    float consumption = 0.0f;
 
     // Random fuel consumption based on resistance factor
     switch (resist) {
       case -6:
-        fuelConsumption += RAN.nextFloat(0.06f, 0.12f);
+        consumption += RAN.nextFloat(0.06f, 0.12f);
         break;
       case -5:
-        fuelConsumption += RAN.nextFloat(0.12f, 0.18f);
+        consumption += RAN.nextFloat(0.12f, 0.18f);
         break;
       case -4:
-        fuelConsumption += RAN.nextFloat(0.18f, 0.24f);
+        consumption += RAN.nextFloat(0.18f, 0.24f);
         break;
       case -3:
-        fuelConsumption += RAN.nextFloat(0.24f, 0.30f);
+        consumption += RAN.nextFloat(0.24f, 0.30f);
         break;
       case -2:
-        fuelConsumption += RAN.nextFloat(0.30f, 0.36f);
+        consumption += RAN.nextFloat(0.30f, 0.36f);
         break;
       case -1:
-        fuelConsumption += RAN.nextFloat(0.36f, 0.42f);
+        consumption += RAN.nextFloat(0.36f, 0.42f);
         break;
       case 1:
-        fuelConsumption += RAN.nextFloat(0.59f, 0.65f);
+        consumption += RAN.nextFloat(0.59f, 0.65f);
         break;
       case 2:
-        fuelConsumption += RAN.nextFloat(0.65f, 0.71f);
+        consumption += RAN.nextFloat(0.65f, 0.71f);
         break;
       case 3:
-        fuelConsumption += RAN.nextFloat(0.71f, 0.77f);
+        consumption += RAN.nextFloat(0.71f, 0.77f);
         break;
       case 4:
-        fuelConsumption += RAN.nextFloat(0.77f, 0.83f);
+        consumption += RAN.nextFloat(0.77f, 0.83f);
         break;
       case 5:
-        fuelConsumption += RAN.nextFloat(0.83f, 0.89f);
+        consumption += RAN.nextFloat(0.83f, 0.89f);
         break;
       case 6:
-        fuelConsumption += RAN.nextFloat(0.89f, 0.95f);
+        consumption += RAN.nextFloat(0.89f, 0.95f);
         break;
       default:
-        fuelConsumption += RAN.nextFloat(0.42f, 0.59f);
+        consumption += RAN.nextFloat(0.42f, 0.59f);
         break;
     }
 
-    // Decrease total fuel level
-    fuelLevel -= fuelConsumption;
+    float dividedConsumption = consumption / 3;
 
-    return fuelLevel;
+    return new Fuel(dividedConsumption, dividedConsumption, dividedConsumption);
   }
 
   /**

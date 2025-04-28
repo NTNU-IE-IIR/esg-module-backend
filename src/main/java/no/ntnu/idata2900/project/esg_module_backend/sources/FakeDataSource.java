@@ -11,6 +11,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import no.ntnu.idata2900.project.esg_module_backend.dtos.ShipDto;
 import no.ntnu.idata2900.project.esg_module_backend.models.DataPoint;
+import no.ntnu.idata2900.project.esg_module_backend.models.Fuel;
 import no.ntnu.idata2900.project.esg_module_backend.models.Position;
 import no.ntnu.idata2900.project.esg_module_backend.models.Ship;
 import org.springframework.stereotype.Component;
@@ -96,8 +97,9 @@ public class FakeDataSource implements DataSource {
    */
   private ShipDto createInitialShipData() {
     DataPoint dp = new DataPoint(ts, new Position(61.6031484f, 5.0445668f));
+    Fuel fuelConsumption = new Fuel(30.0f, 15.0f, 5.0f);
 
-    dp.setShip(new Ship("Ship1", 90.0f, 85.0f, 12.5f, 500.0f, 100.0f));
+    dp.setShip(new Ship("Ship1", 90.0f, 85.0f, 12.5f, fuelConsumption, 100.0f));
 
     return new ShipDto(
         1,
@@ -105,7 +107,7 @@ public class FakeDataSource implements DataSource {
         dp.getShip().getHeading(),
         dp.getShip().getCourse(),
         dp.getShip().getSpeed(),
-        dp.getShip().getFuelLevel(),
+        dp.getShip().getFuelConsumption().getTotal(),
         dp.getShip().getFishAmount(),
         0.0f,
         dp.getPos().getLat(),
@@ -134,13 +136,13 @@ public class FakeDataSource implements DataSource {
     // Increment timestamp by 1 minute
     ts += 60;
     float fishAmount = fakeBoatData.getFishAmount() + (random.nextFloat() * 10);
-    float fuelLevel = fakeBoatData.getFuelLevel() - (random.nextFloat() * 4);
+    float fuelConsumption = fakeBoatData.getFuelLevel() - (random.nextFloat() * 4);
     float totalDistance = fakeBoatData.getTotalDistance() + (random.nextFloat() * 10);
 
     DataPoint dp = new DataPoint(ts, new Position(lat, lng));
 
     dp.setShip(
-        new Ship("Ship1", 90.0f, 85.0f, 12.5f, fuelLevel, fishAmount)
+        new Ship("Ship1", 90.0f, 85.0f, 12.5f, new Fuel(0.0f, 0.0f, 0.0f), fishAmount)
     );
 
     return new ShipDto(
@@ -149,7 +151,7 @@ public class FakeDataSource implements DataSource {
         dp.getShip().getHeading(),
         dp.getShip().getCourse(),
         dp.getShip().getSpeed(),
-        dp.getShip().getFuelLevel(),
+        fuelConsumption,
         dp.getShip().getFishAmount(),
         totalDistance,
         dp.getPos().getLat(),
