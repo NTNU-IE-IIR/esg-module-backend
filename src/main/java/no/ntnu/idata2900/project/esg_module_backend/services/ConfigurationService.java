@@ -3,6 +3,7 @@ package no.ntnu.idata2900.project.esg_module_backend.services;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import no.ntnu.idata2900.project.esg_module_backend.dtos.ConfigurationDto;
 import no.ntnu.idata2900.project.esg_module_backend.models.Configuration;
@@ -14,6 +15,7 @@ import no.ntnu.idata2900.project.esg_module_backend.repositories.ConfigurationRe
  * @author Group 14
  * @version v0.1.0 (2025.04.28)
  */
+@Service
 public class ConfigurationService {
   private ConfigurationRepository configurationRepository;
 

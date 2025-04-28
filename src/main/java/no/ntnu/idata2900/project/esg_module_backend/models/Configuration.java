@@ -1,5 +1,6 @@
 package no.ntnu.idata2900.project.esg_module_backend.models;
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
 /**
@@ -9,6 +10,7 @@ import jakarta.persistence.Id;
  * @author Group 14
  * @version v0.1.0 (2025.04.28)
  */
+@Entity(name = "configuration")
 public class Configuration {
   @Id
   private String registrationMark;
