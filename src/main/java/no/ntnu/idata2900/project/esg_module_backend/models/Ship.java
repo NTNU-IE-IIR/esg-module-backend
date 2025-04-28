@@ -9,7 +9,7 @@ import jakarta.persistence.Id;
  * of the data packaged into a {@link DataPoint data point}.
  *
  * @author Group 14
- * @version v0.2.2 (2025.04.24)
+ * @version v0.2.3 (2025.04.27)
  */
 public class Ship {
   @Id
@@ -19,32 +19,32 @@ public class Ship {
   private float heading;
   private float course;
   private float speed;
-  private float fuelLevel;
+  private Fuel fuelConsumption;
   private float fishAmount;
 
   /**
    * Constructor for the Ship class.
    *
-   * @param name        The specified ship name
-   * @param heading     The specified heading
-   * @param course      The specified course
-   * @param speed       The specified speed
-   * @param fuelLevel   The specified fuel level
-   * @param fishAmount  The specified amount
+   * @param name            The specified ship name
+   * @param heading         The specified heading
+   * @param course          The specified course
+   * @param speed           The specified speed
+   * @param fuelConsumption The specified fuel consumption
+   * @param fishAmount      The specified amount
    */
   public Ship(
       String name,
       float heading,
       float course,
       float speed,
-      float fuelLevel,
+      Fuel fuelConsumption,
       float fishAmount
   ) {
     this.name = name;
     this.heading = heading;
     this.course = course;
     this.speed = speed;
-    this.fuelLevel = fuelLevel;
+    this.fuelConsumption = fuelConsumption;
     this.fishAmount = fishAmount;
   }
 
@@ -63,7 +63,7 @@ public class Ship {
    * @return Ship name
    */
   public String getName() {
-    return name;
+    return this.name;
   }
 
   /**
@@ -72,7 +72,7 @@ public class Ship {
    * @return Heading
    */
   public float getHeading() {
-    return heading;
+    return this.heading;
   }
 
   /**
@@ -81,7 +81,7 @@ public class Ship {
    * @return Course
    */
   public float getCourse() {
-    return course;
+    return this.course;
   }
 
   /**
@@ -90,16 +90,16 @@ public class Ship {
    * @return Speed
    */
   public float getSpeed() {
-    return speed;
+    return this.speed;
   }
 
   /**
-   * Getter for fuel level.
+   * Getter for fuel consumption.
    *
-   * @return Fuel level
+   * @return Fuel consumption
    */
-  public float getFuelLevel() {
-    return fuelLevel;
+  public Fuel getFuelConsumption() {
+    return this.fuelConsumption;
   }
 
   /**
@@ -108,6 +108,6 @@ public class Ship {
    * @return Fish amount
    */
   public float getFishAmount() {
-    return fishAmount;
+    return this.fishAmount;
   }
 }
