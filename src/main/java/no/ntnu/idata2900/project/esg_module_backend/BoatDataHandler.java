@@ -1,7 +1,12 @@
 package no.ntnu.idata2900.project.esg_module_backend;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.List;
 import no.ntnu.idata2900.project.esg_module_backend.dtos.ShipDto;
+import no.ntnu.idata2900.project.esg_module_backend.models.Trip;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -17,8 +22,15 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
  */
 @Component
 public class BoatDataHandler extends TextWebSocketHandler {
+  private Logger logger = LoggerFactory.getLogger(BoatDataHandler.class);
   private final ObjectMapper objectMapper = new ObjectMapper();
   private WebSocketSession session;
+  private final TripManager tripManager;
+
+  @Autowired
+  public BoatDataHandler(TripManager tripManager) {
+    this.tripManager = tripManager;
+  }
 
   /**
    * Sends boat data to the connected WebSocket client.
@@ -46,6 +58,17 @@ public class BoatDataHandler extends TextWebSocketHandler {
   @Override
   public void afterConnectionEstablished(WebSocketSession session) {
     this.session = session;
+    logger.info("WebSocket connection established");
+
+    if (tripManager.tripIsActive()) {
+      Trip currentTrip = tripManager.getCurrentTrip();
+      if (currentTrip != null) {
+        List<ShipDto> shipData = currentTrip.getShipData();
+        for (ShipDto data : shipData) {
+          sendBoatData(data);
+        }
+      }
+    }
   }
 
   /**

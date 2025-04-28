@@ -1,9 +1,15 @@
 package no.ntnu.idata2900.project.esg_module_backend;
 
+import java.util.List;
+import java.util.Optional;
 import no.ntnu.idata2900.project.esg_module_backend.dtos.ShipDto;
 import no.ntnu.idata2900.project.esg_module_backend.models.Trip;
+import no.ntnu.idata2900.project.esg_module_backend.models.TripLog;
+import no.ntnu.idata2900.project.esg_module_backend.repositories.TripLogRepository;
 import no.ntnu.idata2900.project.esg_module_backend.sources.DataListener;
 import no.ntnu.idata2900.project.esg_module_backend.sources.DataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,9 +24,11 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class TripService implements DataListener {
-  private Trip currentTrip;
+  private final Logger logger = LoggerFactory.getLogger(TripService.class);
   private final DataSource dataSource;
-  private BoatDataHandler boatDataHandler;
+  private final BoatDataHandler boatDataHandler;
+  private final TripManager tripManager;
+  private final TripLogRepository tripLogRepository;
 
   /**
    * Constructs a new TripService with the required dependencies.
@@ -29,9 +37,11 @@ public class TripService implements DataListener {
    * @param boatDataHandler The handler for sending boat data to WebSocket clients
    */
   @Autowired
-  TripService(DataSource dataSource, BoatDataHandler boatDataHandler) {
+  TripService(TripLogRepository tripLogRepository, DataSource dataSource, BoatDataHandler boatDataHandler, TripManager tripManager) {
+    this.tripLogRepository = tripLogRepository;
     this.dataSource = dataSource;
     this.boatDataHandler = boatDataHandler;
+    this.tripManager = tripManager;
   }
 
   /**
@@ -40,12 +50,63 @@ public class TripService implements DataListener {
    * to begin collecting ship data.
    */
   public void startTrip() {
-    currentTrip = new Trip();
-    currentTrip.start();
+    tripManager.startTrip();
     dataSource.setDataListener(this);
     dataSource.start();
     // Start trip
     System.out.println("Trip started");
+  }
+
+  public List<TripLog> getAllTripLogs() {
+    return tripLogRepository.findAll();
+  }
+
+  public boolean editComments(String comments, int id) {
+    boolean success = false;
+    Optional<TripLog> tripLog = tripLogRepository.findById(id);
+    if (tripLog.isPresent()) {
+        TripLog log = tripLog.get();
+        log.setComments(comments);
+        tripLogRepository.save(log);
+        logger.info("Updated comments for trip log with ID: {}", id);
+        success = true;
+      }
+    return success;
+  }
+
+  public boolean deleteTripLog(int id) {
+    boolean success = false;
+    Optional<TripLog> tripLog = tripLogRepository.findById(id);
+    if (tripLog.isPresent()) {
+        tripLogRepository.deleteById(id);
+        logger.info("Deleted trip log with ID: {}", id);
+        success = true;
+    }
+    return success;
+  }
+
+  public boolean isTripActive() {
+    return tripManager.tripIsActive();
+  }
+
+  public List<ShipDto> getTripDataPoints() {
+    if (tripManager.tripIsActive()) {
+      return tripManager.getCurrentTripData();
+    } else {
+      throw new IllegalStateException("Could not find any data points for current trip");
+    }
+  }
+
+  public boolean saveTrip(TripLog tripLog) {
+    boolean success = false;
+    tripLogRepository.save(tripLog);
+
+    if (tripLogRepository.findById(tripLog.getId()).isPresent()) {
+      logger.info("Saved trip log with ID: {}", tripLog.getId());
+      success = true;
+    }
+
+    return success;
   }
 
   /**
@@ -54,7 +115,7 @@ public class TripService implements DataListener {
    */
   public void stopTrip() {
     dataSource.stop();
-    currentTrip.end();
+    tripManager.endTrip();
     // Stop trip
   }
 
@@ -64,7 +125,7 @@ public class TripService implements DataListener {
    * @return The current Trip object, or null if no trip is active
    */
   public Trip getCurrentTrip() {
-    return currentTrip;
+    return tripManager.getCurrentTrip();
   }
 
 
@@ -79,8 +140,8 @@ public class TripService implements DataListener {
   @Override
   public void onDataReceived(ShipDto data) {
     System.out.println("Data received: " + data);
-    if (currentTrip != null) {
-      currentTrip.addShipData(data);
+    if (tripManager.tripIsActive()) {
+      tripManager.getCurrentTrip().addShipData(data);
     }
       if (boatDataHandler.isConnected()) {
           boatDataHandler.sendBoatData(data);
