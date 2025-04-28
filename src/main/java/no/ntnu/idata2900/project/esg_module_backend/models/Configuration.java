@@ -15,6 +15,13 @@ public class Configuration {
   private String name;
   private boolean level1;
 
+  /**
+   * Constructor for the Configuration class.
+   * 
+   * @param registrationMark  The specified registration mark
+   * @param name              The specified name
+   * @param level1            The specified level 1
+   */
   public Configuration(String registrationMark, String name, boolean level1) {
     this.registrationMark = registrationMark;
     this.name = name;
