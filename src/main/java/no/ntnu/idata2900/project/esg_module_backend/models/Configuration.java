@@ -47,4 +47,14 @@ public class Configuration {
   public boolean isLevel1() {
     return this.level1;
   }
+
+  /**
+   * Checks if the configuration is valid.
+   * 
+   * @return True if the configuration is valid or false otherwise
+   */
+  public boolean isValid() {
+    return this.registrationMark != null && !this.registrationMark.isBlank() && this.name != null
+        && !this.name.isBlank();
+  }
 }
