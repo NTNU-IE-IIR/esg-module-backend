@@ -1,5 +1,6 @@
 package no.ntnu.idata2900.project.esg_module_backend.models;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,15 +28,24 @@ import jakarta.persistence.Id;
  * <a href="https://api.windy.com/point-forecast/docs">Windy API documentation</a>.</p>
  *
  * @author Group 14
- * @version v0.3.1 (2025.04.29)
+ * @version v0.3.2 (2025.04.29)
  */
 @Entity(name = "weather")
+@Schema(description = "Weather entity representing weather data (wind) at a specific data point")
 public class Weather {
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Schema(description = "Unique ID")
   private Long id;
+
+  @Schema(description = "Wind u vector")
   private float windU;
+
+  @Schema(description = "Wind v vector")
   private float windV;
+
+  @Schema(description = "Wind gusts speed")
   private float gust;
 
   /**

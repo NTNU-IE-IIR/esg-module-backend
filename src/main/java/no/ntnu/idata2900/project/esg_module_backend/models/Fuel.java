@@ -1,5 +1,6 @@
 package no.ntnu.idata2900.project.esg_module_backend.models;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,16 +22,28 @@ import jakarta.persistence.Id;
  * </ul>
  * 
  * @author Group 14
- * @version v0.1.1 (2025.04.29)
+ * @version v0.1.2 (2025.04.29)
  * @see Ship
  */
 @Entity(name = "fuel")
+@Schema(
+  description = "Fuel entity representing fuel consumption data over various posts at a specific "
+              + "data point"
+)
 public class Fuel {
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Schema(description = "Unique ID")
   private Long id;
+
+  @Schema(description = "Drift post")
   private float drift;
+
+  @Schema(description = "Production post")
   private float production;
+
+  @Schema(description = "Hotel")
   private float hotel;
 
   /**

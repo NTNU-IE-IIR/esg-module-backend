@@ -1,5 +1,6 @@
 package no.ntnu.idata2900.project.esg_module_backend.models;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -10,18 +11,33 @@ import jakarta.persistence.Id;
  * of the data packaged into a {@link DataPoint data point}.
  *
  * @author Group 14
- * @version v0.2.4 (2025.04.29)
+ * @version v0.2.5 (2025.04.29)
  */
 @Entity(name = "ship")
+@Schema(description = "Ship entity representing ship data at a specific data point")
 public class Ship {
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Schema(description = "Unique ID")
   private Long id;
+
+  @Schema(description = "Ship name")
   private String name;
+
+  @Schema(description = "Ship heading")
   private float heading;
+
+  @Schema(description = "Ship course")
   private float course;
+
+  @Schema(description = "Ship speed")
   private float speed;
+
+  @Schema(description = "Fuel consumption data over the last time interval")
   private Fuel fuelConsumption;
+
+  @Schema(description = "Amount of fish caught")
   private float fishAmount;
 
   /**

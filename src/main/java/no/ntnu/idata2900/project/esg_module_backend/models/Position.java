@@ -1,5 +1,6 @@
 package no.ntnu.idata2900.project.esg_module_backend.models;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -10,14 +11,23 @@ import jakarta.persistence.Id;
  * longitude.
  *
  * @author Group 14
- * @version v0.1.3 (2025.04.29)
+ * @version v0.1.4 (2025.04.29)
  */
 @Entity(name = "position")
+@Schema(
+  description = "Position entity representing position as coordinates at a specific data point"
+)
 public class Position {
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Schema(description = "Unique ID")
   private Long id;
+
+  @Schema(description = "Latitude")
   private float lat;
+
+  @Schema(description = "Longitude")
   private float lng;
 
   /**

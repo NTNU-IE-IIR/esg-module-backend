@@ -1,5 +1,6 @@
 package no.ntnu.idata2900.project.esg_module_backend.models;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -10,17 +11,30 @@ import jakarta.persistence.Id;
  * {@link Weather weather} data, as well as {@link Position position} data.
  *
  * @author Group 14
- * @version v0.2.3 (2025.04.29)
+ * @version v0.2.4 (2025.04.29)
  */
 @Entity(name = "data_point")
+@Schema(description = "Data point entity representing a specific data point")
 public class DataPoint {
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Schema(description = "Unique ID")
   private Long id;
+
+  @Schema(description = "UNIX timestamp")
   private long ts;
+
+  @Schema(description = "Position data represented as coordinates")
   private Position pos;
+
+  @Schema(description = "Ship data")
   private Ship ship;
+
+  @Schema(description = "Weather data (wind)")
   private Weather weather;
+
+  @Schema(description = "Marine weather data (waves and ocean current)")
   private MarineWeather marineWeather;
 
   /**
