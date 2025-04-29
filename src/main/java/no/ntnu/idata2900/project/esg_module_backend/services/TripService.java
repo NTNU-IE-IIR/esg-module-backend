@@ -1,7 +1,9 @@
-package no.ntnu.idata2900.project.esg_module_backend;
+package no.ntnu.idata2900.project.esg_module_backend.services;
 
 import java.util.List;
 import java.util.Optional;
+
+import no.ntnu.idata2900.project.esg_module_backend.BoatDataHandler;
 import no.ntnu.idata2900.project.esg_module_backend.dtos.ShipDto;
 import no.ntnu.idata2900.project.esg_module_backend.models.Trip;
 import no.ntnu.idata2900.project.esg_module_backend.models.TripLog;
