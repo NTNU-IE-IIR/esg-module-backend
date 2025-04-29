@@ -1,5 +1,6 @@
 package no.ntnu.idata2900.project.esg_module_backend.models;
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -9,8 +10,9 @@ import jakarta.persistence.Id;
  * of the data packaged into a {@link DataPoint data point}.
  *
  * @author Group 14
- * @version v0.2.3 (2025.04.27)
+ * @version v0.2.4 (2025.04.29)
  */
+@Entity(name = "ship")
 public class Ship {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

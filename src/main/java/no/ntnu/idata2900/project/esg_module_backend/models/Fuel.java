@@ -1,5 +1,6 @@
 package no.ntnu.idata2900.project.esg_module_backend.models;
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -20,9 +21,10 @@ import jakarta.persistence.Id;
  * </ul>
  * 
  * @author Group 14
- * @version v0.1.0 (2025.04.28)
+ * @version v0.1.1 (2025.04.29)
  * @see Ship
  */
+@Entity(name = "fuel")
 public class Fuel {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

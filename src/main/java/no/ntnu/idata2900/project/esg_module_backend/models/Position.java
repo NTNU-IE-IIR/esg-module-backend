@@ -1,5 +1,6 @@
 package no.ntnu.idata2900.project.esg_module_backend.models;
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -9,8 +10,9 @@ import jakarta.persistence.Id;
  * longitude.
  *
  * @author Group 14
- * @version v0.1.2 (2025.04.24)
+ * @version v0.1.3 (2025.04.29)
  */
+@Entity(name = "position")
 public class Position {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

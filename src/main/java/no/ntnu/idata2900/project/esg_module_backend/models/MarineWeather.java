@@ -1,5 +1,6 @@
 package no.ntnu.idata2900.project.esg_module_backend.models;
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -27,8 +28,9 @@ import jakarta.persistence.Id;
  * parameters, see their respective class documentations.</p>
  * 
  * @author Group 14
- * @version v0.1.0 (2025.04.24)
+ * @version v0.1.1 (2025.04.29)
  */
+@Entity(name = "marine_weather")
 public class MarineWeather {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
