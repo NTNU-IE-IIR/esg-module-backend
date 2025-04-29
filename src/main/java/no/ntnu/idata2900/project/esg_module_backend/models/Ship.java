@@ -35,8 +35,7 @@ public class Ship {
       float heading,
       float course,
       float speed,
-      Fuel fuelConsumption,
-      float fishAmount
+      Fuel fuelConsumption
   ) {
     this.name = name;
     this.heading = heading;

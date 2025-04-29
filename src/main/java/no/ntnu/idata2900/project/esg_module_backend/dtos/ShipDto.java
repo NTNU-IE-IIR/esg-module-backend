@@ -29,7 +29,6 @@ public class ShipDto {
    * @param heading       The specified heading
    * @param course        The specified course
    * @param speed         The specified speed
-   * @param fishAmount    The specified fish amount
    * @param totalDistance The specified total distance
    * @param lat           The specified latitude
    * @param lng           The specified longitude
@@ -42,7 +41,6 @@ public class ShipDto {
       float course,
       float speed,
       float fuelLevel,
-      float fishAmount,
       float totalDistance,
       float lat,
       float lng,
@@ -54,7 +52,6 @@ public class ShipDto {
     this.course = course;
     this.speed = speed;
     this.fuelLevel = fuelLevel;
-    this.fishAmount = fishAmount;
     this.totalDistance = totalDistance;
     this.lat = lat;
     this.lng = lng;
