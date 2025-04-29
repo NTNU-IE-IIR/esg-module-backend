@@ -58,7 +58,7 @@ public class Trip {
    */
   private void summarizeTrip() {
     this.tripDistance = this.calculateTotalDistance();
-    this.fishCaught = 0; //Temporary assign to 0. Fishing logic will be refactored.
+    this.fishCaught = 0; //TODO: Temporary assign to 0. Fishing logic will be refactored.
     this.fuelConsumed += shipData.getFirst().getFuelLevel() - shipData.getLast().getFuelLevel();
   }
 
@@ -192,10 +192,5 @@ public class Trip {
 
   public Set<FishingSession> getFishingSessions() {
     return fishingSessions;
-  }
-
-  public void setFishingSessions(
-      Set<FishingSession> fishingSessions) {
-    this.fishingSessions = fishingSessions;
   }
 }
