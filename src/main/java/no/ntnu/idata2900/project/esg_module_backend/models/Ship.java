@@ -15,12 +15,11 @@ public class Ship {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-  private String name;
-  private float heading;
-  private float course;
-  private float speed;
-  private Fuel fuelConsumption;
-  private float fishAmount;
+  private final String name;
+  private final float heading;
+  private final float course;
+  private final float speed;
+  private final Fuel fuelConsumption;
 
   /**
    * Constructor for the Ship class.
@@ -30,22 +29,19 @@ public class Ship {
    * @param course          The specified course
    * @param speed           The specified speed
    * @param fuelConsumption The specified fuel consumption
-   * @param fishAmount      The specified amount
    */
   public Ship(
       String name,
       float heading,
       float course,
       float speed,
-      Fuel fuelConsumption,
-      float fishAmount
+      Fuel fuelConsumption
   ) {
     this.name = name;
     this.heading = heading;
     this.course = course;
     this.speed = speed;
     this.fuelConsumption = fuelConsumption;
-    this.fishAmount = fishAmount;
   }
 
   /**
@@ -100,14 +96,5 @@ public class Ship {
    */
   public Fuel getFuelConsumption() {
     return this.fuelConsumption;
-  }
-
-  /**
-   * Getter for fish amount.
-   *
-   * @return Fish amount
-   */
-  public float getFishAmount() {
-    return this.fishAmount;
   }
 }

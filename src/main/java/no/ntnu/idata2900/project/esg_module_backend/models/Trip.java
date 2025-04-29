@@ -7,6 +7,7 @@ import java.util.List;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import java.util.Set;
 import no.ntnu.idata2900.project.esg_module_backend.dtos.ShipDto;
 
 // TODO Refactor class to contain a list of data points instead of ship DTOs
@@ -27,7 +28,8 @@ public class Trip {
   private float tripDistance;
   private float fuelConsumed;
   private float fishCaught;
-  private List<ShipDto> shipData;
+  private Set<FishingSession> fishingSessions;
+  private final List<ShipDto> shipData;
 
   /**
    * Constructor for the Trip class.
@@ -44,7 +46,7 @@ public class Trip {
   }
 
   /**
-   * Ends a fishing trip an intitializes a summarization.
+   * Ends a fishing trip and intitializes a summarization.
    */
   public void end() {
     this.endDate = Instant.now();
@@ -56,7 +58,7 @@ public class Trip {
    */
   private void summarizeTrip() {
     this.tripDistance = this.calculateTotalDistance();
-    this.fishCaught += shipData.getLast().getFishAmount();
+    this.fishCaught = 0; //TODO: Temporary assign to 0. Fishing logic will be refactored.
     this.fuelConsumed += shipData.getFirst().getFuelLevel() - shipData.getLast().getFuelLevel();
   }
 
@@ -186,5 +188,9 @@ public class Trip {
    */
   public void addShipData(ShipDto ship) {
     this.shipData.add(ship);
+  }
+
+  public Set<FishingSession> getFishingSessions() {
+    return fishingSessions;
   }
 }
