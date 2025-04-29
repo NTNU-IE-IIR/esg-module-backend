@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * The TripController class handles HTTP requests related to trip logs. It provides endpoints for
+ * The TripController class handles HTTP requests related to trips. It provides endpoints for
  * starting, stopping, editing, and deleting trip logs. The class uses the TripService to manage
  * trip-related operations and the TripLogRepository to interact with the database.
  */
@@ -47,21 +47,6 @@ public class TripController {
     this.tripService = tripService;
   }
 
-  /**
-   * Endpoint to get all trip logs.
-   *
-   * @return List of all trip logs
-   */
-  @Operation(summary = "Get all trip logs", description = "Retrieves a list of all recorded trip logs from the database")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Successfully retrieved all trip logs",
-          content = @Content(mediaType = "application/json",
-              schema = @Schema(implementation = TripLog.class)))
-  })
-  @GetMapping("/all")
-  public List<TripLog> getAllTripLogs() {
-    return tripService.getAllTripLogs();
-  }
 
   /**
    * Endpoint to start a trip. This method is called when the user wants to start a new trip.
@@ -154,66 +139,5 @@ public class TripController {
     return response;
   }
 
-  /**
-   * Endpoint to edit comments for an existing trip log.
-   *
-   * @param id          The ID of the trip log to edit
-   * @param requestBody A map containing the 'comments' field to update
-   * @return String indicating the status of the operation
-   */
-  @Operation(summary = "Edit trip comments", description = "Updates the comments for an existing trip log")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Comments successfully updated",
-          content = @Content(mediaType = "text/plain", schema = @Schema(type = "string"))),
-      @ApiResponse(responseCode = "404", description = "Trip log not found",
-          content = @Content(mediaType = "text/plain", schema = @Schema(type = "string")))
-  })
-  @PutMapping("/edit/{id}")
-  public ResponseEntity<String> editComments(
-      @Parameter(description = "ID of the trip log to edit", required = true) @PathVariable Long id,
-      @Parameter(description = "Request body containing comments field", required = true)
-      @RequestBody Map<String, String> requestBody) {
-    String comments = requestBody.get("comments");
-    ResponseEntity<String> response;
 
-    if (comments != null && !comments.isEmpty()) {
-      comments = comments.strip();
-    }
-
-    if (tripService.editComments(comments, id)) {
-      response = new ResponseEntity<>("Trip comment was updated", HttpStatus.OK);
-    } else {
-      response = new ResponseEntity<>("Trip log not found", HttpStatus.NOT_FOUND);
-    }
-
-    return response;
-  }
-
-  /**
-   * Endpoint to delete a trip log.
-   *
-   * @param id The ID of the trip log to delete
-   * @return String indicating the status of the operation
-   */
-  @Operation(summary = "Delete a trip log", description = "Removes a trip log from the database")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Trip log successfully deleted",
-          content = @Content(mediaType = "text/plain", schema = @Schema(type = "string"))),
-      @ApiResponse(responseCode = "404", description = "Trip log not found",
-          content = @Content(mediaType = "text/plain", schema = @Schema(type = "string")))
-  })
-  @DeleteMapping("/delete/{id}")
-  public ResponseEntity<String> deleteTrip(
-      @Parameter(description = "ID of the trip log to delete", required = true) @PathVariable
-      Long id) {
-    ResponseEntity<String> response;
-    if (tripService.deleteTripLog(id)) {
-      response = new ResponseEntity<>("Trip log deleted", HttpStatus.OK);
-      logger.info("Deleted trip log with ID: {}", id);
-    } else {
-      response = new ResponseEntity<>("Trip log not found", HttpStatus.NOT_FOUND);
-      logger.info("Trip log with ID: {} not found", id);
-    }
-    return response;
-  }
 }

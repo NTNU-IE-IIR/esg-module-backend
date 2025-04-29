@@ -29,7 +29,6 @@ public class TripService implements DataListener {
   private final Logger logger = LoggerFactory.getLogger(TripService.class);
   private final DataSource dataSource;
   private final BoatDataHandler boatDataHandler;
-  private final TripLogRepository tripLogRepository;
   private Trip currentTrip;
   private boolean tripActive;
 
@@ -41,38 +40,12 @@ public class TripService implements DataListener {
    */
   @Autowired
   TripService(TripLogRepository tripLogRepository, DataSource dataSource, BoatDataHandler boatDataHandler) {
-    this.tripLogRepository = tripLogRepository;
     this.dataSource = dataSource;
     this.boatDataHandler = boatDataHandler;
   }
 
-  public List<TripLog> getAllTripLogs() {
-    return tripLogRepository.findAll();
-  }
 
-  public boolean editComments(String comments, Long id) {
-    boolean success = false;
-    Optional<TripLog> tripLog = tripLogRepository.findById(id);
-    if (tripLog.isPresent()) {
-        TripLog log = tripLog.get();
-        log.setComments(comments);
-        tripLogRepository.save(log);
-        logger.info("Updated comments for trip log with ID: {}", id);
-        success = true;
-      }
-    return success;
-  }
 
-  public boolean deleteTripLog(Long id) {
-    boolean success = false;
-    Optional<TripLog> tripLog = tripLogRepository.findById(id);
-    if (tripLog.isPresent()) {
-        tripLogRepository.deleteById(id);
-        logger.info("Deleted trip log with ID: {}", id);
-        success = true;
-    }
-    return success;
-  }
 
   public boolean isTripActive() {
     return tripActive;
@@ -86,17 +59,6 @@ public class TripService implements DataListener {
     }
   }
 
-  public boolean saveTrip(TripLog tripLog) {
-    boolean success = false;
-    tripLogRepository.save(tripLog);
-
-    if (tripLogRepository.findById(tripLog.getId()).isPresent()) {
-      logger.info("Saved trip log with ID: {}", tripLog.getId());
-      success = true;
-    }
-
-    return success;
-  }
 
   /**
    * Stops the current fishing trip. This method stops the data source
