@@ -1,10 +1,13 @@
 package no.ntnu.idata2900.project.esg_module_backend.models;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 
 /**
  * The SwellWaves class represents various swell wave data. The class is part of the data packaged
@@ -38,38 +41,51 @@ import jakarta.persistence.Id;
  * @author Group 14
  * @version v0.1.2 (2025.04.29)
  */
-@Entity(name = "swell_waves")
+@Entity
+@Table(name = "swell_waves")
 @Schema(description = "Swell waves entity representing swell waves data at a specific data point")
 public class SwellWaves {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "swell_waves_id")
   @Schema(description = "Unique ID")
   public Long id;
 
+  @Column(name = "swell1_height")
   @Schema(description = "Class 1 swell waves height")
   private float swell1Height;
 
+  @Column(name = "swell1_dir")
   @Schema(description = "Class 1 swell waves direction")
   private float swell1Direction;
 
+  @Column(name = "swell1_period")
   @Schema(
     description = "Class 1 swell waves period represented as time interval between arrival of "
                 + "consecutive class 1 swell waves"
   )
   private float swell1Period;
 
+  @Column(name = "swell2_height")
   @Schema(description = "Class 2 swell waves height")
   private float swell2Height;
 
+  @Column(name = "swell2_dir")
   @Schema(description = "Class 2 swell waves direction")
   private float swell2Direction;
 
+  @Column(name = "swell2_period")
   @Schema(
     description = "Class 2 swell waves period represented as time interval between arrival of "
                 + "consecutive class 2 swell waves"
   )
   private float swell2Period;
+
+  @MapsId
+  @OneToOne(mappedBy = "swellWaves")
+  @JoinColumn(name = "swell_waves_id")
+  @Schema(description = "Marine weather data containing this specific swell waves data")
+  private MarineWeather marineWeather;
 
   /**
    * Constructor for the SwellWaves class.
@@ -158,5 +174,23 @@ public class SwellWaves {
    */
   public float getSwell2Period() {
     return this.swell2Period;
+  }
+
+  /**
+   * Getter for marine weather data.
+   * 
+   * @return Marine weather data
+   */
+  public MarineWeather getMarineWeather() {
+    return this.marineWeather;
+  }
+
+  /**
+   * Setter for marine weather data.
+   * 
+   * @param marineWeather The specified marine weather data
+   */
+  public void setMarineWeather(MarineWeather marineWeather) {
+    this.marineWeather = marineWeather;
   }
 }

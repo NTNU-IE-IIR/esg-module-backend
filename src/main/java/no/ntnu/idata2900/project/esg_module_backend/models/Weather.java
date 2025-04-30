@@ -1,10 +1,13 @@
 package no.ntnu.idata2900.project.esg_module_backend.models;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 
 /**
  * The Weather class represents various weather data. The class is part of the data packaged into a
@@ -28,25 +31,35 @@ import jakarta.persistence.Id;
  * <a href="https://api.windy.com/point-forecast/docs">Windy API documentation</a>.</p>
  *
  * @author Group 14
- * @version v0.3.2 (2025.04.29)
+ * @version v0.3.2 (2025.04.30)
  */
-@Entity(name = "weather")
+@Entity
+@Table(name = "weather")
 @Schema(description = "Weather entity representing weather data (wind) at a specific data point")
 public class Weather {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "weather_id")
   @Schema(description = "Unique ID")
   private Long id;
 
+  @Column(name = "wind_u")
   @Schema(description = "Wind u vector")
   private float windU;
 
+  @Column(name = "wind_v")
   @Schema(description = "Wind v vector")
   private float windV;
 
+  @Column(name = "gust")
   @Schema(description = "Wind gusts speed")
   private float gust;
+
+  @MapsId
+  @OneToOne(mappedBy = "weather")
+  @JoinColumn(name = "weather_id")
+  @Schema(description = "Data point containing this specific weather data")
+  private DataPoint dp;
 
   /**
    * Constructor for the Weather class.
@@ -99,5 +112,23 @@ public class Weather {
    */
   public float getGust() {
     return this.gust;
+  }
+
+  /**
+   * Getter for data point.
+   * 
+   * @return Data point
+   */
+  public DataPoint getDp() {
+    return this.dp;
+  }
+
+  /**
+   * Setter for data point.
+   * 
+   * @param dp The specified data point
+   */
+  public void setDp(DataPoint dp) {
+    this.dp = dp;
   }
 }

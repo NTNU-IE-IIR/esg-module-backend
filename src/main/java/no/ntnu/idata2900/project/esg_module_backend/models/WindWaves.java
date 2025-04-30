@@ -1,10 +1,13 @@
 package no.ntnu.idata2900.project.esg_module_backend.models;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 
 /**
  * The WindWaves class represents various wind wave data. The class is part of the data packaged
@@ -30,28 +33,38 @@ import jakarta.persistence.Id;
  * <a href="https://api.windy.com/point-forecast/docs">Windy API documentation</a>.</p>
  * 
  * @author Group 14
- * @version v0.1.2 (2025.04.29)
+ * @version v0.1.2 (2025.04.30)
  */
-@Entity(name = "wind_waves")
+@Entity
+@Table(name = "wind_waves")
 @Schema(description = "Wind waves entity representing wind waves data at a specific data point")
 public class WindWaves {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "wind_waves_id")
   @Schema(description = "Unique ID")
   private Long id;
 
+  @Column(name = "wind_waves_height")
   @Schema(description = "Wind waves height")
   private float wwavesHeight;
 
+  @Column(name = "wind_waves_dir")
   @Schema(description = "Wind waves direction")
   private float wwavesDirection;
 
+  @Column(name = "wind_waves_period")
   @Schema(
     description = "Wind waves period represented as time interval between arrival of consecutive "
                 + "wind waves"
   )
   private float wwavesPeriod;
+
+  @MapsId
+  @OneToOne(mappedBy = "wwaves")
+  @JoinColumn(name = "wind_waves_id")
+  @Schema(description = "Marine weather data containing this specific wind waves data")
+  private MarineWeather marineWeather;
 
   /**
    * Constructor for the WindWaves class.
@@ -100,5 +113,23 @@ public class WindWaves {
    */
   public float getWwavesPeriod() {
     return this.wwavesPeriod;
+  }
+
+  /**
+   * Getter for marine weather data.
+   * 
+   * @return Marine weather data
+   */
+  public MarineWeather getMarineWeather() {
+    return this.marineWeather;
+  }
+
+  /**
+   * Setter for marine weather data.
+   * 
+   * @param marineWeather The specified marine weather data
+   */
+  public void setMarineWeather(MarineWeather marineWeather) {
+    this.marineWeather = marineWeather;
   }
 }

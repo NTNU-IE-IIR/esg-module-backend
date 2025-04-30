@@ -1,10 +1,15 @@
 package no.ntnu.idata2900.project.esg_module_backend.models;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrimaryKeyJoinColumn;
+import jakarta.persistence.Table;
 
 /**
  * The MarineWeather class represents various marine weather data. The class is part of the data
@@ -29,9 +34,10 @@ import jakarta.persistence.Id;
  * parameters, see their respective class documentations.</p>
  * 
  * @author Group 14
- * @version v0.1.2 (2025.04.29)
+ * @version v0.1.2 (2025.04.30)
  */
-@Entity(name = "marine_weather")
+@Entity
+@Table(name = "marine_weather")
 @Schema(
   description = "Marine weather entity representing marine weather data (waves and ocean current) "
               + "at a specific data point"
@@ -39,24 +45,38 @@ import jakarta.persistence.Id;
 public class MarineWeather {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "marine_weather_id")
   @Schema(description = "Unique ID")
   private Long id;
 
+  @OneToOne(cascade = CascadeType.ALL)
+  @PrimaryKeyJoinColumn
   @Schema(description = "Wave data")
   private Waves waves;
 
+  @OneToOne(cascade = CascadeType.ALL)
+  @PrimaryKeyJoinColumn
   @Schema(description = "Wind wave data")
   private WindWaves wwaves;
 
+  @OneToOne(cascade = CascadeType.ALL)
+  @PrimaryKeyJoinColumn
   @Schema(description = "Swell wave data")
   private SwellWaves swellWaves;
 
+  @Column(name = "ocean_current_vel")
   @Schema(description = "Ocean current speed")
   private float oceanCurrentVelocity;
 
+  @Column(name = "ocean_current_dir")
   @Schema(description = "Ocean current direction")
   private float oceanCurrentDirection;
+
+  @MapsId
+  @OneToOne(mappedBy = "marineWeather")
+  @JoinColumn(name = "marine_weather_id")
+  @Schema(description = "Data point containing this specific marine weather data")
+  private DataPoint dp;
 
   /**
    * Constructor for the MarineWeather class.
@@ -133,5 +153,23 @@ public class MarineWeather {
    */
   public float getOceanCurrentDirection() {
     return this.oceanCurrentDirection;
+  }
+
+  /**
+   * Getter for data point.
+   * 
+   * @return Data point
+   */
+  public DataPoint getDp() {
+    return this.dp;
+  }
+
+  /**
+   * Setter for data point.
+   * 
+   * @param dp The specified data point
+   */
+  public void setDp(DataPoint dp) {
+    this.dp = dp;
   }
 }
