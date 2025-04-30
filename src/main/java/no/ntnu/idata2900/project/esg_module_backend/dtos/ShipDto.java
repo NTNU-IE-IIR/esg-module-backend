@@ -14,7 +14,6 @@ public class ShipDto {
   private float course;
   private float speed;
   private float fuelLevel;
-  private float fishAmount;
   private float totalDistance;
 
   private float lat;
@@ -101,15 +100,6 @@ public class ShipDto {
    */
   public float getSpeed() {
     return speed;
-  }
-
-  /**
-   * Getter for fish amount.
-   *
-   * @return Fish amount
-   */
-  public float getFishAmount() {
-    return fishAmount;
   }
 
   /**

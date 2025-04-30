@@ -1,8 +1,15 @@
 package no.ntnu.idata2900.project.esg_module_backend.models;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 
 /**
  * The Fuel class represents fuel consumption divided into different posts. The class is part of
@@ -20,16 +27,40 @@ import jakarta.persistence.Id;
  * </ul>
  * 
  * @author Group 14
- * @version v0.1.0 (2025.04.28)
+ * @version v0.1.2 (2025.04.30)
  * @see Ship
  */
+@Entity
+@Table(name = "fuel")
+@Schema(
+  description = "Fuel entity representing fuel consumption data over various posts at a specific "
+              + "data point"
+)
 public class Fuel {
+
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "fuel_id")
+  @Schema(description = "Unique ID")
   private Long id;
+
+  @Column(name = "drift")
+  @Schema(description = "Drift post")
   private float drift;
+
+  @Column(name = "production")
+  @Schema(description = "Production post")
   private float production;
+
+  @Column(name = "hotel")
+  @Schema(description = "Hotel")
   private float hotel;
+
+  @JsonIgnore
+  @MapsId
+  @OneToOne(mappedBy = "fuelConsumption")
+  @JoinColumn(name = "fuel_id")
+  @Schema(description = "Ship data containing this specific fuel data")
+  private Ship ship;
 
   /**
    * Constructor for the Fuel class.
@@ -69,6 +100,24 @@ public class Fuel {
    */
   public float getHotel() {
     return this.hotel;
+  }
+
+  /**
+   * Getter for ship data.
+   * 
+   * @return Ship data
+   */
+  public Ship getShip() {
+    return this.ship;
+  }
+
+  /**
+   * Setter for ship data.
+   * 
+   * @param ship The specific ship data
+   */
+  public void setShip(Ship ship) {
+    this.ship = ship;
   }
 
   /**
