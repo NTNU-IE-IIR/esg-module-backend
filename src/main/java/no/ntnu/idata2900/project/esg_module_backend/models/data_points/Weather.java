@@ -1,4 +1,4 @@
-package no.ntnu.idata2900.project.esg_module_backend.models;
+package no.ntnu.idata2900.project.esg_module_backend.models.data_points;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -33,7 +33,7 @@ import jakarta.persistence.Table;
  * <a href="https://api.windy.com/point-forecast/docs">Windy API documentation</a>.</p>
  *
  * @author Group 14
- * @version v0.3.2 (2025.04.30)
+ * @version v0.3.3 (2025.04.30)
  */
 @Entity
 @Table(name = "weather")
@@ -65,17 +65,22 @@ public class Weather {
   private DataPoint dp;
 
   /**
+   * Default constructor for the Weather class.
+   * 
+   * <p>The default constructor is required by JPA.</p>
+   */
+  public Weather() {
+    // Intentionally left blank
+  }
+
+  /**
    * Constructor for the Weather class.
    *
    * @param windU The specified wind <code>u</code> vector
    * @param windV The specified wind <code>v</code> vector
    * @param gust  The specified wind gusts speed
    */
-  public Weather(
-      float windU,
-      float windV,
-      float gust
-  ) {
+  public Weather(float windU, float windV, float gust) {
     this.windU = windU;
     this.windV = windV;
     this.gust = gust;

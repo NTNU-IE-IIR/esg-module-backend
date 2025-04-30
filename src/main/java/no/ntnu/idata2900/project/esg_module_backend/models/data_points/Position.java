@@ -1,4 +1,4 @@
-package no.ntnu.idata2900.project.esg_module_backend.models;
+package no.ntnu.idata2900.project.esg_module_backend.models.data_points;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -16,7 +16,7 @@ import jakarta.persistence.Table;
  * longitude.
  *
  * @author Group 14
- * @version v0.1.4 (2025.04.30)
+ * @version v0.1.5 (2025.04.30)
  */
 @Entity
 @Table(name = "position")
@@ -44,6 +44,15 @@ public class Position {
   @JoinColumn(name = "position_id")
   @Schema(description = "Data point containig this specific position data")
   private DataPoint dp;
+
+  /**
+   * Default constructor for the Position class.
+   * 
+   * <p>The default constructor is required by JPA.</p>
+   */
+  public Position() {
+    // Intentionally left blank
+  }
 
   /**
    * Constructor for the Position class.

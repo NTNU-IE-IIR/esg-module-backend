@@ -1,4 +1,4 @@
-package no.ntnu.idata2900.project.esg_module_backend.models;
+package no.ntnu.idata2900.project.esg_module_backend.models.data_points;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -31,12 +31,12 @@ import jakarta.persistence.Table;
  * <a href="https://open-meteo.com/en/docs/marine-weather-api">Marine Weather API</a> distributed
  * by <a href="https://open-meteo.com/">Open-meteo</a>.</p>
  * 
- * <p>The data include further parameters, which are packaged into {@link Waves wave},
- * {@link WindWaves wind wave} and {@link SwellWaves swell wave} data. For documentation of these
+ * <p>The data include further parameters, which are packaged into {@link Waves waves},
+ * {@link WindWaves wind waves} and {@link SwellWaves swell waves} data. For documentation of these
  * parameters, see their respective class documentations.</p>
  * 
  * @author Group 14
- * @version v0.1.2 (2025.04.30)
+ * @version v0.1.5 (2025.04.30)
  */
 @Entity
 @Table(name = "marine_weather")
@@ -53,17 +53,17 @@ public class MarineWeather {
 
   @OneToOne(cascade = CascadeType.ALL)
   @PrimaryKeyJoinColumn
-  @Schema(description = "Wave data")
+  @Schema(description = "Waves data")
   private Waves waves;
 
   @OneToOne(cascade = CascadeType.ALL)
   @PrimaryKeyJoinColumn
-  @Schema(description = "Wind wave data")
+  @Schema(description = "Wind waves data")
   private WindWaves wwaves;
 
   @OneToOne(cascade = CascadeType.ALL)
   @PrimaryKeyJoinColumn
-  @Schema(description = "Swell wave data")
+  @Schema(description = "Swell waves data")
   private SwellWaves swellWaves;
 
   @Column(name = "ocean_current_vel")
@@ -82,24 +82,21 @@ public class MarineWeather {
   private DataPoint dp;
 
   /**
+   * Default constructor for the MarineWeather class.
+   * 
+   * <p>The default constructor is required by JPA.</p>
+   */
+  public MarineWeather() {
+    // Intentionally left blank
+  }
+
+  /**
    * Constructor for the MarineWeather class.
    * 
-   * @param waves                 The specified wave data
-   * @param wwaves                The specified wind wave data
-   * @param swellWaves            The specified swell wave data
    * @param oceanCurrentVelocity  The specified ocean current velocity
    * @param oceanCurrentDirection The specified ocean current direction
    */
-  public MarineWeather(
-    Waves waves,
-    WindWaves wwaves,
-    SwellWaves swellWaves,
-    float oceanCurrentVelocity,
-    float oceanCurrentDirection
-  ) {
-    this.waves = waves;
-    this.wwaves = wwaves;
-    this.swellWaves = swellWaves;
+  public MarineWeather(float oceanCurrentVelocity, float oceanCurrentDirection) {
     this.oceanCurrentVelocity = oceanCurrentVelocity;
     this.oceanCurrentDirection = oceanCurrentDirection;
   }
@@ -114,27 +111,27 @@ public class MarineWeather {
   }
 
   /**
-   * Getter for wave data.
+   * Getter for waves data.
    * 
-   * @return Wave data
+   * @return Waves data
    */
   public Waves getWaves() {
     return this.waves;
   }
 
   /**
-   * Getter for wind wave data.
+   * Getter for wind waves data.
    * 
-   * @return Wind wave data
+   * @return Wind waves data
    */
   public WindWaves getWwaves() {
     return this.wwaves;
   }
 
   /**
-   * Getter for swell wave data.
+   * Getter for swell waves data.
    * 
-   * @return Swell wave data
+   * @return Swell waves data
    */
   public SwellWaves getSwellWaves() {
     return this.swellWaves;

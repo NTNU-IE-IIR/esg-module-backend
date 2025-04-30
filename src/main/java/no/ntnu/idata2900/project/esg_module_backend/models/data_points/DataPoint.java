@@ -1,4 +1,4 @@
-package no.ntnu.idata2900.project.esg_module_backend.models;
+package no.ntnu.idata2900.project.esg_module_backend.models.data_points;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.CascadeType;
@@ -12,11 +12,11 @@ import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
 
 /**
- * The DataPoint class represents a single data point containing {@link Ship ship} and
+ * The DataPoint class represents a single data point containing {@link Vessel vessel} and
  * {@link Weather weather} data, as well as {@link Position position} data.
  *
  * @author Group 14
- * @version v0.2.4 (2025.04.30)
+ * @version v0.2.7 (2025.04.30)
  */
 @Entity
 @Table(name = "data_point")
@@ -29,8 +29,8 @@ public class DataPoint {
   @Schema(description = "Unique ID")
   private Long id;
 
-  @Column(name = "unix_timestamp")
-  @Schema(description = "UNIX timestamp")
+  @Column(name = "timestamp")
+  @Schema(description = "Timestamp")
   private long ts;
 
   @OneToOne(cascade = CascadeType.ALL)
@@ -40,8 +40,8 @@ public class DataPoint {
 
   @OneToOne(cascade = CascadeType.ALL)
   @PrimaryKeyJoinColumn
-  @Schema(description = "Ship data")
-  private Ship ship;
+  @Schema(description = "Vessel data")
+  private Vessel vessel;
 
   @OneToOne(cascade = CascadeType.ALL)
   @PrimaryKeyJoinColumn
@@ -54,17 +54,21 @@ public class DataPoint {
   private MarineWeather marineWeather;
 
   /**
+   * Default constructor for the DataPoint class.
+   * 
+   * <p>The default constructor is required by JPA.</p>
+   */
+  public DataPoint() {
+    // Intentionally left blank
+  }
+
+  /**
    * Constructor for the DataPoint class.
    *
-   * @param ts  The specified timestamp
-   * @param pos The specified position data
+   * @param ts The specified timestamp
    */
-  public DataPoint(long ts, Position pos) {
-    this.pos = pos;
+  public DataPoint(long ts) {
     this.ts = ts;
-    this.ship = null;
-    this.weather = null;
-    this.marineWeather = null;
   }
 
   /**
@@ -95,12 +99,12 @@ public class DataPoint {
   }
 
   /**
-   * Getter for ship data.
+   * Getter for vessel data.
    *
-   * @return Ship data
+   * @return Vessel data
    */
-  public Ship getShip() {
-    return this.ship;
+  public Vessel getVessel() {
+    return this.vessel;
   }
 
   /**

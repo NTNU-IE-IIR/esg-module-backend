@@ -1,0 +1,179 @@
+package no.ntnu.idata2900.project.esg_module_backend.models.data_points;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrimaryKeyJoinColumn;
+import jakarta.persistence.Table;
+
+/**
+ * The Vessel class represents various vessel data collected from different sources. The class is
+ * part of the data packaged into a {@link DataPoint data point}.
+ *
+ * @author Group 14
+ * @version v0.3.0 (2025.04.30)
+ */
+@Entity
+@Table(name = "vessel")
+@Schema(description = "Vessel entity representing vessel data at a specific data point")
+public class Vessel {
+
+  @Id
+  @Column(name = "vessel_id")
+  @Schema(description = "Unique ID")
+  private Long id;
+
+  @Column(name = "registration_mark")
+  @Schema(description = "Vessel registration mark")
+  private String registrationMark;
+
+  @Column(name = "name")
+  @Schema(description = "Vessel name")
+  private String name;
+
+  @Column(name = "heading")
+  @Schema(description = "Vessel heading")
+  private float heading;
+
+  @Column(name = "speed")
+  @Schema(description = "Vessel speed")
+  private float speed;
+
+  @Column(name = "target_speed")
+  @Schema(description = "Vessel target speed")
+  private float targetSpeed;
+
+  @OneToOne(cascade = CascadeType.ALL)
+  @PrimaryKeyJoinColumn
+  @Schema(description = "Fuel consumption data over the last time interval")
+  private Fuel fuelConsumption;
+
+  @JsonIgnore
+  @MapsId
+  @OneToOne(mappedBy = "vessel")
+  @JoinColumn(name = "vessel_id")
+  @Schema(description = "Data point containing this specific vessel data")
+  private DataPoint dp;
+
+  /**
+   * Default constructor for the Vessel class.
+   * 
+   * <p>The default constructor is required by JPA.</p>
+   */
+  public Vessel() {
+    // Intentionally left blank
+  }
+
+  /**
+   * Constructor for the Vessel class.
+   *
+   * @param registrationMark The specified registration mark
+   * @param name             The specified name
+   * @param heading          The specified heading
+   * @param speed            The specified speed
+   */
+  public Vessel(String registrationMark, String name, float heading, float speed) {
+    this.registrationMark = registrationMark;
+    this.name = name;
+    this.heading = heading;
+    this.speed = speed;
+    this.targetSpeed = 0.0f;
+  }
+
+  /**
+   * Getter for ID.
+   * 
+   * @return ID
+   */
+  public Long getId() {
+    return this.id;
+  }
+
+  /**
+   * Getter for registration mark.
+   * 
+   * @return Registration mark
+   */
+  public String getRegistrationMark() {
+    return this.registrationMark;
+  }
+
+  /**
+   * Getter for name.
+   *
+   * @return Name
+   */
+  public String getName() {
+    return this.name;
+  }
+
+  /**
+   * Getter for heading.
+   *
+   * @return Heading
+   */
+  public float getHeading() {
+    return this.heading;
+  }
+
+  /**
+   * Getter for speed.
+   *
+   * @return Speed
+   */
+  public float getSpeed() {
+    return this.speed;
+  }
+
+  /**
+   * Getter for target speed.
+   * 
+   * @return Target speed
+   */
+  public float getTargetSpeed() {
+    return this.targetSpeed;
+  }
+
+  /**
+   * Setter for target speed.
+   * 
+   * @param targetSpeed The specified target speed
+   */
+  public void setTargetSpeed(float targetSpeed) {
+    this.targetSpeed = targetSpeed;
+  }
+
+  /**
+   * Getter for fuel consumption.
+   *
+   * @return Fuel consumption
+   */
+  public Fuel getFuelConsumption() {
+    return this.fuelConsumption;
+  }
+
+  /**
+   * Getter for data point.
+   * 
+   * @return Data point
+   */
+  public DataPoint getDp() {
+    return this.dp;
+  }
+
+  /**
+   * Setter for data point.
+   * 
+   * @param dp The specified data point
+   */
+  public void setDp(DataPoint dp) {
+    this.dp = dp;
+  }
+}
