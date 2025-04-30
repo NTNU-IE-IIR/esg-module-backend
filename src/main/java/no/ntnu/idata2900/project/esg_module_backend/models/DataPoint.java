@@ -12,7 +12,7 @@ import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
 
 /**
- * The DataPoint class represents a single data point containing {@link Ship ship} and
+ * The DataPoint class represents a single data point containing {@link Vessel vessel} and
  * {@link Weather weather} data, as well as {@link Position position} data.
  *
  * @author Group 14
@@ -40,8 +40,8 @@ public class DataPoint {
 
   @OneToOne(cascade = CascadeType.ALL)
   @PrimaryKeyJoinColumn
-  @Schema(description = "Ship data")
-  private Ship ship;
+  @Schema(description = "Vessel data")
+  private Vessel vessel;
 
   @OneToOne(cascade = CascadeType.ALL)
   @PrimaryKeyJoinColumn
@@ -99,12 +99,12 @@ public class DataPoint {
   }
 
   /**
-   * Getter for ship data.
+   * Getter for vessel data.
    *
-   * @return Ship data
+   * @return Vessel data
    */
-  public Ship getShip() {
-    return this.ship;
+  public Vessel getVessel() {
+    return this.vessel;
   }
 
   /**

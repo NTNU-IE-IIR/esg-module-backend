@@ -7,7 +7,7 @@ import no.ntnu.idata2900.project.esg_module_backend.models.DataPoint;
 import no.ntnu.idata2900.project.esg_module_backend.models.Fuel;
 import no.ntnu.idata2900.project.esg_module_backend.models.MarineWeather;
 import no.ntnu.idata2900.project.esg_module_backend.models.Position;
-import no.ntnu.idata2900.project.esg_module_backend.models.Ship;
+import no.ntnu.idata2900.project.esg_module_backend.models.Vessel;
 import no.ntnu.idata2900.project.esg_module_backend.models.SwellWaves;
 import no.ntnu.idata2900.project.esg_module_backend.models.Waves;
 import no.ntnu.idata2900.project.esg_module_backend.models.Weather;
@@ -100,7 +100,7 @@ public class FakeDataInitializer {
 
       Weather weather = initWeatherData();
       MarineWeather marineWeather = initMarineWeatherData();
-      Ship ship = initShipData();
+      Vessel ship = initShipData();
 
       weather.setDp(dp);
       marineWeather.setDp(dp);
@@ -403,9 +403,9 @@ public class FakeDataInitializer {
    *
    * @param id The specified ID
    * @return Randomly generated ship data
-   * @see Ship
+   * @see Vessel
    */
-  private Ship initShipData() {
+  private Vessel initShipData() {
     boolean valid = false;
 
     // Random heading
@@ -439,7 +439,7 @@ public class FakeDataInitializer {
       }
     }
 
-    return new Ship(
+    return new Vessel(
         "Ship",
         heading,
         course,

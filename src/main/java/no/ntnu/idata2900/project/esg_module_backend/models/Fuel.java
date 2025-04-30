@@ -13,22 +13,22 @@ import jakarta.persistence.Table;
 
 /**
  * The Fuel class represents fuel consumption divided into different posts. The class is part of
- * the data packaged into ship data.
+ * the data packaged into vessel data.
  * 
- * <p>Each post represents an individual section of the ship where fuel is consumed. The different
- * posts include:</p>
+ * <p>Each post represents an individual section of the vessel where fuel is consumed. The
+ * different posts include:</p>
  * 
  * <ul>
- *   <li><b>Drift:</b> Fuel consumption caused by the motors for ship movement</li>
+ *   <li><b>Drift:</b> Fuel consumption caused by the motors for vessel movement</li>
  *   <li><b>Production:</b> Fuel consumption caused by generating electricity for fish catching
  *   mechanisms</li>
- *   <li><b>Hotel:</b> Fuel consumption caused by generating electricity for ship housing
+ *   <li><b>Hotel:</b> Fuel consumption caused by generating electricity for vessel housing
  *   operations (e.g. lighting and heating)</li>
  * </ul>
  * 
  * @author Group 14
  * @version v0.1.3 (2025.04.30)
- * @see Ship
+ * @see Vessel
  */
 @Entity
 @Table(name = "fuel")
@@ -59,8 +59,8 @@ public class Fuel {
   @MapsId
   @OneToOne(mappedBy = "fuelConsumption")
   @JoinColumn(name = "fuel_id")
-  @Schema(description = "Ship data containing this specific fuel data")
-  private Ship ship;
+  @Schema(description = "Vessel data containing this specific fuel data")
+  private Vessel vessel;
 
   /**
    * Default constructor for the Fuel class.
@@ -112,21 +112,21 @@ public class Fuel {
   }
 
   /**
-   * Getter for ship data.
+   * Getter for vessel data.
    * 
-   * @return Ship data
+   * @return Vessel data
    */
-  public Ship getShip() {
-    return this.ship;
+  public Vessel getVessel() {
+    return this.vessel;
   }
 
   /**
-   * Setter for ship data.
+   * Setter for vessel data.
    * 
-   * @param ship The specific ship data
+   * @param vessel The specific vessel data
    */
-  public void setShip(Ship ship) {
-    this.ship = ship;
+  public void setVessel(Vessel vessel) {
+    this.vessel = vessel;
   }
 
   /**

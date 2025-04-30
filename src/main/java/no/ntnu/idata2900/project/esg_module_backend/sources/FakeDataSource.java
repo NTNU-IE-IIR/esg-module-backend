@@ -13,7 +13,7 @@ import no.ntnu.idata2900.project.esg_module_backend.dtos.ShipDto;
 import no.ntnu.idata2900.project.esg_module_backend.models.DataPoint;
 import no.ntnu.idata2900.project.esg_module_backend.models.Fuel;
 import no.ntnu.idata2900.project.esg_module_backend.models.Position;
-import no.ntnu.idata2900.project.esg_module_backend.models.Ship;
+import no.ntnu.idata2900.project.esg_module_backend.models.Vessel;
 import org.springframework.stereotype.Component;
 
 /**
@@ -98,7 +98,7 @@ public class FakeDataSource implements DataSource {
   private ShipDto createInitialShipData() {
     DataPoint dp = new DataPoint(ts, new Position(61.6031484f, 5.0445668f));
     Fuel fuelConsumption = new Fuel(30.0f, 15.0f, 5.0f);
-    Ship ship = new Ship("Ship1", 90.0f, 85.0f, 12.5f, fuelConsumption);
+    Vessel ship = new Vessel("Ship1", 90.0f, 85.0f, 12.5f, fuelConsumption);
     ship.setDp(dp);
 
     return new ShipDto(
@@ -138,7 +138,7 @@ public class FakeDataSource implements DataSource {
     float totalDistance = fakeBoatData.getTotalDistance() + (random.nextFloat() * 10);
 
     DataPoint dp = new DataPoint(ts, new Position(lat, lng));
-    Ship ship = new Ship("Ship1", 90.0f, 85.0f, 12.5f, new Fuel(0.0f, 0.0f, 0.0f));
+    Vessel ship = new Vessel("Ship1", 90.0f, 85.0f, 12.5f, new Fuel(0.0f, 0.0f, 0.0f));
     ship.setDp(dp);
 
     return new ShipDto(

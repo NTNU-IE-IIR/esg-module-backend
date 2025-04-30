@@ -14,40 +14,40 @@ import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
 
 /**
- * The Ship class represents various ship data collected from different sources. The class is part
- * of the data packaged into a {@link DataPoint data point}.
+ * The Vessel class represents various vessel data collected from different sources. The class is
+ * part of the data packaged into a {@link DataPoint data point}.
  *
  * @author Group 14
- * @version v0.2.8 (2025.04.30)
+ * @version v0.3.0 (2025.04.30)
  */
 @Entity
-@Table(name = "ship")
-@Schema(description = "Ship entity representing ship data at a specific data point")
-public class Ship {
+@Table(name = "vessel")
+@Schema(description = "Vessel entity representing vessel data at a specific data point")
+public class Vessel {
 
   @Id
-  @Column(name = "ship_id")
+  @Column(name = "vessel_id")
   @Schema(description = "Unique ID")
   private Long id;
 
   @Column(name = "registration_mark")
-  @Schema(description = "Ship registration mark")
+  @Schema(description = "Vessel registration mark")
   private String registrationMark;
 
   @Column(name = "name")
-  @Schema(description = "Ship name")
+  @Schema(description = "Vessel name")
   private String name;
 
   @Column(name = "heading")
-  @Schema(description = "Ship heading")
+  @Schema(description = "Vessel heading")
   private float heading;
 
   @Column(name = "speed")
-  @Schema(description = "Ship speed")
+  @Schema(description = "Vessel speed")
   private float speed;
 
   @Column(name = "target_speed")
-  @Schema(description = "Ship target speed")
+  @Schema(description = "Vessel target speed")
   private float targetSpeed;
 
   @OneToOne(cascade = CascadeType.ALL)
@@ -57,29 +57,29 @@ public class Ship {
 
   @JsonIgnore
   @MapsId
-  @OneToOne(mappedBy = "ship")
-  @JoinColumn(name = "ship_id")
-  @Schema(description = "Data point containing this specific ship data")
+  @OneToOne(mappedBy = "vessel")
+  @JoinColumn(name = "vessel_id")
+  @Schema(description = "Data point containing this specific vessel data")
   private DataPoint dp;
 
   /**
-   * Default constructor for the Ship class.
+   * Default constructor for the Vessel class.
    * 
    * <p>The default constructor is required by JPA.</p>
    */
-  public Ship() {
+  public Vessel() {
     // Intentionally left blank
   }
 
   /**
-   * Constructor for the Ship class.
+   * Constructor for the Vessel class.
    *
    * @param registrationMark The specified registration mark
    * @param name             The specified name
    * @param heading          The specified heading
    * @param speed            The specified speed
    */
-  public Ship(String registrationMark, String name, float heading, float speed) {
+  public Vessel(String registrationMark, String name, float heading, float speed) {
     this.registrationMark = registrationMark;
     this.name = name;
     this.heading = heading;
@@ -106,9 +106,9 @@ public class Ship {
   }
 
   /**
-   * Getter for ship name.
+   * Getter for name.
    *
-   * @return Ship name
+   * @return Name
    */
   public String getName() {
     return this.name;
