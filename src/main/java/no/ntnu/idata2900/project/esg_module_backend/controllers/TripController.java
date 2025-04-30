@@ -83,7 +83,6 @@ public class TripController {
         String comments = requestBody.get("comments");
         String area = requestBody.get("area");
 
-        ResponseEntity<String> response;
 
         //guard clauses and cleaning data
         if (area == null || area.isEmpty()) {
@@ -95,6 +94,8 @@ public class TripController {
         if (comments != null && !comments.isEmpty()) {
             comments = comments.strip();
         }
+
+        ResponseEntity<String> response;
 
         tripService.stopTrip();
 //        TODO: temporarliy commented out because trip logic will be changed
@@ -111,18 +112,25 @@ public class TripController {
         return response;
     }
 
-    /**
-     * Endpoint to check if a trip is active. Returns true if a trip is active, false otherwise.
-     *
-     * @return boolean indicating whether a trip is active or not.
-     */
-    @Operation(summary = "Check if a trip is active", description = "Checks if a fishing trip is currently in progress")
+    @Operation(summary = "Get trip ID if active", description = "Gets the ID of the current trip if it is active")
     @ApiResponses(value = {
 
     })
-    @GetMapping("/active")
-    public ResponseEntity<Boolean> isTripActive() {
-        return new ResponseEntity<>(tripService.isTripActive(), HttpStatus.OK);
+    @GetMapping("/tripId/{registrationMark}")
+    public ResponseEntity<Long> findTripIdIfActive(@PathVariable String registrationMark) {
+        ResponseEntity<Long> response;
+
+        Long tripId = tripService.findTripIdIfActive(registrationMark.strip());
+
+        if (tripId == null) {
+            response = ResponseEntity.notFound().build();
+            logger.info("Could not find trip with registration mark: {}", registrationMark);
+        } else {
+            response = ResponseEntity.ok(tripId);
+            logger.info("Found trip with ID: {} for registration mark: {}", tripId, registrationMark);
+        }
+
+        return response;
     }
 
     @Operation(summary = "Get current trip data points", description = "Gets the current trip data points")

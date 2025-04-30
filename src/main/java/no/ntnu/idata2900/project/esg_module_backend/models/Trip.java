@@ -2,17 +2,12 @@ package no.ntnu.idata2900.project.esg_module_backend.models;
 
 import jakarta.persistence.*;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
-
 import java.util.Set;
-import no.ntnu.idata2900.project.esg_module_backend.dtos.ShipDto;
-
-// TODO Refactor class to contain a list of data points instead of ship DTOs
 
 /**
  * The Trip class represents a fishing trip. The class contain a list of
- * {@link ShipDto ship data}.
+ * {@link DataPoint data points} and a list of {@link FishingSession fishing sessions}.
  *
  * @author Group 14
  * @version v0.1.1 (2025.04.24)
@@ -22,36 +17,25 @@ public class Trip {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String name;
+    private String registrationMark;
     private Instant startDate;
     private Instant endDate;
     private float tripDistance;
     private float fuelConsumed;
     private float fishCaught;
+    private boolean active;
+    private String area;
+    private String comments;
     @OneToMany(mappedBy = "trip")
     private Set<FishingSession> fishingSessions;
     @OneToMany(mappedBy = "trip")
-    private final List<DataPoint> shipData;
+    private List<DataPoint> shipData;
 
     /**
      * Constructor for the Trip class.
      */
     public Trip() {
-        this.shipData = new ArrayList<>();
-    }
-
-    //TODO: potentially remove trip logs
-
-    /**
-     * Returns a trip log derived from the fishing trip.
-     *
-     * @param comments The specified comments
-     * @param area     The specified area
-     * @return A trip log of the fishing trip
-     * @see TripLog
-     */
-    public TripLog toTripLog(String comments, String area) {
-        return new TripLog(fishCaught, fuelConsumed, tripDistance, comments, area, startDate.toString(),
-                endDate.toString());
     }
 
     /**
@@ -106,5 +90,29 @@ public class Trip {
      */
     public float getFishCaught() {
         return this.fishCaught;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }
