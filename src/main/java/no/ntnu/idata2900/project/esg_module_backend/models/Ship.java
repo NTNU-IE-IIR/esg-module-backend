@@ -18,7 +18,7 @@ import jakarta.persistence.Table;
  * of the data packaged into a {@link DataPoint data point}.
  *
  * @author Group 14
- * @version v0.2.5 (2025.04.30)
+ * @version v0.2.6 (2025.04.30)
  */
 @Entity
 @Table(name = "ship")
@@ -38,13 +38,13 @@ public class Ship {
   @Schema(description = "Ship heading")
   private float heading;
 
-  @Column(name = "course")
-  @Schema(description = "Ship course")
-  private float course;
-
   @Column(name = "speed")
   @Schema(description = "Ship speed")
   private float speed;
+
+  @Column(name = "target_speed")
+  @Schema(description = "Ship target speed")
+  private float targetSpeed;
 
   @OneToOne(cascade = CascadeType.ALL)
   @PrimaryKeyJoinColumn
@@ -61,24 +61,19 @@ public class Ship {
   /**
    * Constructor for the Ship class.
    *
-   * @param name            The specified ship name
-   * @param heading         The specified heading
-   * @param course          The specified course
-   * @param speed           The specified speed
-   * @param fuelConsumption The specified fuel consumption
+   * @param name    The specified name
+   * @param heading The specified heading
+   * @param speed   The specified speed
    */
   public Ship(
     String name,
     float heading,
-    float course,
-    float speed,
-    Fuel fuelConsumption
+    float speed
   ) {
     this.name = name;
     this.heading = heading;
-    this.course = course;
     this.speed = speed;
-    this.fuelConsumption = fuelConsumption;
+    this.targetSpeed = 0.0f;
   }
 
   /**
@@ -109,21 +104,30 @@ public class Ship {
   }
 
   /**
-   * Getter for course.
-   *
-   * @return Course
-   */
-  public float getCourse() {
-    return this.course;
-  }
-
-  /**
    * Getter for speed.
    *
    * @return Speed
    */
   public float getSpeed() {
     return this.speed;
+  }
+
+  /**
+   * Getter for target speed.
+   * 
+   * @return Target speed
+   */
+  public float getTargetSpeed() {
+    return this.targetSpeed;
+  }
+
+  /**
+   * Setter for target speed.
+   * 
+   * @param targetSpeed The specified target speed
+   */
+  public void setTargetSpeed(float targetSpeed) {
+    this.targetSpeed = targetSpeed;
   }
 
   /**
