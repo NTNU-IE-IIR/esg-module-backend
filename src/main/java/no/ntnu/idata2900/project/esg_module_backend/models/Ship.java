@@ -18,7 +18,7 @@ import jakarta.persistence.Table;
  * of the data packaged into a {@link DataPoint data point}.
  *
  * @author Group 14
- * @version v0.2.6 (2025.04.30)
+ * @version v0.2.7 (2025.04.30)
  */
 @Entity
 @Table(name = "ship")
@@ -29,6 +29,10 @@ public class Ship {
   @Column(name = "ship_id")
   @Schema(description = "Unique ID")
   private Long id;
+
+  @Column(name = "registration_mark")
+  @Schema(description = "Ship registration mark")
+  private String registrationMark;
 
   @Column(name = "name")
   @Schema(description = "Ship name")
@@ -61,15 +65,18 @@ public class Ship {
   /**
    * Constructor for the Ship class.
    *
-   * @param name    The specified name
-   * @param heading The specified heading
-   * @param speed   The specified speed
+   * @param registrationMark  The specified registration mark
+   * @param name              The specified name
+   * @param heading           The specified heading
+   * @param speed             The specified speed
    */
   public Ship(
+    String registrationMark,
     String name,
     float heading,
     float speed
   ) {
+    this.registrationMark = registrationMark;
     this.name = name;
     this.heading = heading;
     this.speed = speed;
@@ -83,6 +90,15 @@ public class Ship {
    */
   public Long getId() {
     return this.id;
+  }
+
+  /**
+   * Getter for registration mark.
+   * 
+   * @return Registration mark
+   */
+  public String getRegistrationMark() {
+    return this.registrationMark;
   }
 
   /**
