@@ -1,5 +1,7 @@
 package no.ntnu.idata2900.project.esg_module_backend.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -81,6 +83,7 @@ public class SwellWaves {
   )
   private float swell2Period;
 
+  @JsonIgnore
   @MapsId
   @OneToOne(mappedBy = "swellWaves")
   @JoinColumn(name = "swell_waves_id")

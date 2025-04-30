@@ -1,5 +1,7 @@
 package no.ntnu.idata2900.project.esg_module_backend.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -53,6 +55,7 @@ public class Fuel {
   @Schema(description = "Hotel")
   private float hotel;
 
+  @JsonIgnore
   @MapsId
   @OneToOne(mappedBy = "fuelConsumption")
   @JoinColumn(name = "fuel_id")

@@ -1,5 +1,7 @@
 package no.ntnu.idata2900.project.esg_module_backend.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -49,6 +51,7 @@ public class Ship {
   @Schema(description = "Fuel consumption data over the last time interval")
   private Fuel fuelConsumption;
 
+  @JsonIgnore
   @MapsId
   @OneToOne(mappedBy = "ship")
   @JoinColumn(name = "ship_id")

@@ -1,5 +1,7 @@
 package no.ntnu.idata2900.project.esg_module_backend.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -72,6 +74,7 @@ public class MarineWeather {
   @Schema(description = "Ocean current direction")
   private float oceanCurrentDirection;
 
+  @JsonIgnore
   @MapsId
   @OneToOne(mappedBy = "marineWeather")
   @JoinColumn(name = "marine_weather_id")
