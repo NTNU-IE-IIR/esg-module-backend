@@ -55,8 +55,6 @@ public class FakeDataInitializer {
   private float heading;
   private float course;
   private float speed;
-  private float fuelLevel;
-  private float fishAmount;
 
   public FakeDataInitializer(int num) {
     this.data = new ArrayList<>();
@@ -86,8 +84,6 @@ public class FakeDataInitializer {
     this.heading = 315.0f;
     this.course = 310.0f;
     this.speed = 7.0f;
-    this.fuelLevel = 1000.0f;
-    this.fishAmount = 0.0f;
   }
 
   /**
@@ -102,10 +98,15 @@ public class FakeDataInitializer {
     for (int i = 1; i <= num; i++) {
       DataPoint dp = new DataPoint(ts, initPositionData());
 
-      dp.setWeather(initWeatherData());
-      dp.setMarineWeather(initMarineWeatherData());
-      dp.setShip(initShipData());
+      Weather weather = initWeatherData();
+      MarineWeather marineWeather = initMarineWeatherData();
+      Ship ship = initShipData();
 
+      weather.setDp(dp);
+      marineWeather.setDp(dp);
+      ship.setDp(dp);
+
+      // TODO This does not work
       data.add(dp);
 
       // Increment time by 1 minute

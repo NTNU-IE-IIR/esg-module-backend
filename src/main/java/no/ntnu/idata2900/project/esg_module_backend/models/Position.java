@@ -1,22 +1,49 @@
 package no.ntnu.idata2900.project.esg_module_backend.models;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 
 /**
  * The Position class represents a position in the form of a coordinate, containing a latitude and
  * longitude.
  *
  * @author Group 14
- * @version v0.1.2 (2025.04.24)
+ * @version v0.1.4 (2025.04.30)
  */
+@Entity
+@Table(name = "position")
+@Schema(
+  description = "Position entity representing position as coordinates at a specific data point"
+)
 public class Position {
+
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "position_id")
+  @Schema(description = "Unique ID")
   private Long id;
+
+  @Column(name = "latitude")
+  @Schema(description = "Latitude")
   private float lat;
+
+  @Column(name = "longitude")
+  @Schema(description = "Longitude")
   private float lng;
+
+  @JsonIgnore
+  @MapsId
+  @OneToOne(mappedBy = "pos")
+  @JoinColumn(name = "position_id")
+  @Schema(description = "Data point containig this specific position data")
+  private DataPoint dp;
 
   /**
    * Constructor for the Position class.
@@ -54,5 +81,23 @@ public class Position {
    */
   public float getLng() {
     return this.lng;
+  }
+
+  /**
+   * Getter for data point.
+   * 
+   * @return Data point
+   */
+  public DataPoint getDp() {
+    return this.dp;
+  }
+
+  /**
+   * Setter for data point.
+   * 
+   * @param dp The specified data point
+   */
+  public void setDp(DataPoint dp) {
+    this.dp = dp;
   }
 }

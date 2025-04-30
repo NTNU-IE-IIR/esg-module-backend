@@ -1,25 +1,62 @@
 package no.ntnu.idata2900.project.esg_module_backend.models;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrimaryKeyJoinColumn;
+import jakarta.persistence.Table;
 
 /**
  * The Ship class represents various ship data collected from different sources. The class is part
  * of the data packaged into a {@link DataPoint data point}.
  *
  * @author Group 14
- * @version v0.2.3 (2025.04.27)
+ * @version v0.2.5 (2025.04.30)
  */
+@Entity
+@Table(name = "ship")
+@Schema(description = "Ship entity representing ship data at a specific data point")
 public class Ship {
+
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "ship_id")
+  @Schema(description = "Unique ID")
   private Long id;
-  private final String name;
-  private final float heading;
-  private final float course;
-  private final float speed;
-  private final Fuel fuelConsumption;
+
+  @Column(name = "name")
+  @Schema(description = "Ship name")
+  private String name;
+
+  @Column(name = "heading")
+  @Schema(description = "Ship heading")
+  private float heading;
+
+  @Column(name = "course")
+  @Schema(description = "Ship course")
+  private float course;
+
+  @Column(name = "speed")
+  @Schema(description = "Ship speed")
+  private float speed;
+
+  @OneToOne(cascade = CascadeType.ALL)
+  @PrimaryKeyJoinColumn
+  @Schema(description = "Fuel consumption data over the last time interval")
+  private Fuel fuelConsumption;
+
+  @JsonIgnore
+  @MapsId
+  @OneToOne(mappedBy = "ship")
+  @JoinColumn(name = "ship_id")
+  @Schema(description = "Data point containing this specific ship data")
+  private DataPoint dp;
 
   /**
    * Constructor for the Ship class.
@@ -31,11 +68,11 @@ public class Ship {
    * @param fuelConsumption The specified fuel consumption
    */
   public Ship(
-      String name,
-      float heading,
-      float course,
-      float speed,
-      Fuel fuelConsumption
+    String name,
+    float heading,
+    float course,
+    float speed,
+    Fuel fuelConsumption
   ) {
     this.name = name;
     this.heading = heading;
@@ -96,5 +133,23 @@ public class Ship {
    */
   public Fuel getFuelConsumption() {
     return this.fuelConsumption;
+  }
+
+  /**
+   * Getter for data point.
+   * 
+   * @return Data point
+   */
+  public DataPoint getDp() {
+    return this.dp;
+  }
+
+  /**
+   * Setter for data point.
+   * 
+   * @param dp The specified data point
+   */
+  public void setDp(DataPoint dp) {
+    this.dp = dp;
   }
 }
