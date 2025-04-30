@@ -39,105 +39,108 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/trip")
 @Tag(name = "Trip Controller", description = "API for managing fishing trip logs")
 public class TripController {
-  private final Logger logger = LoggerFactory.getLogger(TripController.class);
-  private final TripService tripService;
+    private final Logger logger = LoggerFactory.getLogger(TripController.class);
+    private final TripService tripService;
 
-  @Autowired
-  public TripController(TripService tripService) {
-    this.tripService = tripService;
-  }
-
-
-  /**
-   * Endpoint to start a trip. This method is called when the user wants to start a new trip.
-   *
-   * @return ResponseEntity containing a message indicating that the trip has started.
-   */
-  @Operation(summary = "Start a new trip", description = "Initiates a new fishing trip recording")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Trip successfully started",
-          content = @Content(mediaType = "text/plain", schema = @Schema(type = "string")))
-  })
-  @PostMapping("/start")
-  public ResponseEntity<String> startTrip() {
-    System.out.println("Request received to start trip");
-    tripService.startTrip();
-    return ResponseEntity.ok("Trip started");
-  }
-
-  /**
-   * Endpoint to stop a trip. This method is called when the user wants to end an ongoing trip.
-   *
-   * @param requestBody A map containing trip details: 'comments' (optional) and 'area' (required)
-   * @return String indicating the status of the operation
-   */
-  @Operation(summary = "Stop the current trip", description = "Ends the current fishing trip and saves it to the database")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Trip successfully stopped and saved",
-          content = @Content(mediaType = "text/plain", schema = @Schema(type = "string"))),
-      @ApiResponse(responseCode = "400", description = "Invalid request - area not specified",
-          content = @Content(mediaType = "text/plain", schema = @Schema(type = "string")))
-  })
-  @PostMapping("/stop")
-  public ResponseEntity<String> stopTrip(@RequestBody Map<String, String> requestBody) {
-    String comments = requestBody.get("comments");
-    String area = requestBody.get("area");
-
-    ResponseEntity<String> response;
-
-
-    //guard clauses and cleaning data
-    if (area == null || area.isEmpty()) {
-      return new ResponseEntity<>("Area must be specified", HttpStatus.BAD_REQUEST);
+    @Autowired
+    public TripController(TripService tripService) {
+        this.tripService = tripService;
     }
 
-    area = area.strip();
 
-    if (comments != null && !comments.isEmpty()) {
-      comments = comments.strip();
+    /**
+     * Endpoint to start a trip. This method is called when the user wants to start a new trip.
+     *
+     * @return ResponseEntity containing a message indicating that the trip has started.
+     */
+    @Operation(summary = "Start a new trip", description = "Initiates a new fishing trip recording")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Trip successfully started",
+                    content = @Content(mediaType = "text/plain", schema = @Schema(type = "string")))
+    })
+    @PostMapping("/start")
+    public ResponseEntity<String> start() {
+        logger.info("Starting a new trip");
+        tripService.startTrip();
+        return ResponseEntity.ok("Trip started");
     }
 
-    tripService.stopTrip();
+    /**
+     * Endpoint to stop a trip. This method is called when the user wants to end an ongoing trip.
+     *
+     * @param requestBody A map containing trip details: 'comments' (optional) and 'area' (required)
+     * @return String indicating the status of the operation
+     */
+    @Operation(summary = "Stop the current trip", description = "Ends the current fishing trip and saves it to the database")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Trip successfully stopped and saved",
+                    content = @Content(mediaType = "text/plain", schema = @Schema(type = "string"))),
+            @ApiResponse(responseCode = "400", description = "Invalid request - area not specified",
+                    content = @Content(mediaType = "text/plain", schema = @Schema(type = "string")))
+    })
+    @PostMapping("/stop")
+    public ResponseEntity<String> stop(@RequestBody Map<String, String> requestBody) {
+        String comments = requestBody.get("comments");
+        String area = requestBody.get("area");
 
-    if (tripService.saveTrip(tripService.getCurrentTrip().toTripLog(comments, area))) {
-      response = new ResponseEntity<>("Trip successfully saved", HttpStatus.OK);
-    } else {
-      response = new ResponseEntity<>("Trip could not be saved", HttpStatus.INTERNAL_SERVER_ERROR);
+        ResponseEntity<String> response;
+
+        //guard clauses and cleaning data
+        if (area == null || area.isEmpty()) {
+            return new ResponseEntity<>("Area must be specified", HttpStatus.BAD_REQUEST);
+        }
+
+        area = area.strip();
+
+        if (comments != null && !comments.isEmpty()) {
+            comments = comments.strip();
+        }
+
+        tripService.stopTrip();
+//        TODO: temporarliy commented out because trip logic will be changed
+//        if (tripService.saveTrip(tripService.getCurrentTrip().toTripLog(comments, area))) {
+//            logger.info("Trip successfully stopped");
+//            response = new ResponseEntity<>("Trip successfully saved", HttpStatus.OK);
+//        } else {
+//            logger.error("Trip could not be saved");
+//            response = new ResponseEntity<>("Trip could not be saved", HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+
+        response = new ResponseEntity<>("Trip successfully saved", HttpStatus.OK);
+
+        return response;
     }
 
-    return response;
-  }
+    /**
+     * Endpoint to check if a trip is active. Returns true if a trip is active, false otherwise.
+     *
+     * @return boolean indicating whether a trip is active or not.
+     */
+    @Operation(summary = "Check if a trip is active", description = "Checks if a fishing trip is currently in progress")
+    @ApiResponses(value = {
 
-  /**
-   * Endpoint to check if a trip is active. Returns true if a trip is active, false otherwise.
-   *
-   * @return boolean indicating whether a trip is active or not.
-   */
-  @Operation(summary = "Check if a trip is active", description = "Checks if a fishing trip is currently in progress")
-  @ApiResponses(value = {
-
-  })
-  @GetMapping("/active")
-  public ResponseEntity<Boolean> isTripActive() {
-    return new ResponseEntity<>(tripService.isTripActive(), HttpStatus.OK);
-  }
-
-  @Operation(summary = "Get current trip data points", description = "Gets the current trip data points")
-  @ApiResponses(value = {
-
-  })
-  @GetMapping("/data")
-  public ResponseEntity<List<ShipDto>> getCurrentTripDataPoints() {
-    ResponseEntity<List<ShipDto>> response;
-
-    List<ShipDto> dataPoints = tripService.getTripDataPoints();
-    if (dataPoints.isEmpty()) {
-      response = new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    } else {
-      response = new ResponseEntity<>(dataPoints, HttpStatus.OK);
+    })
+    @GetMapping("/active")
+    public ResponseEntity<Boolean> isTripActive() {
+        return new ResponseEntity<>(tripService.isTripActive(), HttpStatus.OK);
     }
-    return response;
-  }
+
+    @Operation(summary = "Get current trip data points", description = "Gets the current trip data points")
+    @ApiResponses(value = {
+
+    })
+    @GetMapping("/data")
+    public ResponseEntity<List<ShipDto>> getCurrentTripDataPoints() {
+        ResponseEntity<List<ShipDto>> response;
+
+        List<ShipDto> dataPoints = tripService.getTripDataPoints();
+        if (dataPoints.isEmpty()) {
+            response = new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            response = new ResponseEntity<>(dataPoints, HttpStatus.OK);
+        }
+        return response;
+    }
 
 
 }

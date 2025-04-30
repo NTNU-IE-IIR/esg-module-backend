@@ -26,92 +26,90 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class TripService implements DataListener {
-  private final Logger logger = LoggerFactory.getLogger(TripService.class);
-  private final DataSource dataSource;
-  private final BoatDataHandler boatDataHandler;
-  private Trip currentTrip;
-  private boolean tripActive;
+    private final Logger logger = LoggerFactory.getLogger(TripService.class);
+    private final DataSource dataSource;
+    private final BoatDataHandler boatDataHandler;
+    private Trip currentTrip;
+    private boolean tripActive;
 
-  /**
-   * Constructs a new TripService with the required dependencies.
-   *
-   * @param dataSource      The data source that provides ship data during trips
-   * @param boatDataHandler The handler for sending boat data to WebSocket clients
-   */
-  @Autowired
-  TripService(TripLogRepository tripLogRepository, DataSource dataSource, BoatDataHandler boatDataHandler) {
-    this.dataSource = dataSource;
-    this.boatDataHandler = boatDataHandler;
-  }
-
-
-
-
-  public boolean isTripActive() {
-    return tripActive;
-  }
-
-  public List<ShipDto> getTripDataPoints() {
-    if (tripActive) {
-      return currentTrip.getShipData();
-    } else {
-      throw new IllegalStateException("Could not find any data points for current trip");
+    /**
+     * Constructs a new TripService with the required dependencies.
+     *
+     * @param dataSource      The data source that provides ship data during trips
+     * @param boatDataHandler The handler for sending boat data to WebSocket clients
+     */
+    @Autowired
+    TripService(DataSource dataSource, BoatDataHandler boatDataHandler) {
+        this.dataSource = dataSource;
+        this.boatDataHandler = boatDataHandler;
     }
-  }
 
 
-  /**
-   * Stops the current fishing trip. This method stops the data source
-   * to end data collection and finalizes the current trip.
-   */
-  public void stopTrip() {
-    dataSource.stop();
-    currentTrip.end();
-    tripActive = false;
-    // Stop trip
-  }
-
-  /**
-   * Gets the current active trip.
-   *
-   * @return The current Trip object, or null if no trip is active
-   */
-  public Trip getCurrentTrip() {
-    return currentTrip;
-  }
-
-  /**
-   * Starts a new fishing trip. This method creates a new Trip object,
-   * initializes it, sets up the data listener, and starts the data source
-   * to begin collecting ship data.
-   */
-  public void startTrip() {
-    currentTrip = new Trip();
-    tripActive = true;
-    currentTrip.start();
-
-    dataSource.setDataListener(this);
-    dataSource.start();
-    // Start trip
-    System.out.println("Trip started");
-  }
-
-  /**
-   * Handles ship data received from the data source. This method is called
-   * whenever new data is available from the data source.
-   * If a trip is active, the data is added to the trip. If a WebSocket
-   * connection is established, the data is also sent to the client.
-   *
-   * @param data The ship data received from the data source
-   */
-  @Override
-  public void onDataReceived(ShipDto data) {
-    System.out.println("Data received: " + data);
-    if (tripActive) {
-      currentTrip.addShipData(data);
+    public boolean isTripActive() {
+        return tripActive;
     }
-      if (boatDataHandler.isConnected()) {
-          boatDataHandler.sendBoatData(data);
-      }
-  }
+
+    public List<ShipDto> getTripDataPoints() {
+        if (tripActive) {
+            return currentTrip.getShipData();
+        } else {
+            throw new IllegalStateException("Could not find any data points for current trip");
+        }
+    }
+
+
+    /**
+     * Stops the current fishing trip. This method stops the data source
+     * to end data collection and finalizes the current trip.
+     */
+    public void stopTrip() {
+        dataSource.stop();
+        currentTrip.end();
+        tripActive = false;
+        // Stop trip
+    }
+
+    /**
+     * Gets the current active trip.
+     *
+     * @return The current Trip object, or null if no trip is active
+     */
+    public Trip getCurrentTrip() {
+        return currentTrip;
+    }
+
+    /**
+     * Starts a new fishing trip. This method creates a new Trip object,
+     * initializes it, sets up the data listener, and starts the data source
+     * to begin collecting ship data.
+     */
+    public void startTrip() {
+        currentTrip = new Trip();
+        tripActive = true;
+        currentTrip.start();
+
+        dataSource.setDataListener(this);
+        dataSource.start();
+        // Start trip
+        System.out.println("Trip started");
+    }
+
+    /**
+     * Handles ship data received from the data source. This method is called
+     * whenever new data is available from the data source.
+     * If a trip is active, the data is added to the trip. If a WebSocket
+     * connection is established, the data is also sent to the client.
+     *
+     * @param data The ship data received from the data source
+     */
+    @Override
+    public void onDataReceived(ShipDto data) {
+        System.out.println("Data received: " + data);
+        if (tripActive) {
+            currentTrip.addShipData(data);
+        }
+        if (boatDataHandler.isConnected()) {
+            boatDataHandler.sendBoatData(data);
+        }
+    }
 }
