@@ -20,9 +20,9 @@ public class Configuration {
   /**
    * Constructor for the Configuration class.
    * 
-   * @param registrationMark  The specified registration mark
-   * @param name              The specified name
-   * @param level1            The specified level 1
+   * @param registrationMark The specified registration mark
+   * @param name             The specified name
+   * @param level1           The specified level 1
    */
   public Configuration(String registrationMark, String name, boolean level1) {
     this.registrationMark = registrationMark;
@@ -33,10 +33,10 @@ public class Configuration {
   /**
    * Default constructor for Configuration class.
    *
-   * <p>the default constructor is required by JPA</p>
+   * <p>The default constructor is required by JPA.</p>
    */
   public Configuration() {
-    // Intentional left blank, constructor for JPA
+    // Intentionally left blank
   }
 
   /**
