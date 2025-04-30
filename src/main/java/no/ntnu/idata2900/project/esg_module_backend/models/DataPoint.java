@@ -16,7 +16,7 @@ import jakarta.persistence.Table;
  * {@link Weather weather} data, as well as {@link Position position} data.
  *
  * @author Group 14
- * @version v0.2.6 (2025.04.30)
+ * @version v0.2.7 (2025.04.30)
  */
 @Entity
 @Table(name = "data_point")
@@ -29,8 +29,8 @@ public class DataPoint {
   @Schema(description = "Unique ID")
   private Long id;
 
-  @Column(name = "unix_timestamp")
-  @Schema(description = "UNIX timestamp")
+  @Column(name = "timestamp")
+  @Schema(description = "Timestamp")
   private long ts;
 
   @OneToOne(cascade = CascadeType.ALL)

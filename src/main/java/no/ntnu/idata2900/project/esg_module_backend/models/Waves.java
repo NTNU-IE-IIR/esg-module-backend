@@ -12,7 +12,7 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 /**
- * The Waves class represents various wave data. The class is part of the data packaged into
+ * The Waves class represents various waves data. The class is part of the data packaged into
  * {@link MarineWeather marine weather data}.
  * 
  * <p>The data include the following parameters:</p>
@@ -35,7 +35,7 @@ import jakarta.persistence.Table;
  * <a href="https://api.windy.com/point-forecast/docs">Windy API documentation</a>.</p>
  * 
  * @author Group 14
- * @version v0.1.3 (2025.04.30)
+ * @version v0.1.4 (2025.04.30)
  */
 @Entity
 @Table(name = "waves")
@@ -80,9 +80,9 @@ public class Waves {
   /**
    * Constructor for the Waves class.
    * 
-   * @param wavesHeight     The specified waves height
-   * @param wavesDirection  The specified waves direction
-   * @param wavesPeriod     The specified waves period
+   * @param wavesHeight    The specified waves height
+   * @param wavesDirection The specified waves direction
+   * @param wavesPeriod    The specified waves period
    */
   public Waves(float wavesHeight, float wavesDirection, float wavesPeriod) {
     this.wavesHeight = wavesHeight;

@@ -12,7 +12,7 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 /**
- * The WindWaves class represents various wind wave data. The class is part of the data packaged
+ * The WindWaves class represents various wind waves data. The class is part of the data packaged
  * into {@link MarineWeather marine weather data}.
  * 
  * <p>The data include the following parameters:</p>
@@ -35,7 +35,7 @@ import jakarta.persistence.Table;
  * <a href="https://api.windy.com/point-forecast/docs">Windy API documentation</a>.</p>
  * 
  * @author Group 14
- * @version v0.1.3 (2025.04.30)
+ * @version v0.1.4 (2025.04.30)
  */
 @Entity
 @Table(name = "wind_waves")
