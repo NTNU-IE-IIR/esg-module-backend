@@ -16,7 +16,7 @@ import jakarta.persistence.Table;
  * {@link Weather weather} data, as well as {@link Position position} data.
  *
  * @author Group 14
- * @version v0.2.5 (2025.04.30)
+ * @version v0.2.6 (2025.04.30)
  */
 @Entity
 @Table(name = "data_point")
@@ -52,6 +52,15 @@ public class DataPoint {
   @PrimaryKeyJoinColumn
   @Schema(description = "Marine weather data (waves and ocean current)")
   private MarineWeather marineWeather;
+
+  /**
+   * Default constructor for the DataPoint class.
+   * 
+   * <p>The default constructor is required by JPA.</p>
+   */
+  public DataPoint() {
+    // Intentionally left blank
+  }
 
   /**
    * Constructor for the DataPoint class.

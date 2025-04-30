@@ -35,7 +35,7 @@ import jakarta.persistence.Table;
  * <a href="https://api.windy.com/point-forecast/docs">Windy API documentation</a>.</p>
  * 
  * @author Group 14
- * @version v0.1.2 (2025.04.30)
+ * @version v0.1.3 (2025.04.30)
  */
 @Entity
 @Table(name = "wind_waves")
@@ -68,6 +68,15 @@ public class WindWaves {
   @JoinColumn(name = "wind_waves_id")
   @Schema(description = "Marine weather data containing this specific wind waves data")
   private MarineWeather marineWeather;
+
+  /**
+   * Default constructor for the WindWaves class.
+   * 
+   * <p>The default constructor is required by JPA.</p>
+   */
+  public WindWaves() {
+    // Intentionally left blank
+  }
 
   /**
    * Constructor for the WindWaves class.

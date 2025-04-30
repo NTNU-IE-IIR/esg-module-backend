@@ -27,7 +27,7 @@ import jakarta.persistence.Table;
  * </ul>
  * 
  * @author Group 14
- * @version v0.1.2 (2025.04.30)
+ * @version v0.1.3 (2025.04.30)
  * @see Ship
  */
 @Entity
@@ -61,6 +61,15 @@ public class Fuel {
   @JoinColumn(name = "fuel_id")
   @Schema(description = "Ship data containing this specific fuel data")
   private Ship ship;
+
+  /**
+   * Default constructor for the Fuel class.
+   * 
+   * <p>The default constructor is required by JPA.</p>
+   */
+  public Fuel() {
+    // Intentionally left blank
+  }
 
   /**
    * Constructor for the Fuel class.

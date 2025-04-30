@@ -33,7 +33,7 @@ import jakarta.persistence.Table;
  * <a href="https://api.windy.com/point-forecast/docs">Windy API documentation</a>.</p>
  *
  * @author Group 14
- * @version v0.3.2 (2025.04.30)
+ * @version v0.3.3 (2025.04.30)
  */
 @Entity
 @Table(name = "weather")
@@ -63,6 +63,15 @@ public class Weather {
   @JoinColumn(name = "weather_id")
   @Schema(description = "Data point containing this specific weather data")
   private DataPoint dp;
+
+  /**
+   * Default constructor for the Weather class.
+   * 
+   * <p>The default constructor is required by JPA.</p>
+   */
+  public Weather() {
+    // Intentionally left blank
+  }
 
   /**
    * Constructor for the Weather class.

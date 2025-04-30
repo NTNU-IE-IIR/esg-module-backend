@@ -18,7 +18,7 @@ import jakarta.persistence.Table;
  * of the data packaged into a {@link DataPoint data point}.
  *
  * @author Group 14
- * @version v0.2.7 (2025.04.30)
+ * @version v0.2.8 (2025.04.30)
  */
 @Entity
 @Table(name = "ship")
@@ -61,6 +61,15 @@ public class Ship {
   @JoinColumn(name = "ship_id")
   @Schema(description = "Data point containing this specific ship data")
   private DataPoint dp;
+
+  /**
+   * Default constructor for the Ship class.
+   * 
+   * <p>The default constructor is required by JPA.</p>
+   */
+  public Ship() {
+    // Intentionally left blank
+  }
 
   /**
    * Constructor for the Ship class.

@@ -36,7 +36,7 @@ import jakarta.persistence.Table;
  * parameters, see their respective class documentations.</p>
  * 
  * @author Group 14
- * @version v0.1.3 (2025.04.30)
+ * @version v0.1.4 (2025.04.30)
  */
 @Entity
 @Table(name = "marine_weather")
@@ -80,6 +80,15 @@ public class MarineWeather {
   @JoinColumn(name = "marine_weather_id")
   @Schema(description = "Data point containing this specific marine weather data")
   private DataPoint dp;
+
+  /**
+   * Default constructor for the MarineWeather class.
+   * 
+   * <p>The default constructor is required by JPA.</p>
+   */
+  public MarineWeather() {
+    // Intentionally left blank
+  }
 
   /**
    * Constructor for the MarineWeather class.
