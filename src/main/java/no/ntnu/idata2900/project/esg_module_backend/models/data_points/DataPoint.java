@@ -1,4 +1,4 @@
-package no.ntnu.idata2900.project.esg_module_backend.models;
+package no.ntnu.idata2900.project.esg_module_backend.models.data_points;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.CascadeType;

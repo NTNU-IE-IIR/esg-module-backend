@@ -10,10 +10,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import no.ntnu.idata2900.project.esg_module_backend.dtos.ShipDto;
-import no.ntnu.idata2900.project.esg_module_backend.models.DataPoint;
-import no.ntnu.idata2900.project.esg_module_backend.models.Fuel;
-import no.ntnu.idata2900.project.esg_module_backend.models.Position;
-import no.ntnu.idata2900.project.esg_module_backend.models.Vessel;
+import no.ntnu.idata2900.project.esg_module_backend.models.data_points.DataPoint;
+import no.ntnu.idata2900.project.esg_module_backend.models.data_points.Fuel;
+import no.ntnu.idata2900.project.esg_module_backend.models.data_points.Position;
+import no.ntnu.idata2900.project.esg_module_backend.models.data_points.Vessel;
+
 import org.springframework.stereotype.Component;
 
 /**
@@ -96,21 +97,26 @@ public class FakeDataSource implements DataSource {
    * @return A {@link ShipDto} object representing the initial ship data.
    */
   private ShipDto createInitialShipData() {
-    DataPoint dp = new DataPoint(ts, new Position(61.6031484f, 5.0445668f));
+    DataPoint dp = new DataPoint(ts);
+
+    Position pos = new Position(61.6031484f, 5.0445668f);
+    pos.setDp(dp);
+
+    Vessel vessel = new Vessel("FBS-N-1", "Fiskebas", 85.0f, 12.5f);
+    vessel.setDp(dp);
     Fuel fuelConsumption = new Fuel(30.0f, 15.0f, 5.0f);
-    Vessel ship = new Vessel("Ship1", 90.0f, 85.0f, 12.5f, fuelConsumption);
-    ship.setDp(dp);
+    fuelConsumption.setVessel(vessel);
 
     return new ShipDto(
         1,
-        ship.getName(),
-        ship.getHeading(),
-        ship.getCourse(),
-        ship.getSpeed(),
-        ship.getFuelConsumption().getTotal(),
+        vessel.getName(),
+        vessel.getHeading(),
+        90.0f,
+        vessel.getSpeed(),
+        fuelConsumption.getTotal(),
         0.0f,
-        ship.getDp().getPos().getLat(),
-        ship.getDp().getPos().getLng(),
+        pos.getLat(),
+        pos.getLng(),
         // UNIX timestamp in seconds
         ZonedDateTime
             .of(
@@ -137,20 +143,24 @@ public class FakeDataSource implements DataSource {
     float fuelConsumption = fakeBoatData.getFuelLevel() - (random.nextFloat() * 4);
     float totalDistance = fakeBoatData.getTotalDistance() + (random.nextFloat() * 10);
 
-    DataPoint dp = new DataPoint(ts, new Position(lat, lng));
-    Vessel ship = new Vessel("Ship1", 90.0f, 85.0f, 12.5f, new Fuel(0.0f, 0.0f, 0.0f));
-    ship.setDp(dp);
+    DataPoint dp = new DataPoint(ts);
+
+    Position pos = new Position(lat, lng);
+    pos.setDp(dp);
+
+    Vessel vessel = new Vessel("FBS-N-1", "Fiskebas", 85.0f, 12.5f);
+    vessel.setDp(dp);
 
     return new ShipDto(
         1,
-        ship.getName(),
-        ship.getHeading(),
-        ship.getCourse(),
-        ship.getSpeed(),
+        vessel.getName(),
+        vessel.getHeading(),
+        90.0f,
+        vessel.getSpeed(),
         fuelConsumption,
         totalDistance,
-        ship.getDp().getPos().getLat(),
-        ship.getDp().getPos().getLng(),
+        lat,
+        lng,
         // UNIX timestamp in seconds
         ZonedDateTime
             .of(
