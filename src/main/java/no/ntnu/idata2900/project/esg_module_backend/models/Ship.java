@@ -37,9 +37,6 @@ public class Ship {
   @Schema(description = "Fuel consumption data over the last time interval")
   private Fuel fuelConsumption;
 
-  @Schema(description = "Amount of fish caught")
-  private float fishAmount;
-
   /**
    * Constructor for the Ship class.
    *
@@ -48,22 +45,19 @@ public class Ship {
    * @param course          The specified course
    * @param speed           The specified speed
    * @param fuelConsumption The specified fuel consumption
-   * @param fishAmount      The specified amount
    */
   public Ship(
-      String name,
-      float heading,
-      float course,
-      float speed,
-      Fuel fuelConsumption,
-      float fishAmount
+    String name,
+    float heading,
+    float course,
+    float speed,
+    Fuel fuelConsumption
   ) {
     this.name = name;
     this.heading = heading;
     this.course = course;
     this.speed = speed;
     this.fuelConsumption = fuelConsumption;
-    this.fishAmount = fishAmount;
   }
 
   /**
@@ -118,14 +112,5 @@ public class Ship {
    */
   public Fuel getFuelConsumption() {
     return this.fuelConsumption;
-  }
-
-  /**
-   * Getter for fish amount.
-   *
-   * @return Fish amount
-   */
-  public float getFishAmount() {
-    return this.fishAmount;
   }
 }

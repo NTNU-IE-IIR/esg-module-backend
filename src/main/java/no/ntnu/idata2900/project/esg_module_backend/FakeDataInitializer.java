@@ -438,19 +438,12 @@ public class FakeDataInitializer {
       }
     }
 
-    // Randomly adds amount of fish 20 % of the time
-    float fishProb = RAN.nextFloat();
-    if (fishProb > 0.8f) {
-      fishAmount += RAN.nextFloat(50);
-    }
-
     return new Ship(
         "Ship",
         heading,
         course,
         speed,
-        calculateFuelConsumption(),
-        fishAmount
+        calculateFuelConsumption()
     );
   }
 
