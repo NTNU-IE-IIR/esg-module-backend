@@ -442,8 +442,6 @@ public class FakeDataInitializer {
     }
 
     return new Vessel(
-        "SHP_N_1",
-        "Ship",
         heading,
         speed
     );

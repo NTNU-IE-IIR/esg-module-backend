@@ -102,14 +102,14 @@ public class FakeDataSource implements DataSource {
     Position pos = new Position(61.6031484f, 5.0445668f);
     pos.setDp(dp);
 
-    Vessel vessel = new Vessel("FBS-N-1", "Fiskebas", 85.0f, 12.5f);
+    Vessel vessel = new Vessel(85.0f, 12.5f);
     vessel.setDp(dp);
     Fuel fuelConsumption = new Fuel(30.0f, 15.0f, 5.0f);
     fuelConsumption.setVessel(vessel);
 
     return new ShipDto(
         1,
-        vessel.getName(),
+        "Fiskebas",
         vessel.getHeading(),
         90.0f,
         vessel.getSpeed(),
@@ -148,12 +148,12 @@ public class FakeDataSource implements DataSource {
     Position pos = new Position(lat, lng);
     pos.setDp(dp);
 
-    Vessel vessel = new Vessel("FBS-N-1", "Fiskebas", 85.0f, 12.5f);
+    Vessel vessel = new Vessel(85.0f, 12.5f);
     vessel.setDp(dp);
 
     return new ShipDto(
         1,
-        vessel.getName(),
+        "Fiskebas",
         vessel.getHeading(),
         90.0f,
         vessel.getSpeed(),
