@@ -36,7 +36,7 @@ import jakarta.persistence.Table;
  * parameters, see their respective class documentations.</p>
  * 
  * @author Group 14
- * @version v0.1.2 (2025.04.30)
+ * @version v0.1.3 (2025.04.30)
  */
 @Entity
 @Table(name = "marine_weather")
@@ -84,22 +84,10 @@ public class MarineWeather {
   /**
    * Constructor for the MarineWeather class.
    * 
-   * @param waves                 The specified wave data
-   * @param wwaves                The specified wind wave data
-   * @param swellWaves            The specified swell wave data
    * @param oceanCurrentVelocity  The specified ocean current velocity
    * @param oceanCurrentDirection The specified ocean current direction
    */
-  public MarineWeather(
-    Waves waves,
-    WindWaves wwaves,
-    SwellWaves swellWaves,
-    float oceanCurrentVelocity,
-    float oceanCurrentDirection
-  ) {
-    this.waves = waves;
-    this.wwaves = wwaves;
-    this.swellWaves = swellWaves;
+  public MarineWeather(float oceanCurrentVelocity, float oceanCurrentDirection) {
     this.oceanCurrentVelocity = oceanCurrentVelocity;
     this.oceanCurrentDirection = oceanCurrentDirection;
   }

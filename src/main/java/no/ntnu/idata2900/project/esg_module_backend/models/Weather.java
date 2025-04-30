@@ -71,11 +71,7 @@ public class Weather {
    * @param windV The specified wind <code>v</code> vector
    * @param gust  The specified wind gusts speed
    */
-  public Weather(
-      float windU,
-      float windV,
-      float gust
-  ) {
+  public Weather(float windU, float windV, float gust) {
     this.windU = windU;
     this.windV = windV;
     this.gust = gust;

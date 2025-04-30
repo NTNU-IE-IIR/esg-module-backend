@@ -65,17 +65,12 @@ public class Ship {
   /**
    * Constructor for the Ship class.
    *
-   * @param registrationMark  The specified registration mark
-   * @param name              The specified name
-   * @param heading           The specified heading
-   * @param speed             The specified speed
+   * @param registrationMark The specified registration mark
+   * @param name             The specified name
+   * @param heading          The specified heading
+   * @param speed            The specified speed
    */
-  public Ship(
-    String registrationMark,
-    String name,
-    float heading,
-    float speed
-  ) {
+  public Ship(String registrationMark, String name, float heading, float speed) {
     this.registrationMark = registrationMark;
     this.name = name;
     this.heading = heading;

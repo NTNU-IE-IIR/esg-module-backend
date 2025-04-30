@@ -65,9 +65,9 @@ public class Fuel {
   /**
    * Constructor for the Fuel class.
    * 
-   * @param drift       The specified drift fuel consumption
-   * @param production  The specified production fuel consumption
-   * @param hotel       The specified hotel fuel consumption
+   * @param drift      The specified drift fuel consumption
+   * @param production The specified production fuel consumption
+   * @param hotel      The specified hotel fuel consumption
    */
   public Fuel(float drift, float production, float hotel) {
     this.drift = drift;

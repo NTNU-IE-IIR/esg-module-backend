@@ -16,7 +16,7 @@ import jakarta.persistence.Table;
  * {@link Weather weather} data, as well as {@link Position position} data.
  *
  * @author Group 14
- * @version v0.2.4 (2025.04.30)
+ * @version v0.2.5 (2025.04.30)
  */
 @Entity
 @Table(name = "data_point")
@@ -56,15 +56,10 @@ public class DataPoint {
   /**
    * Constructor for the DataPoint class.
    *
-   * @param ts  The specified timestamp
-   * @param pos The specified position data
+   * @param ts The specified timestamp
    */
-  public DataPoint(long ts, Position pos) {
-    this.pos = pos;
+  public DataPoint(long ts) {
     this.ts = ts;
-    this.ship = null;
-    this.weather = null;
-    this.marineWeather = null;
   }
 
   /**
