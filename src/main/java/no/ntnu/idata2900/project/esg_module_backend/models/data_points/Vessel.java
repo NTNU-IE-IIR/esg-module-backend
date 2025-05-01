@@ -1,4 +1,4 @@
-package no.ntnu.idata2900.project.esg_module_backend.models;
+package no.ntnu.idata2900.project.esg_module_backend.models.data_points;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -14,37 +14,33 @@ import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
 
 /**
- * The Ship class represents various ship data collected from different sources. The class is part
- * of the data packaged into a {@link DataPoint data point}.
+ * The Vessel class represents various vessel data collected from different sources. The class is
+ * part of the data packaged into a {@link DataPoint data point}.
  *
  * @author Group 14
- * @version v0.2.5 (2025.04.30)
+ * @version v0.3.1 (2025.04.30)
  */
 @Entity
-@Table(name = "ship")
-@Schema(description = "Ship entity representing ship data at a specific data point")
-public class Ship {
+@Table(name = "vessel")
+@Schema(description = "Vessel entity representing vessel data at a specific data point")
+public class Vessel {
 
   @Id
-  @Column(name = "ship_id")
+  @Column(name = "vessel_id")
   @Schema(description = "Unique ID")
   private Long id;
 
-  @Column(name = "name")
-  @Schema(description = "Ship name")
-  private String name;
-
   @Column(name = "heading")
-  @Schema(description = "Ship heading")
+  @Schema(description = "Vessel heading")
   private float heading;
 
-  @Column(name = "course")
-  @Schema(description = "Ship course")
-  private float course;
-
   @Column(name = "speed")
-  @Schema(description = "Ship speed")
+  @Schema(description = "Vessel speed")
   private float speed;
+
+  @Column(name = "target_speed")
+  @Schema(description = "Vessel target speed")
+  private float targetSpeed;
 
   @OneToOne(cascade = CascadeType.ALL)
   @PrimaryKeyJoinColumn
@@ -53,32 +49,30 @@ public class Ship {
 
   @JsonIgnore
   @MapsId
-  @OneToOne(mappedBy = "ship")
-  @JoinColumn(name = "ship_id")
-  @Schema(description = "Data point containing this specific ship data")
+  @OneToOne(mappedBy = "vessel")
+  @JoinColumn(name = "vessel_id")
+  @Schema(description = "Data point containing this specific vessel data")
   private DataPoint dp;
 
   /**
-   * Constructor for the Ship class.
-   *
-   * @param name            The specified ship name
-   * @param heading         The specified heading
-   * @param course          The specified course
-   * @param speed           The specified speed
-   * @param fuelConsumption The specified fuel consumption
+   * Default constructor for the Vessel class.
+   * 
+   * <p>The default constructor is required by JPA.</p>
    */
-  public Ship(
-    String name,
-    float heading,
-    float course,
-    float speed,
-    Fuel fuelConsumption
-  ) {
-    this.name = name;
+  public Vessel() {
+    // Intentionally left blank
+  }
+
+  /**
+   * Constructor for the Vessel class.
+   *
+   * @param heading The specified heading
+   * @param speed   The specified speed
+   */
+  public Vessel(float heading, float speed) {
     this.heading = heading;
-    this.course = course;
     this.speed = speed;
-    this.fuelConsumption = fuelConsumption;
+    this.targetSpeed = 0.0f;
   }
 
   /**
@@ -91,15 +85,6 @@ public class Ship {
   }
 
   /**
-   * Getter for ship name.
-   *
-   * @return Ship name
-   */
-  public String getName() {
-    return this.name;
-  }
-
-  /**
    * Getter for heading.
    *
    * @return Heading
@@ -109,21 +94,30 @@ public class Ship {
   }
 
   /**
-   * Getter for course.
-   *
-   * @return Course
-   */
-  public float getCourse() {
-    return this.course;
-  }
-
-  /**
    * Getter for speed.
    *
    * @return Speed
    */
   public float getSpeed() {
     return this.speed;
+  }
+
+  /**
+   * Getter for target speed.
+   * 
+   * @return Target speed
+   */
+  public float getTargetSpeed() {
+    return this.targetSpeed;
+  }
+
+  /**
+   * Setter for target speed.
+   * 
+   * @param targetSpeed The specified target speed
+   */
+  public void setTargetSpeed(float targetSpeed) {
+    this.targetSpeed = targetSpeed;
   }
 
   /**

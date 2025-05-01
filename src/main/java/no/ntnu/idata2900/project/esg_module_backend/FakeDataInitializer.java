@@ -3,15 +3,16 @@ package no.ntnu.idata2900.project.esg_module_backend;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import no.ntnu.idata2900.project.esg_module_backend.models.DataPoint;
-import no.ntnu.idata2900.project.esg_module_backend.models.Fuel;
-import no.ntnu.idata2900.project.esg_module_backend.models.MarineWeather;
-import no.ntnu.idata2900.project.esg_module_backend.models.Position;
-import no.ntnu.idata2900.project.esg_module_backend.models.Ship;
-import no.ntnu.idata2900.project.esg_module_backend.models.SwellWaves;
-import no.ntnu.idata2900.project.esg_module_backend.models.Waves;
-import no.ntnu.idata2900.project.esg_module_backend.models.Weather;
-import no.ntnu.idata2900.project.esg_module_backend.models.WindWaves;
+
+import no.ntnu.idata2900.project.esg_module_backend.models.data_points.DataPoint;
+import no.ntnu.idata2900.project.esg_module_backend.models.data_points.Fuel;
+import no.ntnu.idata2900.project.esg_module_backend.models.data_points.MarineWeather;
+import no.ntnu.idata2900.project.esg_module_backend.models.data_points.Position;
+import no.ntnu.idata2900.project.esg_module_backend.models.data_points.SwellWaves;
+import no.ntnu.idata2900.project.esg_module_backend.models.data_points.Vessel;
+import no.ntnu.idata2900.project.esg_module_backend.models.data_points.Waves;
+import no.ntnu.idata2900.project.esg_module_backend.models.data_points.Weather;
+import no.ntnu.idata2900.project.esg_module_backend.models.data_points.WindWaves;
 
 // TODO Refactor class to use trips
 
@@ -96,11 +97,15 @@ public class FakeDataInitializer {
     int ts = 1739438130;
 
     for (int i = 1; i <= num; i++) {
-      DataPoint dp = new DataPoint(ts, initPositionData());
+      DataPoint dp = new DataPoint(ts);
+
+      Position pos = initPositionData();
+
+      pos.setDp(dp);
 
       Weather weather = initWeatherData();
       MarineWeather marineWeather = initMarineWeatherData();
-      Ship ship = initShipData();
+      Vessel ship = initShipData();
 
       weather.setDp(dp);
       marineWeather.setDp(dp);
@@ -388,9 +393,6 @@ public class FakeDataInitializer {
     }
 
     return new MarineWeather(
-      waves,
-      wwaves,
-      swellWaves,
       oceanCurrentVelocity,
       oceanCurrentDirection
     );
@@ -403,9 +405,9 @@ public class FakeDataInitializer {
    *
    * @param id The specified ID
    * @return Randomly generated ship data
-   * @see Ship
+   * @see Vessel
    */
-  private Ship initShipData() {
+  private Vessel initShipData() {
     boolean valid = false;
 
     // Random heading
@@ -439,12 +441,9 @@ public class FakeDataInitializer {
       }
     }
 
-    return new Ship(
-        "Ship",
+    return new Vessel(
         heading,
-        course,
-        speed,
-        calculateFuelConsumption()
+        speed
     );
   }
 

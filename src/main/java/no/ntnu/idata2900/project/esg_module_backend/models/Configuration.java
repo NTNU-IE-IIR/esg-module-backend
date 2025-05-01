@@ -8,7 +8,7 @@ import jakarta.persistence.Id;
  * identified by the registration mark.
  * 
  * @author Group 14
- * @version v0.1.0 (2025.04.28)
+ * @version v0.1.1 (2025.04.30)
  */
 @Entity(name = "configuration")
 public class Configuration {
@@ -20,14 +20,23 @@ public class Configuration {
   /**
    * Constructor for the Configuration class.
    * 
-   * @param registrationMark  The specified registration mark
-   * @param name              The specified name
-   * @param level1            The specified level 1
+   * @param registrationMark The specified registration mark
+   * @param name             The specified name
+   * @param level1           The specified level 1
    */
   public Configuration(String registrationMark, String name, boolean level1) {
     this.registrationMark = registrationMark;
     this.name = name;
     this.level1 = level1;
+  }
+
+  /**
+   * Default constructor for Configuration class.
+   *
+   * <p>The default constructor is required by JPA.</p>
+   */
+  public Configuration() {
+    // Intentionally left blank
   }
 
   /**
