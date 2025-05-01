@@ -5,6 +5,7 @@ import java.util.List;
 import no.ntnu.idata2900.project.esg_module_backend.BoatDataHandler;
 import no.ntnu.idata2900.project.esg_module_backend.dtos.ShipDto;
 import no.ntnu.idata2900.project.esg_module_backend.models.Trip;
+import no.ntnu.idata2900.project.esg_module_backend.repositories.TripLogRepository;
 import no.ntnu.idata2900.project.esg_module_backend.repositories.TripRepository;
 import no.ntnu.idata2900.project.esg_module_backend.sources.DataListener;
 import no.ntnu.idata2900.project.esg_module_backend.sources.DataSource;
@@ -25,7 +26,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class TripService implements DataListener {
-    private final Logger logger = LoggerFactory.getLogger(TripService.class);
+    //private final Logger logger = LoggerFactory.getLogger(TripService.class);
     private final DataSource dataSource;
     private final BoatDataHandler boatDataHandler;
     private final TripRepository tripRepository;
@@ -37,7 +38,8 @@ public class TripService implements DataListener {
      * @param boatDataHandler The handler for sending boat data to WebSocket clients
      */
     @Autowired
-    TripService(DataSource dataSource, BoatDataHandler boatDataHandler, TripRepository tripRepository) {
+    TripService(DataSource dataSource, BoatDataHandler boatDataHandler,
+                TripRepository tripRepository) {
         this.dataSource = dataSource;
         this.boatDataHandler = boatDataHandler;
         this.tripRepository = tripRepository;
@@ -62,47 +64,46 @@ public class TripService implements DataListener {
      * Stops the current fishing trip. This method stops the data source
      * to end data collection and finalizes the current trip.
      */
-    public void stopTrip(Long tripId) {
+    public void stopTrip(Long tripId, String comments, String area) {
         dataSource.stop();
         Trip trip = tripRepository.findById(tripId)
                 .orElseThrow(() -> new IllegalArgumentException("Trip not found with id: " + tripId));
-        trip.setActive(false);
+        trip.end();
+        trip.setComments(comments);
+        trip.setArea(area);
         tripRepository.save(trip);
     }
 
-//TODO: refactor
-//    /**
-//     * Starts a new fishing trip. This method creates a new Trip object,
-//     * initializes it, sets up the data listener, and starts the data source
-//     * to begin collecting ship data.
-//     */
-//    public void startTrip() {
-//        currentTrip = new Trip();
-//        tripActive = true;
-//        currentTrip.start();
-//        dataSource.setDataListener(this);
-//        dataSource.start();
-//        // Start trip
-//        System.out.println("Trip started");
-//    }
+    /**
+     * Starts a new fishing trip. This method creates a new Trip object,
+     * initializes it, sets up the data listener, and starts the data source
+     * to begin collecting ship data.
+     */
+    public void startTrip(String registrationMark, String name) {
+        Trip trip = new Trip(name, registrationMark);
+        tripRepository.save(trip);
+        dataSource.setDataListener(this);
+        dataSource.start();
+        // Start trip
+        System.out.println("Trip started");
+    }
 
-//TODO: refactor
-//    /**
-//     * Handles ship data received from the data source. This method is called
-//     * whenever new data is available from the data source.
-//     * If a trip is active, the data is added to the trip. If a WebSocket
-//     * connection is established, the data is also sent to the client.
-//     *
-//     * @param data The ship data received from the data source
-//     */
-//    @Override
-//    public void onDataReceived(ShipDto data) {
-//        System.out.println("Data received: " + data);
-//        if (tripActive) {
-//            currentTrip.addShipData(data);
-//        }
-//        if (boatDataHandler.isConnected()) {
-//            boatDataHandler.sendBoatData(data);
-//        }
-//    }
+    /**
+     * Handles ship data received from the data source. This method is called
+     * whenever new data is available from the data source.
+     * If a trip is active, the data is added to the trip. If a WebSocket
+     * connection is established, the data is also sent to the client.
+     *
+     * @param data The ship data received from the data source
+     */
+    @Override
+    public void onDataReceived(ShipDto data) {
+
+        //TODO: Currently does not save to database, need to
+        // integrate with the new data classes eventually
+
+        if (boatDataHandler.isConnected()) {
+            boatDataHandler.sendBoatData(data);
+        }
+    }
 }
