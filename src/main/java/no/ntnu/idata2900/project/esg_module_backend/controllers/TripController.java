@@ -6,9 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.List;
 import java.util.Map;
-import no.ntnu.idata2900.project.esg_module_backend.dtos.ShipDto;
 import no.ntnu.idata2900.project.esg_module_backend.services.TripService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,8 +23,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * The TripController class handles HTTP requests related to trips. It provides endpoints for
- * starting, stopping, editing, and deleting trip logs. The class uses the TripService to manage
- * trip-related operations and the TripLogRepository to interact with the database.
+ * starting and stopping trips, as well as seeing if there is an active trip.
+ * The class uses the TripService to manage trip-related operations and the TripRepository to
+ * handle database communication.
+ *
+ * @author Group 14
+ * @version v0.2.0 (2025.05.01)
  */
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
@@ -56,7 +58,8 @@ public class TripController {
   public ResponseEntity<String> start(@RequestBody Map<String, String> requestBody) {
     try {
       String name = validateString(requestBody.get("name"), "Name must be specified");
-      String registrationMark = validateString(requestBody.get("registrationMark"), "Registration mark must be specified");
+      String registrationMark = validateString(requestBody.get("registrationMark"),
+          "Registration mark must be specified");
 
       tripService.startTrip(registrationMark, name);
 
@@ -71,6 +74,7 @@ public class TripController {
   /**
    * Endpoint to stop a trip. This method is called when the user wants to end an ongoing trip.
    *
+   * @param tripId      The id of the trip the user wants to stop
    * @param requestBody A map containing trip details: 'comments' (optional) and 'area' (required)
    * @return String indicating the status of the operation
    */
@@ -102,7 +106,17 @@ public class TripController {
     }
   }
 
- private String validateString(String value, String errorMessage) {
+  /**
+   * Validates the provided string value to ensure it is not null or blank. If the value is
+   * invalid, an {@code IllegalArgumentException} is thrown with the provided error message.
+   * If valid, the string is stripped of leading and trailing whitespaces.
+   *
+   * @param value        The string value to validate.
+   * @param errorMessage The error message to include in the exception if validation fails.
+   * @return The validated string, stripped of leading and trailing whitespaces.
+   * @throws IllegalArgumentException if the provided string is null or blank.
+   */
+  private String validateString(String value, String errorMessage) {
     if (value == null || value.isBlank()) {
       throw new IllegalArgumentException(errorMessage);
     }
@@ -136,7 +150,7 @@ public class TripController {
 
     return response;
   }
-  
+
 // TODO: move to a DataPoint controller
 //  @Operation(summary = "Get current trip data points", description = "Gets the current trip data points")
 //  @ApiResponses(value = {

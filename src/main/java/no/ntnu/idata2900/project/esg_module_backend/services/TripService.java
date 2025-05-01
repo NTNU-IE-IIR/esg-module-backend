@@ -1,18 +1,12 @@
 package no.ntnu.idata2900.project.esg_module_backend.services;
 
-import java.util.List;
-
 import no.ntnu.idata2900.project.esg_module_backend.BoatDataHandler;
 import no.ntnu.idata2900.project.esg_module_backend.dtos.ShipDto;
 import no.ntnu.idata2900.project.esg_module_backend.models.Trip;
-import no.ntnu.idata2900.project.esg_module_backend.repositories.TripLogRepository;
 import no.ntnu.idata2900.project.esg_module_backend.repositories.TripRepository;
 import no.ntnu.idata2900.project.esg_module_backend.sources.DataListener;
 import no.ntnu.idata2900.project.esg_module_backend.sources.DataSource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 /**
@@ -22,33 +16,41 @@ import org.springframework.stereotype.Service;
  * from a data source.
  *
  * @author Group 14
- * @version v0.1.0 (2025.04.22)
+ * @version v0.2.0 (2025.04.22)
  */
 @Service
 public class TripService implements DataListener {
-    //private final Logger logger = LoggerFactory.getLogger(TripService.class);
-    private final DataSource dataSource;
-    private final BoatDataHandler boatDataHandler;
-    private final TripRepository tripRepository;
+  //private final Logger logger = LoggerFactory.getLogger(TripService.class);
+  private final DataSource dataSource;
+  private final BoatDataHandler boatDataHandler;
+  private final TripRepository tripRepository;
 
-    /**
-     * Constructs a new TripService with the required dependencies.
-     *
-     * @param dataSource      The data source that provides ship data during trips
-     * @param boatDataHandler The handler for sending boat data to WebSocket clients
-     */
-    @Autowired
-    TripService(DataSource dataSource, BoatDataHandler boatDataHandler,
-                TripRepository tripRepository) {
-        this.dataSource = dataSource;
-        this.boatDataHandler = boatDataHandler;
-        this.tripRepository = tripRepository;
-    }
+  /**
+   * Constructs a new TripService with the required dependencies.
+   *
+   * @param dataSource      The data source that provides ship data during trips
+   * @param boatDataHandler The handler for sending boat data to WebSocket clients
+   * @param tripRepository The trip repository for database communication
+   */
+  @Autowired
+  TripService(DataSource dataSource, BoatDataHandler boatDataHandler,
+              TripRepository tripRepository) {
+    this.dataSource = dataSource;
+    this.boatDataHandler = boatDataHandler;
+    this.tripRepository = tripRepository;
+  }
 
 
-    public Long findTripIdIfActive(String registrationMark) {
-        return tripRepository.findIdByRegistrationMarkAndActiveTrue(registrationMark);
-    }
+  /**
+   * Finds a trip if it is active. Returns a trip belonging to the registration mark if there is
+   * an active one. If there is no active trip, this method returns null.
+   *
+   * @param registrationMark The registration mark of the ship
+   * @return A tripId of type Long if there is an active trip. Null if there is no active trip.
+   */
+  public Long findTripIdIfActive(String registrationMark) {
+    return tripRepository.findIdByRegistrationMarkAndActiveTrue(registrationMark);
+  }
 
 //TODO: Move to a DataPoint repository maybe?    
 //    public List<ShipDto> getTripDataPoints(String tripId) {
@@ -60,50 +62,51 @@ public class TripService implements DataListener {
 //    }
 
 
-    /**
-     * Stops the current fishing trip. This method stops the data source
-     * to end data collection and finalizes the current trip.
-     */
-    public void stopTrip(Long tripId, String comments, String area) {
-        dataSource.stop();
-        Trip trip = tripRepository.findById(tripId)
-                .orElseThrow(() -> new IllegalArgumentException("Trip not found with id: " + tripId));
-        trip.end();
-        trip.setComments(comments);
-        trip.setArea(area);
-        tripRepository.save(trip);
+  /**
+   * Stops a trip with a tripId and saves area and comments to the database.
+   *
+   * @param tripId If of the trip the user wants to stop.
+   * @param comments The comments the user has given about the trip.
+   * @param area The area the trip was conducted in.
+   */
+  public void stopTrip(Long tripId, String comments, String area) {
+    dataSource.stop();
+    Trip trip = tripRepository.findById(tripId)
+        .orElseThrow(() -> new IllegalArgumentException("Trip not found with id: " + tripId));
+    trip.end();
+    trip.setComments(comments);
+    trip.setArea(area);
+    tripRepository.save(trip);
+  }
+
+  /**
+   * Starts a new fishing trip. This method creates a new Trip object,
+   * initializes it, sets up the data listener, and starts the data source
+   * to begin collecting ship data.
+   */
+  public void startTrip(String registrationMark, String name) {
+    Trip trip = new Trip(name, registrationMark);
+    tripRepository.save(trip);
+    dataSource.setDataListener(this);
+    dataSource.start();
+  }
+
+  /**
+   * Handles ship data received from the data source. This method is called
+   * whenever new data is available from the data source.
+   * If a trip is active, the data is added to the trip. If a WebSocket
+   * connection is established, the data is also sent to the client.
+   *
+   * @param data The ship data received from the data source
+   */
+  @Override
+  public void onDataReceived(ShipDto data) {
+
+    //TODO: Currently does not save to database, need to
+    // integrate with the new data classes eventually
+
+    if (boatDataHandler.isConnected()) {
+      boatDataHandler.sendBoatData(data);
     }
-
-    /**
-     * Starts a new fishing trip. This method creates a new Trip object,
-     * initializes it, sets up the data listener, and starts the data source
-     * to begin collecting ship data.
-     */
-    public void startTrip(String registrationMark, String name) {
-        Trip trip = new Trip(name, registrationMark);
-        tripRepository.save(trip);
-        dataSource.setDataListener(this);
-        dataSource.start();
-        // Start trip
-        System.out.println("Trip started");
-    }
-
-    /**
-     * Handles ship data received from the data source. This method is called
-     * whenever new data is available from the data source.
-     * If a trip is active, the data is added to the trip. If a WebSocket
-     * connection is established, the data is also sent to the client.
-     *
-     * @param data The ship data received from the data source
-     */
-    @Override
-    public void onDataReceived(ShipDto data) {
-
-        //TODO: Currently does not save to database, need to
-        // integrate with the new data classes eventually
-
-        if (boatDataHandler.isConnected()) {
-            boatDataHandler.sendBoatData(data);
-        }
-    }
+  }
 }

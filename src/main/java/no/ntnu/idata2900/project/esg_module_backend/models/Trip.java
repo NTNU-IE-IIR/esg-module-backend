@@ -10,7 +10,7 @@ import java.util.Set;
  * {@link DataPoint data points} and a list of {@link FishingSession fishing sessions}.
  *
  * @author Group 14
- * @version v0.1.1 (2025.04.24)
+ * @version v0.2.0 (2025.05.01)
  */
 @Entity
 public class Trip {
@@ -38,6 +38,12 @@ public class Trip {
   public Trip() {
   }
 
+  /**
+   * Constructor for creating a new Trip with a name and registration mark.
+   *
+   * @param name The name of the trip
+   * @param registrationMark The registration mark of the vessel
+   */
   public Trip(String name, String registrationMark) {
     this.name = name;
     this.registrationMark = registrationMark;
@@ -104,34 +110,73 @@ public class Trip {
     return this.fishCaught;
   }
 
+  /**
+   * Getter for the fishing area.
+   *
+   * @return The fishing area
+   */
   public String getArea() {
     return area;
   }
 
+  /**
+   * Setter for the fishing area.
+   *
+   * @param area The fishing area to set
+   */
   public void setArea(String area) {
     this.area = area;
   }
 
+  /**
+   * Getter for trip comments.
+   *
+   * @return The comments for this trip
+   */
   public String getComments() {
     return comments;
   }
 
+  /**
+   * Setter for trip comments.
+   *
+   * @param comments The comments to set for this trip
+   */
   public void setComments(String comments) {
     this.comments = comments;
   }
 
+  /**
+   * Checks if the trip is currently active.
+   *
+   * @return true if the trip is active, false otherwise
+   */
   public boolean isActive() {
     return active;
   }
 
+  /**
+   * Getter for trip name.
+   *
+   * @return The name of the trip
+   */
   public String getName() {
     return name;
   }
 
+  /**
+   * Getter for vessel registration mark.
+   *
+   * @return The registration mark of the vessel
+   */
   public String getRegistrationMark() {
     return registrationMark;
   }
 
+  /**
+   * Ends the current trip by setting the end date to the current time
+   * and marking the trip as inactive.
+   */
   public void end() {
     this.endDate = Instant.now();
     this.active = false;

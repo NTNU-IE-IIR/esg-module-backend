@@ -3,6 +3,10 @@ package no.ntnu.idata2900.project.esg_module_backend.utils;
 import java.util.List;
 import no.ntnu.idata2900.project.esg_module_backend.models.Position;
 
+/**
+ * The Distance class provides methods to calculate the geographical distance between two points
+ * and the total distance traveled based on a list of positions.
+ */
 public class Distance {
     /**
      * Returns the calculated geographical distance between two individual data points.

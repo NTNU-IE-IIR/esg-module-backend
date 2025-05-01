@@ -128,10 +128,21 @@ public class DataPoint {
     return this.marineWeather;
   }
 
+
+  /**
+   * Getter for trip data.
+   *
+   * @return The associated trip data.
+   */
   public Trip getTrip() {
     return trip;
   }
 
+  /**
+   * Sets the trip associated with this data point.
+   *
+   * @param trip the trip data to associate with this data point
+   */
   public void setTrip(Trip trip) {
     this.trip = trip;
   }
