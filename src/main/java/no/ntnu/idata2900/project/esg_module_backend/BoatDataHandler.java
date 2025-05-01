@@ -1,12 +1,9 @@
 package no.ntnu.idata2900.project.esg_module_backend;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.List;
 import no.ntnu.idata2900.project.esg_module_backend.dtos.ShipDto;
-import no.ntnu.idata2900.project.esg_module_backend.models.Trip;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
