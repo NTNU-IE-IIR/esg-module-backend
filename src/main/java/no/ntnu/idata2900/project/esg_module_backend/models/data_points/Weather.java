@@ -31,9 +31,13 @@ import jakarta.persistence.Table;
  * distributed by <a href="https://www.windy.com/">Windy</a>. For further documentation of
  * parameters, see
  * <a href="https://api.windy.com/point-forecast/docs">Windy API documentation</a>.</p>
+ * 
+ * <p>The class contains two constants: <code>MAX_WIND</code> and <code>MAX_GUST</code>. These
+ * define the maximum allowed value of the <code>windU</code> and <code>windV</code> parameters and
+ * <code>gust</code> parameter respectively.</p>
  *
  * @author Group 14
- * @version v0.3.4 (2025.05.01)
+ * @version v0.4.0 (2025.05.01)
  */
 @Entity
 @Table(name = "weather")
@@ -63,6 +67,9 @@ public class Weather {
   @JoinColumn(name = "weather_id")
   @Schema(description = "Data point containing this specific weather data")
   private DataPoint dp;
+
+  private static final float MAX_WIND = 15;
+  private static final float MAX_GUST = 20;
 
   /**
    * Default constructor for the Weather class.
@@ -146,6 +153,6 @@ public class Weather {
    * @return True if the weather data is valid or false otherwise
    */
   public boolean isValid() {
-    return this.windU >= 0 && this.windV >= 0 && this.gust >= 0;
+    return this.windU >= 0 && this.windU <= 15 && this.windV >= 0 && this.windV <= 15 && this.gust >= 0;
   }
 }

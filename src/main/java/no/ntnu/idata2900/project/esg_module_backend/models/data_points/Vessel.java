@@ -153,6 +153,6 @@ public class Vessel {
    * @return True if vessel data is valid or false otherwise
    */
   public boolean isValid() {
-    return this.heading >= 0 && this.heading <= 360 && this.speed >= 0;
+    return this.heading >= 0 && this.heading <= 360 && this.speed >= 0 && this.speed <= 15;
   }
 }
