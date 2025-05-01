@@ -1,17 +1,11 @@
 package no.ntnu.idata2900.project.esg_module_backend.services;
 
-import java.util.List;
-import java.util.Optional;
-
 import no.ntnu.idata2900.project.esg_module_backend.BoatDataHandler;
 import no.ntnu.idata2900.project.esg_module_backend.dtos.ShipDto;
 import no.ntnu.idata2900.project.esg_module_backend.models.Trip;
-import no.ntnu.idata2900.project.esg_module_backend.models.TripLog;
-import no.ntnu.idata2900.project.esg_module_backend.repositories.TripLogRepository;
+import no.ntnu.idata2900.project.esg_module_backend.repositories.TripRepository;
 import no.ntnu.idata2900.project.esg_module_backend.sources.DataListener;
 import no.ntnu.idata2900.project.esg_module_backend.sources.DataSource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,100 +16,67 @@ import org.springframework.stereotype.Service;
  * from a data source.
  *
  * @author Group 14
- * @version v0.1.0 (2025.04.22)
+ * @version v0.2.0 (2025.04.22)
  */
 @Service
 public class TripService implements DataListener {
-  private final Logger logger = LoggerFactory.getLogger(TripService.class);
+  //private final Logger logger = LoggerFactory.getLogger(TripService.class);
   private final DataSource dataSource;
   private final BoatDataHandler boatDataHandler;
-  private final TripLogRepository tripLogRepository;
-  private Trip currentTrip;
-  private boolean tripActive;
+  private final TripRepository tripRepository;
 
   /**
    * Constructs a new TripService with the required dependencies.
    *
    * @param dataSource      The data source that provides ship data during trips
    * @param boatDataHandler The handler for sending boat data to WebSocket clients
+   * @param tripRepository The trip repository for database communication
    */
   @Autowired
-  TripService(TripLogRepository tripLogRepository, DataSource dataSource, BoatDataHandler boatDataHandler) {
-    this.tripLogRepository = tripLogRepository;
+  TripService(DataSource dataSource, BoatDataHandler boatDataHandler,
+              TripRepository tripRepository) {
     this.dataSource = dataSource;
     this.boatDataHandler = boatDataHandler;
+    this.tripRepository = tripRepository;
   }
 
-  public List<TripLog> getAllTripLogs() {
-    return tripLogRepository.findAll();
-  }
-
-  public boolean editComments(String comments, Long id) {
-    boolean success = false;
-    Optional<TripLog> tripLog = tripLogRepository.findById(id);
-    if (tripLog.isPresent()) {
-        TripLog log = tripLog.get();
-        log.setComments(comments);
-        tripLogRepository.save(log);
-        logger.info("Updated comments for trip log with ID: {}", id);
-        success = true;
-      }
-    return success;
-  }
-
-  public boolean deleteTripLog(Long id) {
-    boolean success = false;
-    Optional<TripLog> tripLog = tripLogRepository.findById(id);
-    if (tripLog.isPresent()) {
-        tripLogRepository.deleteById(id);
-        logger.info("Deleted trip log with ID: {}", id);
-        success = true;
-    }
-    return success;
-  }
-
-  public boolean isTripActive() {
-    return tripActive;
-  }
-
-  public List<ShipDto> getTripDataPoints() {
-    if (tripActive) {
-      return currentTrip.getShipData();
-    } else {
-      throw new IllegalStateException("Could not find any data points for current trip");
-    }
-  }
-
-  public boolean saveTrip(TripLog tripLog) {
-    boolean success = false;
-    tripLogRepository.save(tripLog);
-
-    if (tripLogRepository.findById(tripLog.getId()).isPresent()) {
-      logger.info("Saved trip log with ID: {}", tripLog.getId());
-      success = true;
-    }
-
-    return success;
-  }
 
   /**
-   * Stops the current fishing trip. This method stops the data source
-   * to end data collection and finalizes the current trip.
-   */
-  public void stopTrip() {
-    dataSource.stop();
-    currentTrip.end();
-    tripActive = false;
-    // Stop trip
-  }
-
-  /**
-   * Gets the current active trip.
+   * Finds a trip if it is active. Returns a trip belonging to the registration mark if there is
+   * an active one. If there is no active trip, this method returns null.
    *
-   * @return The current Trip object, or null if no trip is active
+   * @param registrationMark The registration mark of the ship
+   * @return A tripId of type Long if there is an active trip. Null if there is no active trip.
    */
-  public Trip getCurrentTrip() {
-    return currentTrip;
+  public Long findTripIdIfActive(String registrationMark) {
+    return tripRepository.findIdByRegistrationMarkAndActiveTrue(registrationMark);
+  }
+
+//TODO: Move to a DataPoint repository maybe?    
+//    public List<ShipDto> getTripDataPoints(String tripId) {
+//        if (tripActive) {
+//            return tripLogRepository;
+//        } else {
+//            throw new IllegalStateException("Could not find any data points for current trip");
+//        }
+//    }
+
+
+  /**
+   * Stops a trip with a tripId and saves area and comments to the database.
+   *
+   * @param tripId If of the trip the user wants to stop.
+   * @param comments The comments the user has given about the trip.
+   * @param area The area the trip was conducted in.
+   */
+  public void stopTrip(Long tripId, String comments, String area) {
+    dataSource.stop();
+    Trip trip = tripRepository.findById(tripId)
+        .orElseThrow(() -> new IllegalArgumentException("Trip not found with id: " + tripId));
+    trip.end();
+    trip.setComments(comments);
+    trip.setArea(area);
+    tripRepository.save(trip);
   }
 
   /**
@@ -123,15 +84,11 @@ public class TripService implements DataListener {
    * initializes it, sets up the data listener, and starts the data source
    * to begin collecting ship data.
    */
-  public void startTrip() {
-    currentTrip = new Trip();
-    tripActive = true;
-    currentTrip.start();
-
+  public void startTrip(String registrationMark, String name) {
+    Trip trip = new Trip(name, registrationMark);
+    tripRepository.save(trip);
     dataSource.setDataListener(this);
     dataSource.start();
-    // Start trip
-    System.out.println("Trip started");
   }
 
   /**
@@ -144,12 +101,12 @@ public class TripService implements DataListener {
    */
   @Override
   public void onDataReceived(ShipDto data) {
-    System.out.println("Data received: " + data);
-    if (tripActive) {
-      currentTrip.addShipData(data);
+
+    //TODO: Currently does not save to database, need to
+    // integrate with the new data classes eventually
+
+    if (boatDataHandler.isConnected()) {
+      boatDataHandler.sendBoatData(data);
     }
-      if (boatDataHandler.isConnected()) {
-          boatDataHandler.sendBoatData(data);
-      }
   }
 }
