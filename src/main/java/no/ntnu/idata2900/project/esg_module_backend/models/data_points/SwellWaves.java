@@ -41,7 +41,7 @@ import jakarta.persistence.Table;
  * <a href="https://api.windy.com/point-forecast/docs">Windy API documentation</a>.</p>
  * 
  * @author Group 14
- * @version v0.1.4 (2025.04.30)
+ * @version v0.1.5 (2025.05.01)
  */
 @Entity
 @Table(name = "swell_waves")
@@ -204,5 +204,16 @@ public class SwellWaves {
    */
   public void setMarineWeather(MarineWeather marineWeather) {
     this.marineWeather = marineWeather;
+  }
+
+  /**
+   * Checks if the swell waves data is valid.
+   * 
+   * @return True if the swell waves data is valid or false otherwise
+   */
+  public boolean isValid() {
+    return this.swell1Height >= 0 && this.swell1Direction >= 0 && this.swell1Direction <= 360
+        && this.swell1Period >= 0 && this.swell2Height >= 0 && this.swell2Direction >= 0
+        && this.swell2Direction <= 360 && this.swell2Period >= 0;
   }
 }

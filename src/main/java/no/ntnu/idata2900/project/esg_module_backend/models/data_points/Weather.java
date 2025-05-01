@@ -33,7 +33,7 @@ import jakarta.persistence.Table;
  * <a href="https://api.windy.com/point-forecast/docs">Windy API documentation</a>.</p>
  *
  * @author Group 14
- * @version v0.3.3 (2025.04.30)
+ * @version v0.3.4 (2025.05.01)
  */
 @Entity
 @Table(name = "weather")
@@ -138,5 +138,14 @@ public class Weather {
    */
   public void setDp(DataPoint dp) {
     this.dp = dp;
+  }
+
+  /**
+   * Checks if the weather data is valid.
+   * 
+   * @return True if the weather data is valid or false otherwise
+   */
+  public boolean isValid() {
+    return this.windU >= 0 && this.windV >= 0 && this.gust >= 0;
   }
 }

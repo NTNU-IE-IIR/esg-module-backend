@@ -27,7 +27,7 @@ import jakarta.persistence.Table;
  * </ul>
  * 
  * @author Group 14
- * @version v0.1.3 (2025.04.30)
+ * @version v0.1.4 (2025.05.01)
  * @see Vessel
  */
 @Entity
@@ -136,5 +136,14 @@ public class Fuel {
    */
   public float getTotal() {
     return this.drift + this.production + this.hotel;
+  }
+
+  /**
+   * Checks if the fuel consumption is valid.
+   * 
+   * @return True if the fuel consumption is valid or false otherwise
+   */
+  public boolean isValid() {
+    return this.drift >= 0 && this.production >= 0 && this.hotel >= 0;
   }
 }

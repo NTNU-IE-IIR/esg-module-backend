@@ -18,7 +18,7 @@ import jakarta.persistence.Table;
  * part of the data packaged into a {@link DataPoint data point}.
  *
  * @author Group 14
- * @version v0.3.1 (2025.04.30)
+ * @version v0.3.2 (2025.05.01)
  */
 @Entity
 @Table(name = "vessel")
@@ -44,7 +44,7 @@ public class Vessel {
 
   @OneToOne(cascade = CascadeType.ALL)
   @PrimaryKeyJoinColumn
-  @Schema(description = "Fuel consumption data over the last time interval")
+  @Schema(description = "Fuel consumption over the last time interval")
   private Fuel fuelConsumption;
 
   @JsonIgnore
@@ -145,5 +145,14 @@ public class Vessel {
    */
   public void setDp(DataPoint dp) {
     this.dp = dp;
+  }
+
+  /**
+   * Checks if vessel data is valid.
+   * 
+   * @return True if vessel data is valid or false otherwise
+   */
+  public boolean isValid() {
+    return this.heading >= 0 && this.heading <= 360 && this.speed >= 0;
   }
 }

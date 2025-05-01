@@ -36,7 +36,7 @@ import jakarta.persistence.Table;
  * parameters, see their respective class documentations.</p>
  * 
  * @author Group 14
- * @version v0.1.5 (2025.04.30)
+ * @version v0.1.6 (2025.05.01)
  */
 @Entity
 @Table(name = "marine_weather")
@@ -171,5 +171,15 @@ public class MarineWeather {
    */
   public void setDp(DataPoint dp) {
     this.dp = dp;
+  }
+
+  /**
+   * Checks if weather data is valid.
+   * 
+   * @return True if weather data is valid or false otherwise
+   */
+  public boolean isValid() {
+    return this.oceanCurrentVelocity >= 0 && this.oceanCurrentDirection >= 0
+        && this.oceanCurrentDirection <= 360;
   }
 }

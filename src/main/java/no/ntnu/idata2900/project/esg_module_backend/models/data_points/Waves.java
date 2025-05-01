@@ -35,7 +35,7 @@ import jakarta.persistence.Table;
  * <a href="https://api.windy.com/point-forecast/docs">Windy API documentation</a>.</p>
  * 
  * @author Group 14
- * @version v0.1.4 (2025.04.30)
+ * @version v0.1.5 (2025.05.01)
  */
 @Entity
 @Table(name = "waves")
@@ -142,5 +142,15 @@ public class Waves {
    */
   public void setMarineWeather(MarineWeather marineWeather) {
     this.marineWeather = marineWeather;
+  }
+
+  /**
+   * Checks if the waves data is valid.
+   * 
+   * @return True if waves data is valid or false otherwise
+   */
+  public boolean isValid() {
+    return this.wavesHeight >= 0 && this.wavesDirection >= 0 && this.wavesDirection <= 360
+        && this.wavesPeriod >= 0;
   }
 }

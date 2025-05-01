@@ -16,7 +16,7 @@ import jakarta.persistence.Table;
  * {@link Weather weather} data, as well as {@link Position position} data.
  *
  * @author Group 14
- * @version v0.2.7 (2025.04.30)
+ * @version v0.2.8 (2025.05.01)
  */
 @Entity
 @Table(name = "data_point")
@@ -35,7 +35,7 @@ public class DataPoint {
 
   @OneToOne(cascade = CascadeType.ALL)
   @PrimaryKeyJoinColumn
-  @Schema(description = "Position data represented as coordinates")
+  @Schema(description = "Position represented as coordinates")
   private Position pos;
 
   @OneToOne(cascade = CascadeType.ALL)
@@ -123,5 +123,14 @@ public class DataPoint {
    */
   public MarineWeather getMarineWeather() {
     return this.marineWeather;
+  }
+
+  /**
+   * Checks if data point is valid.
+   * 
+   * @return True if data point is valid or false otherwise
+   */
+  public boolean isValid() {
+    return this.ts >= 0;
   }
 }

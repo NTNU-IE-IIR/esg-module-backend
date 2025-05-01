@@ -109,4 +109,13 @@ public class Position {
   public void setDp(DataPoint dp) {
     this.dp = dp;
   }
+
+  /**
+   * Checks if position is valid.
+   * 
+   * @return True if position is valid or false otherwise
+   */
+  public boolean isValid() {
+    return this.lat >= -90 && this.lat <= 90 && this.lng <= 180 && this.lng >= -180;
+  }
 }
