@@ -1,6 +1,8 @@
 package no.ntnu.idata2900.project.esg_module_backend.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,14 +28,24 @@ import java.util.Set;
 @Entity
 public class FishingSession {
   @Id
+  @Column(name = "fishing_session_id")
+  @Schema(description = "Unique ID")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
+  @Column(name = "start_date")
+  @Schema(description = "Start date of the fishing session")
   private String startDate;
+  @Column(name = "end_date")
+  @Schema(description = "End date of the fishing session")
   private String endDate;
+  @Column(name = "fuel_consumed")
+  @Schema(description = "Amount of fuel that was consumed during the fishing session")
   private Long fuelConsumed;
   @OneToMany(mappedBy = "fishingSession")
+  @Schema(description = "Set of fishing operations performed during the fishing session")
   private Set<FishingOperation> operations;
   @ManyToOne
+  @Schema(description = "Trip this session belongs to")
   @JsonIgnore
   private Trip trip;
 
