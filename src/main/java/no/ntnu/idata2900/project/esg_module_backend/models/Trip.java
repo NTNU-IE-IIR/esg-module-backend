@@ -14,105 +14,127 @@ import java.util.Set;
  */
 @Entity
 public class Trip {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String name;
-    private String registrationMark;
-    private Instant startDate;
-    private Instant endDate;
-    private float tripDistance;
-    private float fuelConsumed;
-    private float fishCaught;
-    private boolean active;
-    private String area;
-    private String comments;
-    @OneToMany(mappedBy = "trip")
-    private Set<FishingSession> fishingSessions;
-    @OneToMany(mappedBy = "trip")
-    private List<DataPoint> shipData;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+  private String name;
+  private String registrationMark;
+  private Instant startDate;
+  private Instant endDate;
+  private float tripDistance;
+  private float fuelConsumed;
+  private float fishCaught;
+  private boolean active;
+  private String area;
+  private String comments;
+  @OneToMany(mappedBy = "trip")
+  private Set<FishingSession> fishingSessions;
+  @OneToMany(mappedBy = "trip")
+  private List<DataPoint> shipData;
 
-    /**
-     * Constructor for the Trip class.
-     */
-    public Trip() {
-    }
+  /**
+   * Constructor for the Trip class.
+   */
+  public Trip() {
+  }
 
-    /**
-     * Getter for ID.
-     *
-     * @return ID
-     */
-    public Long getId() {
-        return this.id;
-    }
+  public Trip(String name, String registrationMark) {
+    this.name = name;
+    this.registrationMark = registrationMark;
+    this.startDate = Instant.now();
+    this.endDate = null;
+    this.tripDistance = 0;
+    this.fuelConsumed = 0;
+    this.fishCaught = 0;
+    this.active = true;
+    this.area = null;
+  }
 
-    /**
-     * Getter for start date.
-     *
-     * @return Start date
-     */
-    public Instant getStartDate() {
-        return this.startDate;
-    }
+  /**
+   * Getter for ID.
+   *
+   * @return ID
+   */
+  public Long getId() {
+    return this.id;
+  }
 
-    /**
-     * Getter for end date.
-     *
-     * @return End date
-     */
-    public Instant getEndDate() {
-        return this.endDate;
-    }
+  /**
+   * Getter for start date.
+   *
+   * @return Start date
+   */
+  public Instant getStartDate() {
+    return this.startDate;
+  }
 
-    /**
-     * Getter for total trip distance.
-     *
-     * @return Total trip distance
-     */
-    public float getTripDistance() {
-        return this.tripDistance;
-    }
+  /**
+   * Getter for end date.
+   *
+   * @return End date
+   */
+  public Instant getEndDate() {
+    return this.endDate;
+  }
 
-    /**
-     * Getter for total fuel consumed.
-     *
-     * @return Total fuel consumed
-     */
-    public float getFuelConsumed() {
-        return this.fuelConsumed;
-    }
+  /**
+   * Getter for total trip distance.
+   *
+   * @return Total trip distance
+   */
+  public float getTripDistance() {
+    return this.tripDistance;
+  }
 
-    /**
-     * Getter for total fish caught.
-     *
-     * @return Total fish caught
-     */
-    public float getFishCaught() {
-        return this.fishCaught;
-    }
+  /**
+   * Getter for total fuel consumed.
+   *
+   * @return Total fuel consumed
+   */
+  public float getFuelConsumed() {
+    return this.fuelConsumed;
+  }
 
-    public String getArea() {
-        return area;
-    }
+  /**
+   * Getter for total fish caught.
+   *
+   * @return Total fish caught
+   */
+  public float getFishCaught() {
+    return this.fishCaught;
+  }
 
-    public void setArea(String area) {
-        this.area = area;
-    }
+  public String getArea() {
+    return area;
+  }
 
-    public String getComments() {
-        return comments;
-    }
+  public void setArea(String area) {
+    this.area = area;
+  }
 
-    public void setComments(String comments) {
-        this.comments = comments;
-    }
+  public String getComments() {
+    return comments;
+  }
 
-    public boolean isActive() {
-        return active;
-    }
+  public void setComments(String comments) {
+    this.comments = comments;
+  }
 
-    public void setActive(boolean active) {
-        this.active = active;
-    }
+  public boolean isActive() {
+    return active;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public String getRegistrationMark() {
+    return registrationMark;
+  }
+
+  public void end() {
+    this.endDate = Instant.now();
+    this.active = false;
+    //maybe calculate total fish and fuel here?
+  }
 }

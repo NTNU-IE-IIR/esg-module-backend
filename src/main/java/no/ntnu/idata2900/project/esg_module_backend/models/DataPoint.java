@@ -1,5 +1,6 @@
 package no.ntnu.idata2900.project.esg_module_backend.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -7,6 +8,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
@@ -52,6 +54,11 @@ public class DataPoint {
   @PrimaryKeyJoinColumn
   @Schema(description = "Marine weather data (waves and ocean current)")
   private MarineWeather marineWeather;
+
+  @ManyToOne(cascade = CascadeType.ALL)
+  @Schema(description = "Trip data")
+  @JsonIgnore
+  private Trip trip;
 
   /**
    * Constructor for the DataPoint class.
@@ -119,5 +126,13 @@ public class DataPoint {
    */
   public MarineWeather getMarineWeather() {
     return this.marineWeather;
+  }
+
+  public Trip getTrip() {
+    return trip;
+  }
+
+  public void setTrip(Trip trip) {
+    this.trip = trip;
   }
 }
