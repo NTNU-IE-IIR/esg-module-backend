@@ -1,9 +1,11 @@
 package no.ntnu.idata2900.project.esg_module_backend.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import java.util.Set;
 
@@ -17,6 +19,9 @@ public class FishingSession {
   private Long fuelConsumed;
   @OneToMany(mappedBy = "fishingSession")
   private Set<FishingOperation> operations;
+  @ManyToOne
+  @JsonIgnore
+  private Trip trip;
 
   public String getStartDate() {
     return startDate;
@@ -36,5 +41,9 @@ public class FishingSession {
 
   public Long getId() {
     return id;
+  }
+
+  public void setTrip(Trip trip) {
+    this.trip = trip;
   }
 }
