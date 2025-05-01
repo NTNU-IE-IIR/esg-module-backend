@@ -31,7 +31,7 @@ public class Trip {
   @OneToMany(mappedBy = "trip")
   private Set<FishingSession> fishingSessions;
   @OneToMany(mappedBy = "trip")
-  private List<DataPoint> shipData;
+  private List<DataPoint> dataPoints;
 
   /**
    * Constructor for the Trip class.
