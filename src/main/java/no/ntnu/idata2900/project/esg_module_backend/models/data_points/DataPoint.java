@@ -12,6 +12,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
+import no.ntnu.idata2900.project.esg_module_backend.models.Trip;
 
 /**
  * The DataPoint class represents a single data point containing {@link Vessel vessel} and

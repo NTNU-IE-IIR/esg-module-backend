@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import java.time.Instant;
 import java.util.List;
 import java.util.Set;
+import no.ntnu.idata2900.project.esg_module_backend.models.data_points.DataPoint;
 
 /**
  * The Trip class represents a fishing trip. The class contain a list of
