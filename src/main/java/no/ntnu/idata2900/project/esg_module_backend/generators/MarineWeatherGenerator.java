@@ -74,14 +74,25 @@ public class MarineWeatherGenerator {
    * @see DataPoint
    */
   public void generate(DataPoint baseDp, DataPoint dp) {
-    MarineWeather marineWeather = this.randomMarineWeather(baseDp);
+    MarineWeather marineWeather;
+    if (baseDp == null) {
+      marineWeather = new MarineWeather(0.2f, 230.0f);
+    } else {
+      marineWeather = this.randomMarineWeather(baseDp);
+    }
     marineWeather.setDp(dp);
     // Add marine weather data to storage
     this.marineWeatherService.add(marineWeather);
 
-    this.wavesGenerator.generate(baseDp.getMarineWeather(), marineWeather);
-    this.wwavesGenerator.generate(baseDp.getMarineWeather(), marineWeather);
-    this.swellWavesGenerator.generate(baseDp.getMarineWeather(), marineWeather);
+    if (baseDp == null) {
+      this.wavesGenerator.generate(null, marineWeather);
+      this.wwavesGenerator.generate(null, marineWeather);
+      this.swellWavesGenerator.generate(null, marineWeather);
+    } else {
+      this.wavesGenerator.generate(baseDp.getMarineWeather(), marineWeather);
+      this.wwavesGenerator.generate(baseDp.getMarineWeather(), marineWeather);
+      this.swellWavesGenerator.generate(baseDp.getMarineWeather(), marineWeather);
+    }
   }
 
   /**

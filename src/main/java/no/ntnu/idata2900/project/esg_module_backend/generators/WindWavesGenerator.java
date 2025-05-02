@@ -32,7 +32,12 @@ public class WindWavesGenerator {
   }
 
   public void generate(MarineWeather baseMarineWeather, MarineWeather marineWeather) {
-    WindWaves wwaves = this.randomWwaves(baseMarineWeather);
+    WindWaves wwaves;
+    if (baseMarineWeather == null) {
+      wwaves = new WindWaves(0.3f, 15.0f, 4.0f);
+    } else {
+      wwaves = this.randomWwaves(baseMarineWeather);
+    }
     wwaves.setMarineWeather(marineWeather);
     // Add wind waves data to storage
     this.wwavesService.add(wwaves);

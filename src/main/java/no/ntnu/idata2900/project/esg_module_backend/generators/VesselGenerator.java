@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 
 import no.ntnu.idata2900.project.esg_module_backend.models.data_points.DataPoint;
 import no.ntnu.idata2900.project.esg_module_backend.models.data_points.Vessel;
-import no.ntnu.idata2900.project.esg_module_backend.services.data_points.DataPointService;
 import no.ntnu.idata2900.project.esg_module_backend.services.data_points.VesselService;
 
 /**
@@ -28,7 +27,6 @@ import no.ntnu.idata2900.project.esg_module_backend.services.data_points.VesselS
  */
 @Component
 public class VesselGenerator {
-  private DataPointService dpService;
   private VesselService vesselService;
 
   private FuelGenerator fuelGenerator;
@@ -44,12 +42,7 @@ public class VesselGenerator {
    * @param vesselService The specified vessel data service
    */
   @Autowired
-  public VesselGenerator(
-    DataPointService dpService,
-    VesselService vesselService,
-    FuelGenerator fuelGenerator
-  ) {
-    this.dpService = dpService;
+  public VesselGenerator(VesselService vesselService, FuelGenerator fuelGenerator) {
     this.vesselService = vesselService;
     this.fuelGenerator = fuelGenerator;
   }
@@ -68,7 +61,12 @@ public class VesselGenerator {
    * @see DataPoint
    */
   public void generate(DataPoint baseDp, DataPoint dp) {
-    Vessel vessel = this.randomVessel(baseDp);
+    Vessel vessel;
+    if (baseDp == null) {
+      vessel = new Vessel(315.0f, 7.0f);
+    } else {
+      vessel = this.randomVessel(baseDp);
+    }
     vessel.setDp(dp);
     // Add vessel data to storage
     this.vesselService.add(vessel);

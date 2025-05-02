@@ -35,7 +35,12 @@ public class SwellWavesGenerator {
   }
 
   public void generate(MarineWeather baseMarineWeather, MarineWeather marineWeather) {
-    SwellWaves swellWaves = this.randomWaves(baseMarineWeather);
+    SwellWaves swellWaves;
+    if (baseMarineWeather == null) {
+      swellWaves = new SwellWaves(0.5f, 60.0f, 7.0f, 0.3f, 55.0f, 9.0f);
+    } else {
+      swellWaves = this.randomWaves(baseMarineWeather);
+    }
     swellWaves.setMarineWeather(marineWeather);
     // Add swell waves data to storage
     this.swellWavesService.add(swellWaves);

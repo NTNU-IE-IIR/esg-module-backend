@@ -56,7 +56,12 @@ public class PositionGenerator {
    * @see DataPoint
    */
   public void generate(DataPoint baseDp, DataPoint dp) {
-    Position pos = this.randomPos(baseDp);
+    Position pos;
+    if (baseDp == null) {
+      pos = new Position(62.27082f, 5.52099f);
+    } else {
+      pos = this.randomPos(baseDp);
+    }
     pos.setDp(dp);
     // Add position to storage
     this.posService.add(pos);

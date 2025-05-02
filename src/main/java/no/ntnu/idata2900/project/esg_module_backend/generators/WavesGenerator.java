@@ -32,7 +32,12 @@ public class WavesGenerator {
   }
 
   public void generate(MarineWeather baseMarineWeather, MarineWeather marineWeather) {
-    Waves waves = this.randomWaves(baseMarineWeather);
+    Waves waves;
+    if (baseMarineWeather == null) {
+      waves = new Waves(0.5f, 30.0f, 8.0f);
+    } else {
+      waves = this.randomWaves(baseMarineWeather);
+    }
     waves.setMarineWeather(marineWeather);
     // Add waves data to storage
     this.wavesService.add(waves);

@@ -2,8 +2,6 @@ package no.ntnu.idata2900.project.esg_module_backend.generators;
 
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,9 +22,6 @@ public class DataPointGenerator {
   private VesselGenerator vesselGenerator;
   private WeatherGenerator weatherGenerator;
   private MarineWeatherGenerator marineWeatherGenerator;
-
-  private final Logger logger = LoggerFactory.getLogger(DataPointGenerator.class);
-
   /**
    * Constructor for the DataPointInitializer class.
    * 
@@ -48,10 +43,13 @@ public class DataPointGenerator {
   }
 
   public DataPoint generate(DataPoint baseDp) {
-    this.logger.info("Generarting data point...");
-
-    // Increment timestamp by 1 min
-    long ts = baseDp.getTs() + 60;
+    long ts = 0;
+    if (baseDp == null) {
+      ts = 1747713600;
+    } else {
+      // Increment timestamp by 1 min
+      ts = baseDp.getTs() + 60;
+    }
 
     DataPoint dp = new DataPoint(ts);
     Long id = this.dpService.add(dp);
@@ -59,11 +57,12 @@ public class DataPointGenerator {
     this.posGenerator.generate(baseDp, dp);
     this.weatherGenerator.generate(baseDp, dp);
     this.marineWeatherGenerator.generate(baseDp, dp);
-    // Update data point so far
+    // Update data point with generated weather data
     dp = this.fetch(id);
     this.vesselGenerator.generate(baseDp, dp);
 
-    this.logger.info("Finished generating data point");
+    // Updata data point with complete data
+    dp = this.fetch(id);
 
     return dp;
   }
