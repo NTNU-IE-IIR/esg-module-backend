@@ -41,7 +41,7 @@ import jakarta.persistence.Table;
  * <a href="https://api.windy.com/point-forecast/docs">Windy API documentation</a>.</p>
  * 
  * @author Group 14
- * @version v0.1.5 (2025.05.01)
+ * @version v0.2.0 (2025.05.02)
  */
 @Entity
 @Table(name = "swell_waves")
@@ -89,6 +89,11 @@ public class SwellWaves {
   @JoinColumn(name = "swell_waves_id")
   @Schema(description = "Marine weather data containing this specific swell waves data")
   private MarineWeather marineWeather;
+
+  private static final float MAX_SWELL1_HEIGHT = 1;
+  private static final float MAX_SWELL1_PERIOD = 14;
+  private static final float MAX_SWELL2_HEIGHT = 0.6f;
+  private static final float MAX_SWELL2_PERIOD = 15;
 
   /**
    * Default constructor for the SwellWaves class.
@@ -215,5 +220,16 @@ public class SwellWaves {
     return this.swell1Height >= 0 && this.swell1Direction >= 0 && this.swell1Direction <= 360
         && this.swell1Period >= 0 && this.swell2Height >= 0 && this.swell2Direction >= 0
         && this.swell2Direction <= 360 && this.swell2Period >= 0;
+  }
+
+  /**
+   * Checks if the generated swell waves data is valid.
+   * 
+   * @return True if the generated swell waves data is valid or false otherwise
+   */
+  public boolean isGeneratedValid() {
+    return this.isValid() && this.swell1Height <= MAX_SWELL1_HEIGHT
+        && this.swell1Period <= MAX_SWELL1_PERIOD && this.swell2Height <= MAX_SWELL2_HEIGHT
+        && this.swell2Period <= MAX_SWELL2_PERIOD;
   }
 }

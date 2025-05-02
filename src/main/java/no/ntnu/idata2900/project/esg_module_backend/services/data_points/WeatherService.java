@@ -10,7 +10,7 @@ import no.ntnu.idata2900.project.esg_module_backend.repositories.data_points.Wea
  * The WeatherService class represents the service for {@link Weather weather data}.
  * 
  * @author Group 14
- * @version v0.1.0 (2025.05.01)
+ * @version v0.1.1 (2025.05.02)
  */
 @Service
 public class WeatherService {
@@ -33,9 +33,8 @@ public class WeatherService {
    * @param weather The specified weather data
    */
   public void add(Weather weather) {
-    boolean valid = weather.isValid();
-    if (!valid) {
-      throw new IllegalArgumentException("Weather data is invalid");
+    if (!weather.isValid()) {
+      throw new IllegalArgumentException("The specified weather data is invalid");
     }
     this.repo.save(weather);
   }

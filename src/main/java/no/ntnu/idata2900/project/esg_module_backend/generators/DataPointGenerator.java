@@ -2,6 +2,8 @@ package no.ntnu.idata2900.project.esg_module_backend.generators;
 
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +14,7 @@ import no.ntnu.idata2900.project.esg_module_backend.services.data_points.DataPoi
  * The DataPointGenerator class represents a generator for {@link DataPoint data points}.
  * 
  * @author Group 14
- * @version v0.1.0 (2025.05.01)
+ * @version v0.1.0 (2025.05.02)
  */
 @Component
 public class DataPointGenerator {
@@ -20,6 +22,10 @@ public class DataPointGenerator {
 
   private PositionGenerator posGenerator;
   private VesselGenerator vesselGenerator;
+  private WeatherGenerator weatherGenerator;
+  private MarineWeatherGenerator marineWeatherGenerator;
+
+  private final Logger logger = LoggerFactory.getLogger(DataPointGenerator.class);
 
   /**
    * Constructor for the DataPointInitializer class.
@@ -30,14 +36,20 @@ public class DataPointGenerator {
   public DataPointGenerator(
     DataPointService dpService,
     PositionGenerator posGenerator,
-    VesselGenerator vesselGenerator
+    VesselGenerator vesselGenerator,
+    WeatherGenerator weatherGenerator,
+    MarineWeatherGenerator marineWeatherGenerator
   ) {
     this.dpService = dpService;
     this.posGenerator = posGenerator;
     this.vesselGenerator = vesselGenerator;
+    this.weatherGenerator = weatherGenerator;
+    this.marineWeatherGenerator = marineWeatherGenerator;
   }
 
   public DataPoint generate(DataPoint baseDp) {
+    this.logger.info("Generarting data point...");
+
     // Increment timestamp by 1 min
     long ts = baseDp.getTs() + 60;
 
@@ -45,15 +57,24 @@ public class DataPointGenerator {
     Long id = this.dpService.add(dp);
 
     this.posGenerator.generate(baseDp, dp);
+    this.weatherGenerator.generate(baseDp, dp);
+    this.marineWeatherGenerator.generate(baseDp, dp);
+    // Update data point so far
+    dp = this.fetch(id);
     this.vesselGenerator.generate(baseDp, dp);
 
-    // Data point fetched from storage
+    this.logger.info("Finished generating data point");
+
+    return dp;
+  }
+
+  private DataPoint fetch(Long id) {
+    DataPoint dp = null;
     Optional<DataPoint> fDp = this.dpService.get(id);
     if (fDp.isPresent()) {
       // Update data point with relationships in storage
       dp = fDp.get();
     }
-
     return dp;
   }
 }

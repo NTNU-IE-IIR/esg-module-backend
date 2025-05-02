@@ -10,9 +10,16 @@ import no.ntnu.idata2900.project.esg_module_backend.models.data_points.Position;
 import no.ntnu.idata2900.project.esg_module_backend.services.data_points.PositionService;
 
 /**
- * The PositionGenerator class represents the generator for {@link Position positions}. The class
- * contains a set of constants called max boundaries that defines how much each attribute can
- * maximum change at each {@link DataPoint data point}.
+ * The PositionGenerator class represents the generator for {@link Position positions}.
+ * 
+ * <p><i>Deviation constants:</i></p>
+ * 
+ * <ul>
+ *   <li><code>COR</code> (<code>degrees</code>): Maximum coordinate deivation</li>
+ * </ul>
+ * 
+ * <p>The preceding constants define how much each attribute can maximum change at each
+ * {@link DataPoint data point}.</p>
  * 
  * @author Group 14
  * @version v0.1.0 (2025.05.01)
@@ -21,8 +28,7 @@ import no.ntnu.idata2900.project.esg_module_backend.services.data_points.Positio
 public class PositionGenerator {
   private PositionService posService;
 
-  // MAX BONDARIES
-  private static final float COR = 0.005f; // Degrees
+  private static final float COR = 0.005f;
 
   private static final Random RAN = new Random();
 

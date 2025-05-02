@@ -3,22 +3,38 @@ package no.ntnu.idata2900.project.esg_module_backend.generators;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import no.ntnu.idata2900.project.esg_module_backend.models.data_points.DataPoint;
 import no.ntnu.idata2900.project.esg_module_backend.models.data_points.Vessel;
+import no.ntnu.idata2900.project.esg_module_backend.services.data_points.DataPointService;
 import no.ntnu.idata2900.project.esg_module_backend.services.data_points.VesselService;
 
 /**
- * The VesselGenerator class represents the generator for {@link Vessel vessel data}. The class
- * contains a set of constants called max boundaries that defines how much each attribute can
- * maximum change at each {@link DataPoint data point}.
+ * The VesselGenerator class represents the generator for {@link Vessel vessel data}.
+ * 
+ * <p><i>Deviation constants:</i></p>
+ * 
+ * <ul>
+ *   <li><code>HEADING</code> (<code>degrees</code>): Maximum heading deivation</li>
+ *   <li><code>SPEED</code> (<code>knots</code>): Maximum speed deviation</li>
+ * </ul>
+ * 
+ * <p>The preceding constants define how much each attribute can maximum change at each
+ * {@link DataPoint data point}.</p>
+ * 
+ * @author Group 14
+ * @version v0.1.0 (2025.05.02)
  */
+@Component
 public class VesselGenerator {
+  private DataPointService dpService;
   private VesselService vesselService;
 
-  // MAX BOUNDARIES
-  private static final float HEADING = 15.0f; // Degreees
-  private static final float SPEED = 0.5f; // Knots
+  private FuelGenerator fuelGenerator;
+
+  private static final float HEADING = 15.0f;
+  private static final float SPEED = 0.5f;
 
   private static final Random RAN = new Random();
 
@@ -28,10 +44,15 @@ public class VesselGenerator {
    * @param vesselService The specified vessel data service
    */
   @Autowired
-  public VesselGenerator(VesselService vesselService) {
+  public VesselGenerator(
+    DataPointService dpService,
+    VesselService vesselService,
+    FuelGenerator fuelGenerator
+  ) {
+    this.dpService = dpService;
     this.vesselService = vesselService;
+    this.fuelGenerator = fuelGenerator;
   }
-
 
   /**
    * Generates vessel data and adds it to storage. The generated vessel data is based on the data
@@ -49,8 +70,10 @@ public class VesselGenerator {
   public void generate(DataPoint baseDp, DataPoint dp) {
     Vessel vessel = this.randomVessel(baseDp);
     vessel.setDp(dp);
-    // Add vessel to storage
+    // Add vessel data to storage
     this.vesselService.add(vessel);
+
+    this.fuelGenerator.generate(dp.getWeather(), dp.getMarineWeather(), vessel);
   }
 
   /**
@@ -68,9 +91,16 @@ public class VesselGenerator {
       float heading = baseDp.getVessel().getHeading() + RAN.nextFloat(HEADING * 2) - HEADING;
       float speed = baseDp.getVessel().getSpeed() + RAN.nextFloat(SPEED * 2) - SPEED;
 
+      // Correct `heading`
+      if (heading > 360) {
+        heading -= 360;
+      } else if (heading < 0) {
+        heading += 360;
+      }
+
       vessel = new Vessel(heading, speed);
 
-      if (vessel.isValid()) {
+      if (vessel.isGeneratedValid()) {
         valid = true;
       }
     }

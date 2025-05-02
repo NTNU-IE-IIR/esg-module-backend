@@ -35,8 +35,17 @@ import jakarta.persistence.Table;
  * {@link WindWaves wind waves} and {@link SwellWaves swell waves} data. For documentation of these
  * parameters, see their respective class documentations.</p>
  * 
+ * <p><i>Data generation constans:</i></p>
+ * 
+ * <ul>
+ *   <li><code>MAX_OCEAN_CURRENT_VELOCITY</code> (<code>m/s</code>): Maximum ocean current velocity
+ *   marine weather data can obtain during data generation</li>
+ * </ul>
+ * 
+ * <p>The preceding constans are used to define boundaries for data generation.</p>
+ * 
  * @author Group 14
- * @version v0.1.6 (2025.05.01)
+ * @version v0.2.0 (2025.05.02)
  */
 @Entity
 @Table(name = "marine_weather")
@@ -80,6 +89,8 @@ public class MarineWeather {
   @JoinColumn(name = "marine_weather_id")
   @Schema(description = "Data point containing this specific marine weather data")
   private DataPoint dp;
+
+  private static final float MAX_OCEAN_CURRENT_VELOCITY = 0.25f;
 
   /**
    * Default constructor for the MarineWeather class.
@@ -174,12 +185,21 @@ public class MarineWeather {
   }
 
   /**
-   * Checks if weather data is valid.
+   * Checks if marine weather data is valid.
    * 
-   * @return True if weather data is valid or false otherwise
+   * @return True if marine weather data is valid or false otherwise
    */
   public boolean isValid() {
     return this.oceanCurrentVelocity >= 0 && this.oceanCurrentDirection >= 0
         && this.oceanCurrentDirection <= 360;
+  }
+
+  /**
+   * Checks if generated marine weather data is valid.
+   * 
+   * @return True if generated marine weather data is valid or false otherwise
+   */
+  public boolean isGeneratedValid() {
+    return this.isValid() && this.oceanCurrentVelocity <= MAX_OCEAN_CURRENT_VELOCITY;
   }
 }

@@ -10,7 +10,7 @@ import no.ntnu.idata2900.project.esg_module_backend.repositories.data_points.Ves
  * The VesselService class represents the service for {@link Vessel vessel data}.
  * 
  * @author Group 14
- * @version v0.1.0 (2025.05.01)
+ * @version v0.1.1 (2025.05.02)
  */
 @Service
 public class VesselService {
@@ -33,9 +33,8 @@ public class VesselService {
    * @param vessel The specified vessel data
    */
   public void add(Vessel vessel) {
-    boolean valid = vessel.isValid();
-    if (!valid) {
-      throw new IllegalArgumentException("Vessel data is invalid");
+    if (!vessel.isValid()) {
+      throw new IllegalArgumentException("The specified vessel data is invalid");
     }
     this.repo.save(vessel);
   }

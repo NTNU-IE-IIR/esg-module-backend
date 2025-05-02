@@ -116,6 +116,6 @@ public class Position {
    * @return True if position is valid or false otherwise
    */
   public boolean isValid() {
-    return this.lat >= -90 && this.lat <= 90 && this.lng <= 180 && this.lng >= -180;
+    return this.lat <= 90 && this.lat >= -90 && this.lng <= 180 && this.lng >= -180;
   }
 }

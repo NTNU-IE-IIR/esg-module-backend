@@ -32,12 +32,19 @@ import jakarta.persistence.Table;
  * parameters, see
  * <a href="https://api.windy.com/point-forecast/docs">Windy API documentation</a>.</p>
  * 
- * <p>The class contains two constants: <code>MAX_WIND</code> and <code>MAX_GUST</code>. These
- * define the maximum allowed value of the <code>windU</code> and <code>windV</code> parameters and
- * <code>gust</code> parameter respectively.</p>
+ * <p><i>Data generation constans:</i></p>
+ * 
+ * <ul>
+ *   <li><code>MAX_WIND</code> (<code>m/s</code>): Maximum wind speed weather data can obtain
+ *   during data generation</li>
+ *   <li><code>MAX_GUST</code> (<code>m/s</code>): Maximum wind gust speed weather data can obtain
+ *   during data generation</li>
+ * </ul>
+ * 
+ * <p>The preceding constans are used to define boundaries for data generation.</p>
  *
  * @author Group 14
- * @version v0.4.0 (2025.05.01)
+ * @version v0.4.0 (2025.05.02)
  */
 @Entity
 @Table(name = "weather")
@@ -153,6 +160,16 @@ public class Weather {
    * @return True if the weather data is valid or false otherwise
    */
   public boolean isValid() {
-    return this.windU >= 0 && this.windU <= 15 && this.windV >= 0 && this.windV <= 15 && this.gust >= 0;
+    return this.windU >= 0 && this.windV >= 0 && this.gust >= 0;
+  }
+
+  /**
+   * Chekcs if the generated weather data is valid.
+   * 
+   * @return True if the generated weather data is valid or false otherwise
+   */
+  public boolean isGeneratedValid() {
+    return this.isValid() && this.windU <= MAX_WIND && this.windV <= MAX_WIND
+        && this.gust <= MAX_GUST;
   }
 }

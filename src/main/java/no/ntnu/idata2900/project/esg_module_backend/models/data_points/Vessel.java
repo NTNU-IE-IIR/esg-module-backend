@@ -16,9 +16,18 @@ import jakarta.persistence.Table;
 /**
  * The Vessel class represents various vessel data collected from different sources. The class is
  * part of the data packaged into a {@link DataPoint data point}.
+ * 
+ * <p><i>Data generation constans:</i></p>
+ * 
+ * <ul>
+ *   <li><code>MAX_SPEED</code> (<code>knots</code>): Maximum speed vessel data can obtain during
+ *   data generation</li>
+ * </ul>
+ * 
+ * <p>The preceding constans are used to define boundaries for data generation.</p>
  *
  * @author Group 14
- * @version v0.3.2 (2025.05.01)
+ * @version v0.4.0 (2025.05.02)
  */
 @Entity
 @Table(name = "vessel")
@@ -53,6 +62,8 @@ public class Vessel {
   @JoinColumn(name = "vessel_id")
   @Schema(description = "Data point containing this specific vessel data")
   private DataPoint dp;
+
+  private static final float MAX_SPEED = 15;
 
   /**
    * Default constructor for the Vessel class.
@@ -154,5 +165,14 @@ public class Vessel {
    */
   public boolean isValid() {
     return this.heading >= 0 && this.heading <= 360 && this.speed >= 0 && this.speed <= 15;
+  }
+
+  /**
+   * Checks if generated vessel data is valid.
+   * 
+   * @return True if generated vessel data is valid or false otherwise
+   */
+  public boolean isGeneratedValid() {
+    return this.isValid() && this.speed <= MAX_SPEED;
   }
 }
