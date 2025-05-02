@@ -3,14 +3,13 @@ package no.ntnu.idata2900.project.esg_module_backend.models.data_points;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
-import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
 
 /**
@@ -56,22 +55,20 @@ import jakarta.persistence.Table;
 public class MarineWeather {
 
   @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "marine_weather_id")
   @Schema(description = "Unique ID")
   private Long id;
 
-  @OneToOne(cascade = CascadeType.ALL)
-  @PrimaryKeyJoinColumn
+  @OneToOne(mappedBy = "marineWeather")
   @Schema(description = "Waves data")
   private Waves waves;
 
-  @OneToOne(cascade = CascadeType.ALL)
-  @PrimaryKeyJoinColumn
+  @OneToOne(mappedBy = "marineWeather")
   @Schema(description = "Wind waves data")
   private WindWaves wwaves;
 
-  @OneToOne(cascade = CascadeType.ALL)
-  @PrimaryKeyJoinColumn
+  @OneToOne(mappedBy = "marineWeather")
   @Schema(description = "Swell waves data")
   private SwellWaves swellWaves;
 
@@ -84,9 +81,8 @@ public class MarineWeather {
   private float oceanCurrentDirection;
 
   @JsonIgnore
-  @MapsId
-  @OneToOne(mappedBy = "marineWeather")
-  @JoinColumn(name = "marine_weather_id")
+  @OneToOne
+  @JoinColumn(name = "data_point_id")
   @Schema(description = "Data point containing this specific marine weather data")
   private DataPoint dp;
 

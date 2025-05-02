@@ -5,9 +5,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -52,6 +53,7 @@ import jakarta.persistence.Table;
 public class Weather {
 
   @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "weather_id")
   @Schema(description = "Unique ID")
   private Long id;
@@ -69,9 +71,8 @@ public class Weather {
   private float gust;
 
   @JsonIgnore
-  @MapsId
-  @OneToOne(mappedBy = "weather")
-  @JoinColumn(name = "weather_id")
+  @OneToOne
+  @JoinColumn(name = "data_point_id")
   @Schema(description = "Data point containing this specific weather data")
   private DataPoint dp;
 

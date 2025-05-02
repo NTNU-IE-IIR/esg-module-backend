@@ -5,9 +5,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -26,6 +27,7 @@ import jakarta.persistence.Table;
 public class Position {
 
   @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "position_id")
   @Schema(description = "Unique ID")
   private Long id;
@@ -39,9 +41,8 @@ public class Position {
   private float lng;
 
   @JsonIgnore
-  @MapsId
-  @OneToOne(mappedBy = "pos")
-  @JoinColumn(name = "position_id")
+  @OneToOne
+  @JoinColumn(name = "data_point_id")
   @Schema(description = "Data point containig this specific position data")
   private DataPoint dp;
 

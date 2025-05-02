@@ -5,9 +5,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -43,6 +44,7 @@ import jakarta.persistence.Table;
 public class WindWaves {
 
   @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "wind_waves_id")
   @Schema(description = "Unique ID")
   private Long id;
@@ -63,9 +65,8 @@ public class WindWaves {
   private float wwavesPeriod;
 
   @JsonIgnore
-  @MapsId
-  @OneToOne(mappedBy = "wwaves")
-  @JoinColumn(name = "wind_waves_id")
+  @OneToOne
+  @JoinColumn(name = "marine_weather_id")
   @Schema(description = "Marine weather data containing this specific wind waves data")
   private MarineWeather marineWeather;
 
