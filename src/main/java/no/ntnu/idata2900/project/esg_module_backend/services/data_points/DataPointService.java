@@ -30,6 +30,15 @@ public class DataPointService {
   }
 
   /**
+   * Gets all data points.
+   * 
+   * @return All data points
+   */
+  public Iterable<DataPoint> getAll() {
+    return this.repo.findAll();
+  }
+
+  /**
    * Gets the data point with the specified ID.
    * 
    * @param id The specified ID
