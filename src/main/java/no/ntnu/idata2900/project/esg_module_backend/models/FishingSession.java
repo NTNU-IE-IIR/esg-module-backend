@@ -50,6 +50,25 @@ public class FishingSession {
   private Trip trip;
 
   /**
+   * Default constructor for the FishingSession class.
+   */
+  public FishingSession() {
+    //Intentionally left blank
+  }
+
+  /**
+   * Constructor for the FishingSession class.
+   * @param startDate The start date of the fishing session in the format "yyyy-MM-dd HH:mm:ss".
+   * @param endDate The end date of the fishing session in the format "yyyy-MM-dd HH:mm:ss".
+   * @param fuelConsumed The amount of fuel consumed during the fishing session in liters.
+   */
+  public FishingSession(String startDate, String endDate, Long fuelConsumed) {
+    this.startDate = startDate;
+    this.endDate = endDate;
+    this.fuelConsumed = fuelConsumed;
+  }
+
+  /**
    * Gets the start date of the fishing session.
    *
    * @return The start date as a string
@@ -101,5 +120,9 @@ public class FishingSession {
    */
   public void setTrip(Trip trip) {
     this.trip = trip;
+  }
+
+  public Trip getTrip() {
+    return trip;
   }
 }

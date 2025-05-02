@@ -50,6 +50,27 @@ public class FishingOperation {
   @Schema(description = "Fishing session this operation belongs to")
   private FishingSession fishingSession;
 
+  public FishingOperation() {
+  }
+
+  /**
+   * Constructor for the FishingOperation class.
+   *
+   * @param startDate The start date of the fishing operation in the format "yyyy-MM-dd HH:mm:ss".
+   * @param endDate The end date of the fishing operation in the format "yyyy-MM-dd HH:mm:ss".
+   * @param fuelConsumed The amount of fuel consumed during the fishing operation in liters.
+   * @param fishAmount The amount of fish caught during the fishing operation in kilograms.
+   * @param fishingMethod The fishing method used during the fishing operation.
+   */
+  public FishingOperation(String startDate, String endDate, Long fuelConsumed, Long fishAmount,
+                          String fishingMethod) {
+    this.startDate = startDate;
+    this.endDate = endDate;
+    this.fuelConsumed = fuelConsumed;
+    this.fishAmount = fishAmount;
+    this.fishingMethod = fishingMethod;
+  }
+
   /**
    * Gets the fishing session associated with this operation.
    *
