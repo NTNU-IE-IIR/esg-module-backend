@@ -1,5 +1,6 @@
 package no.ntnu.idata2900.project.esg_module_backend.models;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import java.time.Instant;
 import java.util.List;
@@ -14,23 +15,61 @@ import no.ntnu.idata2900.project.esg_module_backend.models.data_points.DataPoint
  * @version v0.2.0 (2025.05.01)
  */
 @Entity
+@Table(name = "trip")
+@Schema(description = "Trip entity representing a fishing trip")
 public class Trip {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "trip_id")
+  @Schema(description = "Unique ID")
   private Long id;
+
+  @Column(name = "name")
+  @Schema(description = "Name of the trip")
   private String name;
+
+  @Column(name = "registration_mark")
+  @Schema(description = "Registration mark of the vessel")
   private String registrationMark;
+
+  @Column(name = "start_date")
+  @Schema(description = "Start date of the trip")
   private Instant startDate;
+
+  @Column(name = "end_date")
+  @Schema(description = "End date of the trip")
   private Instant endDate;
+
+  @Column(name = "trip_distance")
+  @Schema(description = "Total distance traveled during the trip")
   private float tripDistance;
+
+  @Column(name = "fuel_consumed")
+  @Schema(description = "Total fuel consumed during the trip")
   private float fuelConsumed;
+
+  @Column(name = "fish_caught")
+  @Schema(description = "Total amount of fish caught during the trip")
   private float fishCaught;
+
+  @Column(name = "active")
+  @Schema(description = "Whether the trip is currently active")
   private boolean active;
+
+  @Column(name = "area")
+  @Schema(description = "Fishing area of the trip")
   private String area;
+
+  @Column(name = "comments")
+  @Schema(description = "Comments about the trip")
   private String comments;
+
   @OneToMany(mappedBy = "trip")
+  @Schema(description = "Set of fishing sessions during the trip")
   private Set<FishingSession> fishingSessions;
+
   @OneToMany(mappedBy = "trip")
+  @Schema(description = "List of data points collected during the trip")
   private List<DataPoint> dataPoints;
 
   /**
