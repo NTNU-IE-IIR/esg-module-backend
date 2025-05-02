@@ -1,6 +1,8 @@
 package no.ntnu.idata2900.project.esg_module_backend.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,16 +28,45 @@ import java.util.Set;
 @Entity
 public class FishingSession {
   @Id
+  @Column(name = "fishing_session_id")
+  @Schema(description = "Unique ID")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
+  @Column(name = "start_date")
+  @Schema(description = "Start date of the fishing session")
   private String startDate;
+  @Column(name = "end_date")
+  @Schema(description = "End date of the fishing session")
   private String endDate;
+  @Column(name = "fuel_consumed")
+  @Schema(description = "Amount of fuel that was consumed during the fishing session")
   private Long fuelConsumed;
   @OneToMany(mappedBy = "fishingSession")
+  @Schema(description = "Set of fishing operations performed during the fishing session")
   private Set<FishingOperation> operations;
   @ManyToOne
+  @Schema(description = "Trip this session belongs to")
   @JsonIgnore
   private Trip trip;
+
+  /**
+   * Default constructor for the FishingSession class.
+   */
+  public FishingSession() {
+    //Intentionally left blank
+  }
+
+  /**
+   * Constructor for the FishingSession class.
+   * @param startDate The start date of the fishing session in the format "yyyy-MM-dd HH:mm:ss".
+   * @param endDate The end date of the fishing session in the format "yyyy-MM-dd HH:mm:ss".
+   * @param fuelConsumed The amount of fuel consumed during the fishing session in liters.
+   */
+  public FishingSession(String startDate, String endDate, Long fuelConsumed) {
+    this.startDate = startDate;
+    this.endDate = endDate;
+    this.fuelConsumed = fuelConsumed;
+  }
 
   /**
    * Gets the start date of the fishing session.
@@ -89,5 +120,9 @@ public class FishingSession {
    */
   public void setTrip(Trip trip) {
     this.trip = trip;
+  }
+
+  public Trip getTrip() {
+    return trip;
   }
 }
