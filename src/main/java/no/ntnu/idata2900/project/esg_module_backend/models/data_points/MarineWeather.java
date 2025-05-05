@@ -3,14 +3,13 @@ package no.ntnu.idata2900.project.esg_module_backend.models.data_points;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
-import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
 
 /**
@@ -35,8 +34,17 @@ import jakarta.persistence.Table;
  * {@link WindWaves wind waves} and {@link SwellWaves swell waves} data. For documentation of these
  * parameters, see their respective class documentations.</p>
  * 
+ * <p><i>Data generation constans:</i></p>
+ * 
+ * <ul>
+ *   <li><code>MAX_OCEAN_CURRENT_VELOCITY</code> (<code>m/s</code>): Maximum ocean current velocity
+ *   marine weather data can obtain during data generation</li>
+ * </ul>
+ * 
+ * <p>The preceding constans are used to define boundaries for data generation.</p>
+ * 
  * @author Group 14
- * @version v0.1.5 (2025.04.30)
+ * @version v0.2.0 (2025.05.02)
  */
 @Entity
 @Table(name = "marine_weather")
@@ -47,22 +55,20 @@ import jakarta.persistence.Table;
 public class MarineWeather {
 
   @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "marine_weather_id")
   @Schema(description = "Unique ID")
   private Long id;
 
-  @OneToOne(cascade = CascadeType.ALL)
-  @PrimaryKeyJoinColumn
+  @OneToOne(mappedBy = "marineWeather")
   @Schema(description = "Waves data")
   private Waves waves;
 
-  @OneToOne(cascade = CascadeType.ALL)
-  @PrimaryKeyJoinColumn
+  @OneToOne(mappedBy = "marineWeather")
   @Schema(description = "Wind waves data")
   private WindWaves wwaves;
 
-  @OneToOne(cascade = CascadeType.ALL)
-  @PrimaryKeyJoinColumn
+  @OneToOne(mappedBy = "marineWeather")
   @Schema(description = "Swell waves data")
   private SwellWaves swellWaves;
 
@@ -75,11 +81,12 @@ public class MarineWeather {
   private float oceanCurrentDirection;
 
   @JsonIgnore
-  @MapsId
-  @OneToOne(mappedBy = "marineWeather")
-  @JoinColumn(name = "marine_weather_id")
+  @OneToOne
+  @JoinColumn(name = "data_point_id")
   @Schema(description = "Data point containing this specific marine weather data")
   private DataPoint dp;
+
+  private static final float MAX_OCEAN_CURRENT_VELOCITY = 0.25f;
 
   /**
    * Default constructor for the MarineWeather class.
@@ -171,5 +178,24 @@ public class MarineWeather {
    */
   public void setDp(DataPoint dp) {
     this.dp = dp;
+  }
+
+  /**
+   * Checks if marine weather data is valid.
+   * 
+   * @return True if marine weather data is valid or false otherwise
+   */
+  public boolean isValid() {
+    return this.oceanCurrentVelocity >= 0 && this.oceanCurrentDirection >= 0
+        && this.oceanCurrentDirection <= 360;
+  }
+
+  /**
+   * Checks if generated marine weather data is valid.
+   * 
+   * @return True if generated marine weather data is valid or false otherwise
+   */
+  public boolean isGeneratedValid() {
+    return this.isValid() && this.oceanCurrentVelocity <= MAX_OCEAN_CURRENT_VELOCITY;
   }
 }

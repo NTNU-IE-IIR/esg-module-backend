@@ -5,9 +5,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -27,7 +28,7 @@ import jakarta.persistence.Table;
  * </ul>
  * 
  * @author Group 14
- * @version v0.1.3 (2025.04.30)
+ * @version v0.1.4 (2025.05.01)
  * @see Vessel
  */
 @Entity
@@ -39,6 +40,7 @@ import jakarta.persistence.Table;
 public class Fuel {
 
   @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "fuel_id")
   @Schema(description = "Unique ID")
   private Long id;
@@ -56,9 +58,8 @@ public class Fuel {
   private float hotel;
 
   @JsonIgnore
-  @MapsId
-  @OneToOne(mappedBy = "fuelConsumption")
-  @JoinColumn(name = "fuel_id")
+  @OneToOne
+  @JoinColumn(name = "vessel_id")
   @Schema(description = "Vessel data containing this specific fuel data")
   private Vessel vessel;
 
@@ -136,5 +137,14 @@ public class Fuel {
    */
   public float getTotal() {
     return this.drift + this.production + this.hotel;
+  }
+
+  /**
+   * Checks if the fuel consumption is valid.
+   * 
+   * @return True if the fuel consumption is valid or false otherwise
+   */
+  public boolean isValid() {
+    return this.drift >= 0 && this.production >= 0 && this.hotel >= 0;
   }
 }

@@ -5,9 +5,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -31,9 +32,20 @@ import jakarta.persistence.Table;
  * distributed by <a href="https://www.windy.com/">Windy</a>. For further documentation of
  * parameters, see
  * <a href="https://api.windy.com/point-forecast/docs">Windy API documentation</a>.</p>
+ * 
+ * <p><i>Data generation constans:</i></p>
+ * 
+ * <ul>
+ *   <li><code>MAX_WIND</code> (<code>m/s</code>): Maximum wind speed weather data can obtain
+ *   during data generation</li>
+ *   <li><code>MAX_GUST</code> (<code>m/s</code>): Maximum wind gust speed weather data can obtain
+ *   during data generation</li>
+ * </ul>
+ * 
+ * <p>The preceding constans are used to define boundaries for data generation.</p>
  *
  * @author Group 14
- * @version v0.3.3 (2025.04.30)
+ * @version v0.4.0 (2025.05.02)
  */
 @Entity
 @Table(name = "weather")
@@ -41,6 +53,7 @@ import jakarta.persistence.Table;
 public class Weather {
 
   @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "weather_id")
   @Schema(description = "Unique ID")
   private Long id;
@@ -58,11 +71,13 @@ public class Weather {
   private float gust;
 
   @JsonIgnore
-  @MapsId
-  @OneToOne(mappedBy = "weather")
-  @JoinColumn(name = "weather_id")
+  @OneToOne
+  @JoinColumn(name = "data_point_id")
   @Schema(description = "Data point containing this specific weather data")
   private DataPoint dp;
+
+  private static final float MAX_WIND = 15;
+  private static final float MAX_GUST = 20;
 
   /**
    * Default constructor for the Weather class.
@@ -138,5 +153,24 @@ public class Weather {
    */
   public void setDp(DataPoint dp) {
     this.dp = dp;
+  }
+
+  /**
+   * Checks if the weather data is valid.
+   * 
+   * @return True if the weather data is valid or false otherwise
+   */
+  public boolean isValid() {
+    return this.windU >= 0 && this.windV >= 0 && this.gust >= 0;
+  }
+
+  /**
+   * Chekcs if the generated weather data is valid.
+   * 
+   * @return True if the generated weather data is valid or false otherwise
+   */
+  public boolean isGeneratedValid() {
+    return this.isValid() && this.windU <= MAX_WIND && this.windV <= MAX_WIND
+        && this.gust <= MAX_GUST;
   }
 }

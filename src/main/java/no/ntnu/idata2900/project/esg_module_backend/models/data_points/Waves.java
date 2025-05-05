@@ -5,9 +5,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -35,7 +36,7 @@ import jakarta.persistence.Table;
  * <a href="https://api.windy.com/point-forecast/docs">Windy API documentation</a>.</p>
  * 
  * @author Group 14
- * @version v0.1.4 (2025.04.30)
+ * @version v0.1.5 (2025.05.01)
  */
 @Entity
 @Table(name = "waves")
@@ -43,6 +44,7 @@ import jakarta.persistence.Table;
 public class Waves {
 
   @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "waves_id")
   @Schema(description = "Unique ID")
   public Long id;
@@ -62,11 +64,13 @@ public class Waves {
   private float wavesPeriod;
 
   @JsonIgnore
-  @MapsId
-  @OneToOne(mappedBy = "waves")
-  @JoinColumn(name = "waves_id")
+  @OneToOne
+  @JoinColumn(name = "marine_weather_id")
   @Schema(description = "Marine weather data containing this specific waves data")
   private MarineWeather marineWeather;
+
+  private static final float MAX_WAVES_HEIGHT = 6;
+  private static final float MAX_WAVES_PERIOD = 15;
 
   /**
    * Default constructor for the Waves class.
@@ -122,7 +126,7 @@ public class Waves {
    * 
    * @return Waves period
    */
-  public float wavesPeriod() {
+  public float getWavesPeriod() {
     return this.wavesPeriod;
   }
 
@@ -142,5 +146,25 @@ public class Waves {
    */
   public void setMarineWeather(MarineWeather marineWeather) {
     this.marineWeather = marineWeather;
+  }
+
+  /**
+   * Checks if the waves data is valid.
+   * 
+   * @return True if waves data is valid or false otherwise
+   */
+  public boolean isValid() {
+    return this.wavesHeight >= 0 && this.wavesDirection >= 0 && this.wavesDirection <= 360
+        && this.wavesPeriod >= 0;
+  }
+
+  /**
+   * Checks if the generated waves data is valid.
+   * 
+   * @return True if generated waves data is valid or alse otherwise
+   */
+  public boolean isGeneratedValid() {
+    return this.isValid() && this.wavesHeight <= MAX_WAVES_HEIGHT
+        && this.wavesPeriod <= MAX_WAVES_PERIOD;
   }
 }

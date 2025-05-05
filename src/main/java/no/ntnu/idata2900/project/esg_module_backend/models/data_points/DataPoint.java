@@ -1,8 +1,8 @@
 package no.ntnu.idata2900.project.esg_module_backend.models.data_points;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,7 +10,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
-import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
 import no.ntnu.idata2900.project.esg_module_backend.models.Trip;
 
@@ -19,7 +18,7 @@ import no.ntnu.idata2900.project.esg_module_backend.models.Trip;
  * {@link Weather weather} data, as well as {@link Position position} data.
  *
  * @author Group 14
- * @version v0.2.7 (2025.04.30)
+ * @version v0.2.8 (2025.05.01)
  */
 @Entity
 @Table(name = "data_point")
@@ -36,29 +35,25 @@ public class DataPoint {
   @Schema(description = "Timestamp")
   private long ts;
 
-  @OneToOne(cascade = CascadeType.ALL)
-  @PrimaryKeyJoinColumn
-  @Schema(description = "Position data represented as coordinates")
+  @OneToOne(mappedBy = "dp")
+  @Schema(description = "Position represented as coordinates")
   private Position pos;
 
-  @OneToOne(cascade = CascadeType.ALL)
-  @PrimaryKeyJoinColumn
+  @OneToOne(mappedBy = "dp")
   @Schema(description = "Vessel data")
   private Vessel vessel;
 
-  @OneToOne(cascade = CascadeType.ALL)
-  @PrimaryKeyJoinColumn
+  @OneToOne(mappedBy = "dp")
   @Schema(description = "Weather data (wind)")
   private Weather weather;
 
-  @OneToOne(cascade = CascadeType.ALL)
-  @PrimaryKeyJoinColumn
+  @OneToOne(mappedBy = "dp")
   @Schema(description = "Marine weather data (waves and ocean current)")
   private MarineWeather marineWeather;
 
-  @ManyToOne(cascade = CascadeType.ALL)
-  @Schema(description = "Trip data")
   @JsonIgnore
+  @ManyToOne
+  @Schema(description = "Trip containing this specific data point")
   private Trip trip;
 
   /**
@@ -133,22 +128,30 @@ public class DataPoint {
     return this.marineWeather;
   }
 
-
   /**
-   * Getter for trip data.
+   * Getter for trip.
    *
-   * @return The associated trip data.
+   * @return Trip.
    */
   public Trip getTrip() {
     return trip;
   }
 
   /**
-   * Sets the trip associated with this data point.
+   * Setter for trip.
    *
-   * @param trip the trip data to associate with this data point
+   * @param trip The specified trip
    */
   public void setTrip(Trip trip) {
     this.trip = trip;
+  }
+
+  /**
+   * Checks if data point is valid.
+   * 
+   * @return True if data point is valid or false otherwise
+   */
+  public boolean isValid() {
+    return this.ts >= 0;
   }
 }

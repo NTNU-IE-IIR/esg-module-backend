@@ -5,9 +5,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -35,7 +36,7 @@ import jakarta.persistence.Table;
  * <a href="https://api.windy.com/point-forecast/docs">Windy API documentation</a>.</p>
  * 
  * @author Group 14
- * @version v0.1.4 (2025.04.30)
+ * @version v0.2.0 (2025.05.02)
  */
 @Entity
 @Table(name = "wind_waves")
@@ -43,6 +44,7 @@ import jakarta.persistence.Table;
 public class WindWaves {
 
   @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "wind_waves_id")
   @Schema(description = "Unique ID")
   private Long id;
@@ -63,11 +65,13 @@ public class WindWaves {
   private float wwavesPeriod;
 
   @JsonIgnore
-  @MapsId
-  @OneToOne(mappedBy = "wwaves")
-  @JoinColumn(name = "wind_waves_id")
+  @OneToOne
+  @JoinColumn(name = "marine_weather_id")
   @Schema(description = "Marine weather data containing this specific wind waves data")
   private MarineWeather marineWeather;
+
+  private static final float MAX_WWAVES_HEIGHT = 2;
+  private static final float MAX_WWAVES_PERIOD = 10;
 
   /**
    * Default constructor for the WindWaves class.
@@ -143,5 +147,25 @@ public class WindWaves {
    */
   public void setMarineWeather(MarineWeather marineWeather) {
     this.marineWeather = marineWeather;
+  }
+
+  /**
+   * Checks if the wind waves data is valid.
+   * 
+   * @return True if wind waves data is valid or false otherwise
+   */
+  public boolean isValid() {
+    return this.wwavesHeight >= 0 && this.wwavesDirection >= 0 && this.wwavesDirection <= 360
+        && this.wwavesPeriod >= 0;
+  }
+
+  /**
+   * Checks if the generated wind waves data is valid.
+   * 
+   * @return True if the generated wind waves data is valid or false otherwise
+   */
+  public boolean isGeneratedValid() {
+    return this.isValid() && this.wwavesHeight <= MAX_WWAVES_HEIGHT
+        && this.wwavesPeriod <= MAX_WWAVES_PERIOD;
   }
 }

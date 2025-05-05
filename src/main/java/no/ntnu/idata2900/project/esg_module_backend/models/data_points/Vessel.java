@@ -3,22 +3,30 @@ package no.ntnu.idata2900.project.esg_module_backend.models.data_points;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
-import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
 
 /**
  * The Vessel class represents various vessel data collected from different sources. The class is
  * part of the data packaged into a {@link DataPoint data point}.
+ * 
+ * <p><i>Data generation constans:</i></p>
+ * 
+ * <ul>
+ *   <li><code>MAX_SPEED</code> (<code>knots</code>): Maximum speed vessel data can obtain during
+ *   data generation</li>
+ * </ul>
+ * 
+ * <p>The preceding constans are used to define boundaries for data generation.</p>
  *
  * @author Group 14
- * @version v0.3.1 (2025.04.30)
+ * @version v0.4.0 (2025.05.02)
  */
 @Entity
 @Table(name = "vessel")
@@ -26,6 +34,7 @@ import jakarta.persistence.Table;
 public class Vessel {
 
   @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "vessel_id")
   @Schema(description = "Unique ID")
   private Long id;
@@ -42,17 +51,17 @@ public class Vessel {
   @Schema(description = "Vessel target speed")
   private float targetSpeed;
 
-  @OneToOne(cascade = CascadeType.ALL)
-  @PrimaryKeyJoinColumn
-  @Schema(description = "Fuel consumption data over the last time interval")
+  @OneToOne(mappedBy = "vessel")
+  @Schema(description = "Fuel consumption over the last time interval")
   private Fuel fuelConsumption;
 
   @JsonIgnore
-  @MapsId
-  @OneToOne(mappedBy = "vessel")
-  @JoinColumn(name = "vessel_id")
+  @OneToOne
+  @JoinColumn(name = "data_point_id")
   @Schema(description = "Data point containing this specific vessel data")
   private DataPoint dp;
+
+  private static final float MAX_SPEED = 15;
 
   /**
    * Default constructor for the Vessel class.
@@ -145,5 +154,23 @@ public class Vessel {
    */
   public void setDp(DataPoint dp) {
     this.dp = dp;
+  }
+
+  /**
+   * Checks if vessel data is valid.
+   * 
+   * @return True if vessel data is valid or false otherwise
+   */
+  public boolean isValid() {
+    return this.heading >= 0 && this.heading <= 360 && this.speed >= 0 && this.speed <= 15;
+  }
+
+  /**
+   * Checks if generated vessel data is valid.
+   * 
+   * @return True if generated vessel data is valid or false otherwise
+   */
+  public boolean isGeneratedValid() {
+    return this.isValid() && this.speed <= MAX_SPEED;
   }
 }
