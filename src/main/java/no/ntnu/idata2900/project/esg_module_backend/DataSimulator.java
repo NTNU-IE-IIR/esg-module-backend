@@ -33,10 +33,10 @@ public class DataSimulator implements ApplicationListener<ApplicationReadyEvent>
   }
 
   public void onApplicationEvent(ApplicationReadyEvent event) {
-    // Uncomment to start simulator
-    //this.logger.info("Starting simulator...");
-    //this.simulateDataPoints();
-    //this.logger.info("Simlator finished");
+//     Uncomment to start simulator
+    this.logger.info("Starting simulator...");
+    this.simulateDataPoints();
+    this.logger.info("Simlator finished");
   }
 
   private void simulateDataPoints() {
@@ -50,7 +50,7 @@ public class DataSimulator implements ApplicationListener<ApplicationReadyEvent>
       for (int i = 0; i < 4; i++) {
         DataPoint dp = null;
         for (int j = 0; j < num; j++) {
-          dp = dpGenerator.generate(dp);
+          dp = dpGenerator.generate(dp, null);
         }
       }
     }

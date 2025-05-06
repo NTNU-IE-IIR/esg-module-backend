@@ -3,8 +3,9 @@ package no.ntnu.idata2900.project.esg_module_backend.services;
 
 import java.util.List;
 import java.util.Optional;
-import no.ntnu.idata2900.project.esg_module_backend.models.TripLog;
-import no.ntnu.idata2900.project.esg_module_backend.repositories.TripLogRepository;
+import no.ntnu.idata2900.project.esg_module_backend.dtos.TripLogDto;
+import no.ntnu.idata2900.project.esg_module_backend.models.Trip;
+import no.ntnu.idata2900.project.esg_module_backend.repositories.TripRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,26 +20,28 @@ import org.springframework.stereotype.Service;
 @Service
 public class TripLogService {
   private final Logger logger = LoggerFactory.getLogger(TripLogService.class);
-  private final TripLogRepository tripLogRepository;
+  private final TripRepository tripRepository;
 
   @Autowired
-  public TripLogService(TripLogRepository tripLogRepository) {
-    this.tripLogRepository = tripLogRepository;
+  public TripLogService(TripRepository tripRepository) {
+    this.tripRepository = tripRepository;
   }
 
 
-  public List<TripLog> getAllTripLogs() {
-    return tripLogRepository.findAll();
+  public List<TripLogDto> getAllTripLogs(String registrationMark) {
+    List<Trip> trips = tripRepository.findByRegistrationMarkAndActiveFalse(registrationMark);
+
+    return trips.stream().map(TripLogDto::new).toList();
   }
 
 
   public boolean editComments(String comments, Long id) {
     boolean success = false;
-    Optional<TripLog> tripLog = tripLogRepository.findById(id);
-    if (tripLog.isPresent()) {
-      TripLog log = tripLog.get();
-      log.setComments(comments);
-      tripLogRepository.save(log);
+    Optional<Trip> trip = tripRepository.findById(id);
+    if (trip.isPresent()) {
+      Trip updatedTrip = trip.get();
+      updatedTrip.setComments(comments);
+      tripRepository.save(updatedTrip);
       logger.info("Updated comments for trip log with ID: {}", id);
       success = true;
     }
@@ -48,25 +51,12 @@ public class TripLogService {
 
   public boolean deleteTripLog(Long id) {
     boolean success = false;
-    Optional<TripLog> tripLog = tripLogRepository.findById(id);
+    Optional<Trip> tripLog = tripRepository.findById(id);
     if (tripLog.isPresent()) {
-      tripLogRepository.deleteById(id);
+      tripRepository.deleteById(id);
       logger.info("Deleted trip log with ID: {}", id);
       success = true;
     }
-    return success;
-  }
-
-
-  public boolean createTripLog(TripLog tripLog) {
-    boolean success = false;
-    tripLogRepository.save(tripLog);
-
-    if (tripLogRepository.findById(tripLog.getId()).isPresent()) {
-      logger.info("Saved trip log with ID: {}", tripLog.getId());
-      success = true;
-    }
-
     return success;
   }
 }

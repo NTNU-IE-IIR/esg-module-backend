@@ -6,7 +6,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 import java.util.Map;
+import no.ntnu.idata2900.project.esg_module_backend.dtos.TripDto;
 import no.ntnu.idata2900.project.esg_module_backend.services.TripService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +35,7 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/api/trip")
-@Tag(name = "Trip Controller", description = "API for managing fishing trip logs")
+@Tag(name = "Trip Controller", description = "API for managing fishing trips")
 public class TripController {
   private final Logger logger = LoggerFactory.getLogger(TripController.class);
   private final TripService tripService;
@@ -55,19 +57,19 @@ public class TripController {
           content = @Content(mediaType = "text/plain", schema = @Schema(type = "string")))
   })
   @PostMapping("/start")
-  public ResponseEntity<String> start(@RequestBody Map<String, String> requestBody) {
+  public ResponseEntity<Long> start(@RequestBody Map<String, String> requestBody) {
     try {
       String name = validateString(requestBody.get("name"), "Name must be specified");
       String registrationMark = validateString(requestBody.get("registrationMark"),
           "Registration mark must be specified");
 
-      tripService.startTrip(registrationMark, name);
+      Long tripId = tripService.startTrip(registrationMark, name);
 
       logger.info("New trip successfully started");
-      return ResponseEntity.ok("Trip successfully started");
+      return ResponseEntity.ok(tripId);
     } catch (IllegalArgumentException ex) {
       logger.warn("Invalid request for starting a new trip: {}", ex.getMessage());
-      return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -151,19 +153,22 @@ public class TripController {
     return response;
   }
 
-// TODO: move to a DataPoint controller
-//  @Operation(summary = "Get current trip data points", description = "Gets the current trip data points")
-//  @ApiResponses(value = {
-//  })
-//  @GetMapping("/data")
-//  public ResponseEntity<List<ShipDto>> getCurrentTripDataPoints() {
-//    ResponseEntity<List<ShipDto>> response;
-//    List<ShipDto> dataPoints = tripService.getTripDataPoints();
-//    if (dataPoints.isEmpty()) {
-//      response = new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//    } else {
-//      response = new ResponseEntity<>(dataPoints, HttpStatus.OK);
-//    }
-//    return response;
-//  }
+  @Operation(summary = "Get current trip data points", description = "Gets the current trip data points")
+  @ApiResponses(value = {
+  })
+  @GetMapping("/data/{tripId}")
+  public ResponseEntity<List<TripDto>> getActiveTripData(@PathVariable Long tripId) {
+    ResponseEntity<List<TripDto>> response;
+    try {
+      List<TripDto> dataPoints = tripService.getActiveTripData(tripId);
+      if (dataPoints.isEmpty()) {
+        response = new ResponseEntity<>(HttpStatus.NO_CONTENT);
+      } else {
+        response = new ResponseEntity<>(dataPoints, HttpStatus.OK);
+      }
+    } catch (IllegalArgumentException e) {
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+    return response;
+  }
 }

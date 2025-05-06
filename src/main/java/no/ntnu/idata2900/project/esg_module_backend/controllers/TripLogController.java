@@ -9,7 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import java.util.Map;
-import no.ntnu.idata2900.project.esg_module_backend.models.TripLog;
+import no.ntnu.idata2900.project.esg_module_backend.dtos.TripLogDto;
 import no.ntnu.idata2900.project.esg_module_backend.services.TripLogService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Group 14
  * @version 0.1.0 (2025.04.29)
  */
-@CrossOrigin(origins = "http://localhost:5137")
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/api/logs")
 @Tag(name = "Trip Log Controller", description = "API for managing fishing trip logs")
@@ -55,11 +55,12 @@ public class TripLogController {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Successfully retrieved all trip logs",
           content = @Content(mediaType = "application/json",
-              schema = @Schema(implementation = TripLog.class)))
+              schema = @Schema(implementation = TripLogDto.class)))
   })
-  @GetMapping("/all")
-  public List<TripLog> getAllTripLogs() {
-    return tripLogService.getAllTripLogs();
+  @GetMapping("/all/{registrationMark}")
+  public List<TripLogDto> getAllTripLogs(@PathVariable String registrationMark) {
+    logger.info("Received request to get all trip logs for registration mark: {}", registrationMark);
+    return tripLogService.getAllTripLogs(registrationMark);
   }
 
 

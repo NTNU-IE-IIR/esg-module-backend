@@ -15,7 +15,7 @@ public class Distance {
      * @param p2 The specified second position
      * @return Calculated geographical distance between two points
      */
-    private static float calculateDistance(Position p1, Position p2) {
+    public static float calculateDistance(Position p1, Position p2) {
         float lat1 = p1.getLat();
         float lon1 = p1.getLng();
         float lat2 = p2.getLat();
@@ -43,7 +43,7 @@ public class Distance {
      *
      * @return Calculated total distance traveled
      */
-    private float calculateTotalDistance(List<Position> positions) {
+    public float calculateTotalDistance(List<Position> positions) {
         float distance = 0;
         for (int i = 0; i < positions.size() - 1; i++) {
             distance += calculateDistance(positions.get(i), positions.get(i + 1));

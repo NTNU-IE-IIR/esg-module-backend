@@ -2,6 +2,12 @@ package no.ntnu.idata2900.project.esg_module_backend.generators;
 
 import java.util.Optional;
 
+import no.ntnu.idata2900.project.esg_module_backend.models.Trip;
+import no.ntnu.idata2900.project.esg_module_backend.models.data_points.MarineWeather;
+import no.ntnu.idata2900.project.esg_module_backend.models.data_points.Position;
+import no.ntnu.idata2900.project.esg_module_backend.models.data_points.Weather;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,12 +22,13 @@ import no.ntnu.idata2900.project.esg_module_backend.services.data_points.DataPoi
  */
 @Component
 public class DataPointGenerator {
-  private DataPointService dpService;
+  private final DataPointService dpService;
+  private final Logger logger = LoggerFactory.getLogger(DataPointGenerator.class);
 
-  private PositionGenerator posGenerator;
-  private VesselGenerator vesselGenerator;
-  private WeatherGenerator weatherGenerator;
-  private MarineWeatherGenerator marineWeatherGenerator;
+  private final PositionGenerator posGenerator;
+  private final VesselGenerator vesselGenerator;
+  private final WeatherGenerator weatherGenerator;
+  private final MarineWeatherGenerator marineWeatherGenerator;
   /**
    * Constructor for the DataPointInitializer class.
    * 
@@ -42,7 +49,7 @@ public class DataPointGenerator {
     this.marineWeatherGenerator = marineWeatherGenerator;
   }
 
-  public DataPoint generate(DataPoint baseDp) {
+  public DataPoint generate(DataPoint baseDp, Trip trip) {
     long ts = 0;
     if (baseDp == null) {
       ts = 1747713600;
@@ -52,17 +59,18 @@ public class DataPointGenerator {
     }
 
     DataPoint dp = new DataPoint(ts);
+    if (trip != null) {
+      dp.setTrip(trip);
+    }
     Long id = this.dpService.add(dp);
 
-    this.posGenerator.generate(baseDp, dp);
-    this.weatherGenerator.generate(baseDp, dp);
-    this.marineWeatherGenerator.generate(baseDp, dp);
-    // Update data point with generated weather data
-    dp = this.fetch(id);
-    this.vesselGenerator.generate(baseDp, dp);
 
-    // Updata data point with complete data
-    dp = this.fetch(id);
+    dp.setPos(posGenerator.generate(baseDp, dp));
+    dp.setWeather(weatherGenerator.generate(baseDp, dp));
+    dp.setMarineWeather(marineWeatherGenerator.generate(baseDp, dp));
+    logger.info("Datapoint after setting everything: {}", dp);
+    dp.setVessel(vesselGenerator.generate(baseDp, dp));
+
 
     return dp;
   }

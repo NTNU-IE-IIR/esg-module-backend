@@ -25,7 +25,7 @@ public class Trip {
   private Long id;
 
   @Column(name = "name")
-  @Schema(description = "Name of the trip")
+  @Schema(description = "Name of the ship")
   private String name;
 
   @Column(name = "registration_mark")
@@ -39,6 +39,14 @@ public class Trip {
   @Column(name = "end_date")
   @Schema(description = "End date of the trip")
   private Instant endDate;
+
+  public void setFuelConsumed(float fuelConsumed) {
+    this.fuelConsumed = fuelConsumed;
+  }
+
+  public void setTripDistance(float tripDistance) {
+    this.tripDistance = tripDistance;
+  }
 
   @Column(name = "trip_distance")
   @Schema(description = "Total distance traveled during the trip")
@@ -64,11 +72,11 @@ public class Trip {
   @Schema(description = "Comments about the trip")
   private String comments;
 
-  @OneToMany(mappedBy = "trip")
+  @OneToMany(fetch = FetchType.EAGER, mappedBy = "trip")
   @Schema(description = "Set of fishing sessions during the trip")
   private Set<FishingSession> fishingSessions;
 
-  @OneToMany(mappedBy = "trip")
+  @OneToMany(fetch = FetchType.EAGER, mappedBy = "trip")
   @Schema(description = "List of data points collected during the trip")
   private List<DataPoint> dataPoints;
 
@@ -221,5 +229,13 @@ public class Trip {
     this.endDate = Instant.now();
     this.active = false;
     //maybe calculate total fish and fuel here?
+  }
+
+  public List<DataPoint> getDataPoints() {
+    return dataPoints;
+  }
+
+  public Set<FishingSession> getFishingSessions() {
+    return fishingSessions;
   }
 }

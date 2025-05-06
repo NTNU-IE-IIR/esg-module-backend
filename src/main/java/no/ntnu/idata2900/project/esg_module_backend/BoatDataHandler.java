@@ -1,7 +1,7 @@
 package no.ntnu.idata2900.project.esg_module_backend;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import no.ntnu.idata2900.project.esg_module_backend.dtos.ShipDto;
+import no.ntnu.idata2900.project.esg_module_backend.dtos.TripDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -19,7 +19,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
  */
 @Component
 public class BoatDataHandler extends TextWebSocketHandler {
-  private Logger logger = LoggerFactory.getLogger(BoatDataHandler.class);
+  private final Logger logger = LoggerFactory.getLogger(BoatDataHandler.class);
   private final ObjectMapper objectMapper = new ObjectMapper();
   private WebSocketSession session;
 
@@ -28,15 +28,16 @@ public class BoatDataHandler extends TextWebSocketHandler {
    * The method converts the boat data to JSON and sends it as a text message.
    * If no session is established or the session is closed, the message is not sent.
    *
-   * @param boatData The boat data to be sent to the client
+   * @param tripDto The boat data to be sent to the client
    */
-  public void sendBoatData(ShipDto boatData) {
+  public void sendBoatData(TripDto tripDto) {
     try {
       if (session != null && session.isOpen()) {
-        session.sendMessage(new TextMessage(objectMapper.writeValueAsString(boatData)));
+        logger.debug("Sending tripDto to client: {}", tripDto);
+        session.sendMessage(new TextMessage(objectMapper.writeValueAsString(tripDto)));
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("Failed to send boat data to client", e);
     }
   }
 
@@ -49,7 +50,7 @@ public class BoatDataHandler extends TextWebSocketHandler {
   @Override
   public void afterConnectionEstablished(WebSocketSession session) {
     this.session = session;
-    logger.info("WebSocket connection established");
+    logger.debug("WebSocket connection established");
   }
 
   /**
