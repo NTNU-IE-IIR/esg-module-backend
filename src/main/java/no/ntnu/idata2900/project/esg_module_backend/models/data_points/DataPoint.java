@@ -8,6 +8,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -52,6 +53,7 @@ public class DataPoint {
   private MarineWeather marineWeather;
 
   @JsonIgnore
+  @JoinColumn(name = "trip_id")
   @ManyToOne
   @Schema(description = "Trip containing this specific data point")
   private Trip trip;
@@ -101,6 +103,10 @@ public class DataPoint {
     return this.pos;
   }
 
+  public void setPos(Position pos) {
+    this.pos = pos;
+  }
+
   /**
    * Getter for vessel data.
    *
@@ -108,6 +114,10 @@ public class DataPoint {
    */
   public Vessel getVessel() {
     return this.vessel;
+  }
+
+  public void setVessel(Vessel vessel) {
+    this.vessel = vessel;
   }
 
   /**
@@ -119,6 +129,10 @@ public class DataPoint {
     return this.weather;
   }
 
+  public void setWeather(Weather weather) {
+    this.weather = weather;
+  }
+
   /**
    * Getter for marine weather data.
    * 
@@ -126,6 +140,10 @@ public class DataPoint {
    */
   public MarineWeather getMarineWeather() {
     return this.marineWeather;
+  }
+
+  public void setMarineWeather(MarineWeather marineWeather) {
+    this.marineWeather = marineWeather;
   }
 
   /**
@@ -153,5 +171,18 @@ public class DataPoint {
    */
   public boolean isValid() {
     return this.ts >= 0;
+  }
+
+  @Override
+  public String toString() {
+    return "DataPoint{" +
+        "id=" + id +
+        ", ts=" + ts +
+        ", pos=" + pos +
+        ", vessel=" + vessel +
+        ", weather=" + weather +
+        ", marineWeather=" + marineWeather +
+        ", trip=" + trip +
+        '}';
   }
 }

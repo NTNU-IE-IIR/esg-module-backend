@@ -27,11 +27,12 @@ public class FuelGenerator {
     this.fuelService = fuelService;
   }
 
-  public void generate(Weather weather, MarineWeather marineWeather, Vessel vessel) {
+  public Fuel generate(Weather weather, MarineWeather marineWeather, Vessel vessel) {
     Fuel fuel = this.calculateFuelConsumption(weather, marineWeather, vessel);
     fuel.setVessel(vessel);
     // Add fuel consumption to storage
     this.fuelService.add(fuel);
+    return fuel;
   }
 
   /**

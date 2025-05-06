@@ -108,6 +108,18 @@ public class MarineWeather {
     this.oceanCurrentDirection = oceanCurrentDirection;
   }
 
+  public void setWaves(Waves waves) {
+    this.waves = waves;
+  }
+
+  public void setWwaves(WindWaves wwaves) {
+    this.wwaves = wwaves;
+  }
+
+  public void setSwellWaves(SwellWaves swellWaves) {
+    this.swellWaves = swellWaves;
+  }
+
   /**
    * Getter for ID.
    * 
@@ -197,5 +209,18 @@ public class MarineWeather {
    */
   public boolean isGeneratedValid() {
     return this.isValid() && this.oceanCurrentVelocity <= MAX_OCEAN_CURRENT_VELOCITY;
+  }
+
+  @Override
+  public String toString() {
+    return "MarineWeather{" +
+        "id=" + id +
+        ", waves=" + waves +
+        ", wwaves=" + wwaves +
+        ", swellWaves=" + swellWaves +
+        ", oceanCurrentVelocity=" + oceanCurrentVelocity +
+        ", oceanCurrentDirection=" + oceanCurrentDirection +
+        ", dp=" + dp.getId() +
+        '}';
   }
 }

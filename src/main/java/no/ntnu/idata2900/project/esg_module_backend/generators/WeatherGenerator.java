@@ -57,7 +57,7 @@ public class WeatherGenerator {
    * @see Weather
    * @see DataPoint
    */
-  public void generate(DataPoint baseDp, DataPoint dp) {
+  public Weather generate(DataPoint baseDp, DataPoint dp) {
     Weather weather;
     if (baseDp == null) {
       weather = new Weather(5.0f, 5.0f, 10.0f);
@@ -67,6 +67,7 @@ public class WeatherGenerator {
     weather.setDp(dp);
     // Add weather data to storage
     this.weatherService.add(weather);
+    return weather;
   }
 
   /**

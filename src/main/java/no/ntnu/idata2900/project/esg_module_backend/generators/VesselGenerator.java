@@ -2,6 +2,7 @@ package no.ntnu.idata2900.project.esg_module_backend.generators;
 
 import java.util.Random;
 
+import no.ntnu.idata2900.project.esg_module_backend.models.data_points.Fuel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -60,7 +61,7 @@ public class VesselGenerator {
    * @see Vessel
    * @see DataPoint
    */
-  public void generate(DataPoint baseDp, DataPoint dp) {
+  public Vessel generate(DataPoint baseDp, DataPoint dp) {
     Vessel vessel;
     if (baseDp == null) {
       vessel = new Vessel(315.0f, 7.0f);
@@ -71,7 +72,11 @@ public class VesselGenerator {
     // Add vessel data to storage
     this.vesselService.add(vessel);
 
-    this.fuelGenerator.generate(dp.getWeather(), dp.getMarineWeather(), vessel);
+    Fuel fuel = fuelGenerator.generate(dp.getWeather(), dp.getMarineWeather(), vessel);
+
+    vessel.setFuelConsumption(fuel);
+
+    return vessel;
   }
 
   /**

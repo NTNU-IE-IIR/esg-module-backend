@@ -2,6 +2,8 @@ package no.ntnu.idata2900.project.esg_module_backend.generators;
 
 import java.util.Random;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -27,6 +29,7 @@ import no.ntnu.idata2900.project.esg_module_backend.services.data_points.Positio
 @Component
 public class PositionGenerator {
   private PositionService posService;
+  //private Logger logger = LoggerFactory.getLogger(PositionGenerator.class);
 
   private static final float COR = 0.005f;
 
@@ -55,7 +58,7 @@ public class PositionGenerator {
    * @see Position
    * @see DataPoint
    */
-  public void generate(DataPoint baseDp, DataPoint dp) {
+  public Position generate(DataPoint baseDp, DataPoint dp) {
     Position pos;
     if (baseDp == null) {
       pos = new Position(62.27082f, 5.52099f);
@@ -65,6 +68,8 @@ public class PositionGenerator {
     pos.setDp(dp);
     // Add position to storage
     this.posService.add(pos);
+    //logger.info("Position after saved {}", pos);
+    return pos;
   }
 
   /**
