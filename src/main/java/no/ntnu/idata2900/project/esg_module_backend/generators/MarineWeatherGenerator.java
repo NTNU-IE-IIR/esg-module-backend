@@ -2,6 +2,9 @@ package no.ntnu.idata2900.project.esg_module_backend.generators;
 
 import java.util.Random;
 
+import no.ntnu.idata2900.project.esg_module_backend.models.data_points.SwellWaves;
+import no.ntnu.idata2900.project.esg_module_backend.models.data_points.Waves;
+import no.ntnu.idata2900.project.esg_module_backend.models.data_points.WindWaves;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -73,7 +76,7 @@ public class MarineWeatherGenerator {
    * @see Vessel
    * @see DataPoint
    */
-  public void generate(DataPoint baseDp, DataPoint dp) {
+  public MarineWeather generate(DataPoint baseDp, DataPoint dp) {
     MarineWeather marineWeather;
     if (baseDp == null) {
       marineWeather = new MarineWeather(0.2f, 230.0f);
@@ -84,15 +87,23 @@ public class MarineWeatherGenerator {
     // Add marine weather data to storage
     this.marineWeatherService.add(marineWeather);
 
+    Waves waves;
+    WindWaves wwaves;
+    SwellWaves swellWaves;
+
     if (baseDp == null) {
-      this.wavesGenerator.generate(null, marineWeather);
-      this.wwavesGenerator.generate(null, marineWeather);
-      this.swellWavesGenerator.generate(null, marineWeather);
+      waves = wavesGenerator.generate(null, marineWeather);
+      wwaves = wwavesGenerator.generate(null, marineWeather);
+      swellWaves = swellWavesGenerator.generate(null, marineWeather);
     } else {
-      this.wavesGenerator.generate(baseDp.getMarineWeather(), marineWeather);
-      this.wwavesGenerator.generate(baseDp.getMarineWeather(), marineWeather);
-      this.swellWavesGenerator.generate(baseDp.getMarineWeather(), marineWeather);
+      waves = wavesGenerator.generate(baseDp.getMarineWeather(), marineWeather);
+      wwaves = wwavesGenerator.generate(baseDp.getMarineWeather(), marineWeather);
+      swellWaves = swellWavesGenerator.generate(baseDp.getMarineWeather(), marineWeather);
     }
+    marineWeather.setWaves(waves);
+    marineWeather.setWwaves(wwaves);
+    marineWeather.setSwellWaves(swellWaves);
+    return marineWeather;
   }
 
   /**

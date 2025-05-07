@@ -119,4 +119,14 @@ public class Position {
   public boolean isValid() {
     return this.lat <= 90 && this.lat >= -90 && this.lng <= 180 && this.lng >= -180;
   }
+
+  @Override
+  public String toString() {
+    return "Position{" +
+        "id=" + id +
+        ", lat=" + lat +
+        ", lng=" + lng +
+        ", dp=" + dp.getId() +
+        '}';
+  }
 }
