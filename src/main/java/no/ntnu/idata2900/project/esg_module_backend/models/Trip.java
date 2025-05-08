@@ -19,7 +19,7 @@ import no.ntnu.idata2900.project.esg_module_backend.models.data_points.DataPoint
 @Schema(description = "Trip entity representing a fishing trip")
 public class Trip {
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.AUTO)
   @Column(name = "trip_id")
   @Schema(description = "Unique ID")
   private Long id;
@@ -39,14 +39,6 @@ public class Trip {
   @Column(name = "end_date")
   @Schema(description = "End date of the trip")
   private Instant endDate;
-
-  public void setFuelConsumed(float fuelConsumed) {
-    this.fuelConsumed = fuelConsumed;
-  }
-
-  public void setTripDistance(float tripDistance) {
-    this.tripDistance = tripDistance;
-  }
 
   @Column(name = "trip_distance")
   @Schema(description = "Total distance traveled during the trip")
@@ -219,6 +211,14 @@ public class Trip {
    */
   public String getRegistrationMark() {
     return registrationMark;
+  }
+
+  public void setFuelConsumed(float fuelConsumed) {
+    this.fuelConsumed = fuelConsumed;
+  }
+
+  public void setTripDistance(float tripDistance) {
+    this.tripDistance = tripDistance;
   }
 
   /**

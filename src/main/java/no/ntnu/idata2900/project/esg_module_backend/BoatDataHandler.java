@@ -1,10 +1,13 @@
 package no.ntnu.idata2900.project.esg_module_backend;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import no.ntnu.idata2900.project.esg_module_backend.dtos.TripDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
@@ -21,7 +24,8 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 public class BoatDataHandler extends TextWebSocketHandler {
   private final Logger logger = LoggerFactory.getLogger(BoatDataHandler.class);
   private final ObjectMapper objectMapper = new ObjectMapper();
-  private WebSocketSession session;
+
+  private final Map<String, WebSocketSession> clientSessions = new ConcurrentHashMap<>();
 
   /**
    * Sends boat data to the connected WebSocket client.
@@ -30,11 +34,19 @@ public class BoatDataHandler extends TextWebSocketHandler {
    *
    * @param tripDto The boat data to be sent to the client
    */
-  public void sendBoatData(TripDto tripDto) {
+  public void sendBoatData(String regMark, TripDto tripDto) {
+    WebSocketSession session = this.clientSessions.get(regMark);
+    if (session == null) {
+      logger.warn("No session found for regMark {}", regMark);
+      return;
+    }
+
     try {
-      if (session != null && session.isOpen()) {
-        logger.debug("Sending tripDto to client: {}", tripDto);
+      if (session.isOpen()) {
         session.sendMessage(new TextMessage(objectMapper.writeValueAsString(tripDto)));
+        logger.debug("Sending tripDto to client: {}", tripDto);
+      } else {
+        logger.warn("Session for regMark {} is closed", regMark);
       }
     } catch (Exception e) {
       logger.error("Failed to send boat data to client", e);
@@ -49,16 +61,43 @@ public class BoatDataHandler extends TextWebSocketHandler {
    */
   @Override
   public void afterConnectionEstablished(WebSocketSession session) {
-    this.session = session;
-    logger.debug("WebSocket connection established");
+    String regMark = (String) session.getAttributes().get("clientId");
+    if (regMark != null) {
+      clientSessions.put(regMark, session);
+      logger.debug("WebSocket connection established for regMark {}", regMark);
+    } else {
+      logger.warn("WebSocket connection established without clientId");
+    }
   }
 
   /**
-   * Checks if there is an active WebSocket connection.
+   * Called after a WebSocket connection has been closed.
+   * Removes the session associated with the clientId.
    *
-   * @return true if a WebSocket session exists and is open, false otherwise
+   * @param session The WebSocket session that has been closed
+   * @param status  The status of the connection closure
    */
-  public boolean isConnected() {
+  @Override
+  public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
+    try {
+      String clientId = (String) session.getAttributes().get("clientId");
+      if (clientId != null) {
+        clientSessions.remove(clientId);
+        logger.debug("WebSocket connection closed for clientId: {}", clientId);
+      }
+    } catch (Exception e) {
+      logger.error("Failed to remove WebSocket session for ",  e);
+    }
+  }
+
+  /**
+   * Checks if a WebSocket session exists for a specific client ID and is open.
+   *
+   * @param clientId The unique ID associated with the client
+   * @return true if the WebSocket session exists and is open, false otherwise
+   */
+  public boolean isClientConnected(String clientId) {
+    WebSocketSession session = clientSessions.get(clientId);
     return session != null && session.isOpen();
   }
 }

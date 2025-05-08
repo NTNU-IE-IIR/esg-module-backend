@@ -63,6 +63,7 @@ public class TripController {
       String registrationMark = validateString(requestBody.get("registrationMark"),
           "Registration mark must be specified");
 
+      tripService.deactivateTripsByRegMark(registrationMark);
       Long tripId = tripService.startTrip(registrationMark, name);
 
       logger.info("New trip successfully started");

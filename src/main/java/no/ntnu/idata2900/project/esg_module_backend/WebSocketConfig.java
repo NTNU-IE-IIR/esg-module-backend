@@ -18,6 +18,8 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
   @Override
   public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-    registry.addHandler(boatDataHandler, "/boatdata").setAllowedOrigins("*");
+    registry.addHandler(boatDataHandler, "/boatdata")
+        .addInterceptors(new ClientIdInterceptor())
+        .setAllowedOrigins("*");
   }
 }

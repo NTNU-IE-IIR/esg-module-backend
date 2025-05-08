@@ -17,4 +17,6 @@ public interface TripRepository extends CrudRepository<Trip, Long> {
     @Modifying
     @Query("UPDATE Trip t SET t.active = false WHERE t.registrationMark = :registrationMark AND t.active = true")
     void deactivateActiveTripsByRegistrationMark(@Param("registrationMark") String registrationMark);
+
+    List<Trip> findByActiveTrue();
 }
