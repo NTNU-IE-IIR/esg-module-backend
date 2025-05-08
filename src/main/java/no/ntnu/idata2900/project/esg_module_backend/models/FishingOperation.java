@@ -64,6 +64,9 @@ public class FishingOperation {
    */
   public FishingOperation(String startDate, String endDate, Long fuelConsumed, Long fishAmount,
                           String fishingMethod) {
+    if (startDate == null) {
+      throw new NullPointerException("Start date cannot be null");
+    } //The start date will never be modified, so there is no reason to make an empty setter for the start date
     this.startDate = startDate;
     this.endDate = endDate;
     this.fuelConsumed = fuelConsumed;
