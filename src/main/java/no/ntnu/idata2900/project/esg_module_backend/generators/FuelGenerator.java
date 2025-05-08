@@ -149,6 +149,10 @@ public class FuelGenerator {
         break;
     }
 
+    // Increase fuel consumption by vessel speed share
+    float speedShare = 1 + (vessel.getSpeed() / 15);
+    consumption = consumption * speedShare;
+
     // Calculate fuel consumption by posts
     float hotel = consumption / 3;
     float production = 0;
