@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,7 +31,6 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Group 14
  * @version v0.2.0 (2025.05.01)
  */
-@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/api/trip")
 @Tag(name = "Trip Controller", description = "API for managing fishing trips")
@@ -63,6 +61,7 @@ public class TripController {
       String registrationMark = validateString(requestBody.get("registrationMark"),
           "Registration mark must be specified");
 
+      tripService.deactivateTripsByRegMark(registrationMark);
       Long tripId = tripService.startTrip(registrationMark, name);
 
       logger.info("New trip successfully started");

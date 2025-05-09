@@ -9,15 +9,17 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 @Configuration
 @EnableWebSocket
 public class WebSocketConfig implements WebSocketConfigurer {
-  private BoatDataHandler boatDataHandler;
+  private final TripDtoHandler tripDtoHandler;
 
   @Autowired
-  public WebSocketConfig(BoatDataHandler boatDataHandler) {
-    this.boatDataHandler = boatDataHandler;
+  public WebSocketConfig(TripDtoHandler tripDtoHandler) {
+    this.tripDtoHandler = tripDtoHandler;
   }
 
   @Override
   public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-    registry.addHandler(boatDataHandler, "/boatdata").setAllowedOrigins("*");
+    registry.addHandler(tripDtoHandler, "/tripdto")
+        .addInterceptors(new ClientIdInterceptor())
+        .setAllowedOrigins("*");
   }
 }

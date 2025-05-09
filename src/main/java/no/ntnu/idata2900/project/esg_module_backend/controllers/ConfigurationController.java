@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +25,6 @@ import no.ntnu.idata2900.project.esg_module_backend.services.ConfigurationServic
 
 @RestController
 @RequestMapping("/api/config")
-@CrossOrigin(origins = "http://localhost:5173")
 public class ConfigurationController {
   private ConfigurationService configurationService;
 

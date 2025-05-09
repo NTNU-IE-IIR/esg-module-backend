@@ -1,23 +1,16 @@
 package no.ntnu.idata2900.project.esg_module_backend.sources;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Random;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import no.ntnu.idata2900.project.esg_module_backend.DataSimulator;
-import no.ntnu.idata2900.project.esg_module_backend.dtos.TripDto;
 import no.ntnu.idata2900.project.esg_module_backend.generators.DataPointGenerator;
 import no.ntnu.idata2900.project.esg_module_backend.models.Trip;
 import no.ntnu.idata2900.project.esg_module_backend.models.data_points.DataPoint;
-import no.ntnu.idata2900.project.esg_module_backend.models.data_points.Fuel;
-import no.ntnu.idata2900.project.esg_module_backend.models.data_points.Position;
-import no.ntnu.idata2900.project.esg_module_backend.models.data_points.Vessel;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -31,23 +24,39 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class FakeDataSource implements DataSource {
+  private Logger logger = LoggerFactory.getLogger(FakeDataSource.class);
   private ScheduledExecutorService scheduler;
   private DataListener listener;
   private int i = 0;
-
+  private List<DataPoint> clients; //Contains the last dp of each client.
   private final DataPointGenerator generator;
-  private DataPoint currentDp = null;
 
   @Autowired
   public FakeDataSource(DataPointGenerator generator) {
     this.generator = generator;
+    this.clients = new ArrayList<>();
+  }
+
+  public void addClient(Trip trip) {
+    logger.info("Adding client with ID: {}", trip.getId());
+    clients.add(generator.generate(null, trip));
+    logger.info("Printing client datapoints");
+    clients.forEach(dp -> logger.info("Client data point: {}", dp));
+  }
+
+  public void restoreClients(List<DataPoint> clients) {
+    logger.info("Restoring clients");
+    this.clients = clients;
+  }
+
+  public void removeClient(Trip trip) {
+    logger.info("Removing client with ID: {}", trip.getId());
+    clients.removeIf(dp -> dp.getTrip().getId().equals(trip.getId()));
   }
 
   @Override
-  public void start(Trip trip) {
-
-    currentDp = generator.generate(currentDp, trip);
-
+  public void start() {
+    logger.info("Starting FakeDataSource...");
     // Make sure any existing scheduler is shut down
     if (scheduler != null && !scheduler.isShutdown()) {
       scheduler.shutdownNow();
@@ -56,10 +65,18 @@ public class FakeDataSource implements DataSource {
     scheduler = Executors.newSingleThreadScheduledExecutor();
 
     scheduler.scheduleAtFixedRate(() -> {
+      logger.info("start of scheduled task");
       if (i < 200) {
           if (listener != null) {
-            currentDp = generator.generate(currentDp, trip);
-            listener.onDataReceived(currentDp);
+            List<DataPoint> updatedClients = new ArrayList<>();
+            for (DataPoint dp : clients) {
+              logger.info("processing a client datapoint");
+              DataPoint updatedDp = generator.generate(dp, dp.getTrip());
+              updatedClients.add(updatedDp);
+              logger.info("Client data point after update: {}", updatedDp);
+              listener.onDataReceived(updatedDp);
+            }
+            clients = updatedClients;
           }
           i = (i + 1);
       } else {
@@ -72,13 +89,13 @@ public class FakeDataSource implements DataSource {
 
   @Override
   public void stop() {
-    if (scheduler != null && !scheduler.isShutdown()) {
-      scheduler.shutdownNow();
-      scheduler = null;
-    }
-
-    i = 0;
-    System.out.println("FakeDataSource stopped");
+//    if (scheduler != null && !scheduler.isShutdown()) {
+//      scheduler.shutdownNow();
+//      scheduler = null;
+//    }
+//
+//    i = 0;
+//    System.out.println("FakeDataSource stopped");
   }
 
 
