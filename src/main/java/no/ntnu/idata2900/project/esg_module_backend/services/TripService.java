@@ -3,7 +3,7 @@ package no.ntnu.idata2900.project.esg_module_backend.services;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
-import no.ntnu.idata2900.project.esg_module_backend.BoatDataHandler;
+import no.ntnu.idata2900.project.esg_module_backend.TripDtoHandler;
 import no.ntnu.idata2900.project.esg_module_backend.dtos.DataPointDto;
 import no.ntnu.idata2900.project.esg_module_backend.dtos.TripDto;
 import no.ntnu.idata2900.project.esg_module_backend.models.Trip;
@@ -30,18 +30,18 @@ import org.springframework.stereotype.Service;
 public class TripService implements DataListener {
   private final Logger logger = LoggerFactory.getLogger(TripService.class);
   private final DataSource dataSource;
-  private final BoatDataHandler boatDataHandler;
+  private final TripDtoHandler tripDtoHandler;
   private final TripRepository tripRepository;
 
   /**
    * Constructs a new TripService with the required dependencies.
    *
    * @param dataSource      The data source that provides ship data during trips
-   * @param boatDataHandler The handler for sending boat data to WebSocket clients
+   * @param tripDtoHandler The handler for sending boat data to WebSocket clients
    * @param tripRepository  The trip repository for database communication
    */
   @Autowired
-  TripService(DataSource dataSource, BoatDataHandler boatDataHandler,
+  TripService(DataSource dataSource, TripDtoHandler tripDtoHandler,
               TripRepository tripRepository) {
     this.tripRepository = tripRepository;
     //datasource initialization
@@ -50,7 +50,7 @@ public class TripService implements DataListener {
     this.restoreActiveTrips();
     this.dataSource.start();
 
-    this.boatDataHandler = boatDataHandler;
+    this.tripDtoHandler = tripDtoHandler;
   }
 
 
@@ -168,9 +168,9 @@ public class TripService implements DataListener {
 
     logger.info("TripDto created: {}", tripDto);
 
-    if (boatDataHandler.isClientConnected(trip.get().getRegistrationMark())) {
+    if (tripDtoHandler.isClientConnected(trip.get().getRegistrationMark())) {
       logger.info("client with regMark {} is connected", trip.get().getRegistrationMark());
-      boatDataHandler.sendBoatData(trip.get().getRegistrationMark(), tripDto);
+      tripDtoHandler.sendTripDto(trip.get().getRegistrationMark(), tripDto);
     }
   }
 

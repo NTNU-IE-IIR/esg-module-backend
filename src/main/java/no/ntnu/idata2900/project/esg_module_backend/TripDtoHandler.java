@@ -18,23 +18,23 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
  * It extends TextWebSocketHandler to handle text-based WebSocket messages.
  *
  * @author Group 14
- * @version v0.0.1 (2025.04.22)
+ * @version v0.1.0 (2025.05.09)
  */
 @Component
-public class BoatDataHandler extends TextWebSocketHandler {
-  private final Logger logger = LoggerFactory.getLogger(BoatDataHandler.class);
+public class TripDtoHandler extends TextWebSocketHandler {
+  private final Logger logger = LoggerFactory.getLogger(TripDtoHandler.class);
   private final ObjectMapper objectMapper = new ObjectMapper();
 
   private final Map<String, WebSocketSession> clientSessions = new ConcurrentHashMap<>();
 
   /**
-   * Sends boat data to the connected WebSocket client.
-   * The method converts the boat data to JSON and sends it as a text message.
+   * Sends a tripDto to the connected WebSocket client.
+   * The method converts the tripDto to JSON and sends it as a text message.
    * If no session is established or the session is closed, the message is not sent.
    *
    * @param tripDto The boat data to be sent to the client
    */
-  public void sendBoatData(String regMark, TripDto tripDto) {
+  public void sendTripDto(String regMark, TripDto tripDto) {
     WebSocketSession session = this.clientSessions.get(regMark);
     if (session == null) {
       logger.warn("No session found for regMark {}", regMark);
