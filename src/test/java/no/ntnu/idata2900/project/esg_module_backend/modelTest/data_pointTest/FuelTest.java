@@ -1,6 +1,7 @@
 package no.ntnu.idata2900.project.esg_module_backend.modelTest.data_pointTest;
 
 import no.ntnu.idata2900.project.esg_module_backend.models.data_points.Fuel;
+import no.ntnu.idata2900.project.esg_module_backend.models.data_points.Vessel;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -8,11 +9,29 @@ import static org.junit.jupiter.api.Assertions.*;
 class FuelTest {
 
     @Test
-    void testValidFuelCreation() {
+    void testConstructorInitializesFields() {
         Fuel fuel = new Fuel(10.0f, 5.0f, 3.0f);
         assertEquals(10.0f, fuel.getDrift());
         assertEquals(5.0f, fuel.getProduction());
         assertEquals(3.0f, fuel.getHotel());
+        assertNull(fuel.getVessel(), "Vessel should be null by default");
+    }
+
+    @Test
+    void testDefaultConstructor() {
+        Fuel fuel = new Fuel();
+        assertEquals(0.0f, fuel.getDrift());
+        assertEquals(0.0f, fuel.getProduction());
+        assertEquals(0.0f, fuel.getHotel());
+        assertNull(fuel.getVessel());
+    }
+
+    @Test
+    void testSetAndGetVessel() {
+        Fuel fuel = new Fuel();
+        Vessel vessel = new Vessel();
+        fuel.setVessel(vessel);
+        assertEquals(vessel, fuel.getVessel());
     }
 
     @Test

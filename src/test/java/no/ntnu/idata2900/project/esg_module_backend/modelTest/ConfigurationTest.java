@@ -8,11 +8,19 @@ import static org.junit.jupiter.api.Assertions.*;
 class ConfigurationTest {
 
     @Test
-    void testValidConfigurationCreation() {
+    void testConstructorInitializesFields() {
         Configuration config = new Configuration("REG123", "VesselName", true);
         assertEquals("REG123", config.getRegistrationMark());
         assertEquals("VesselName", config.getName());
         assertTrue(config.isLevel1());
+    }
+
+    @Test
+    void testDefaultConstructor() {
+        Configuration config = new Configuration();
+        assertNull(config.getRegistrationMark());
+        assertNull(config.getName());
+        assertFalse(config.isLevel1());
     }
 
     @Test

@@ -1,5 +1,7 @@
-package no.ntnu.idata2900.project.esg_module_backend.modelTest.data_pointTest;
+package no.ntnu.idata2900.project.esg_module_backend.modelTest.data_points;
 
+import no.ntnu.idata2900.project.esg_module_backend.models.data_points.DataPoint;
+import no.ntnu.idata2900.project.esg_module_backend.models.data_points.Fuel;
 import no.ntnu.idata2900.project.esg_module_backend.models.data_points.Vessel;
 import org.junit.jupiter.api.Test;
 
@@ -8,18 +10,48 @@ import static org.junit.jupiter.api.Assertions.*;
 class VesselTest {
 
     @Test
-    void testValidVesselCreation() {
+    void testConstructorInitializesFields() {
         Vessel vessel = new Vessel(90.0f, 10.0f);
         assertEquals(90.0f, vessel.getHeading());
         assertEquals(10.0f, vessel.getSpeed());
         assertEquals(0.0f, vessel.getTargetSpeed());
+        assertNull(vessel.getFuelConsumption(), "Fuel consumption should be null by default");
+        assertNull(vessel.getDp(), "Data point should be null by default");
+        assertNull(vessel.getId(), "ID should be null before persistence");
     }
 
     @Test
-    void testSetTargetSpeed() {
-        Vessel vessel = new Vessel(90.0f, 10.0f);
+    void testDefaultConstructor() {
+        Vessel vessel = new Vessel();
+        assertEquals(0.0f, vessel.getHeading());
+        assertEquals(0.0f, vessel.getSpeed());
+        assertEquals(0.0f, vessel.getTargetSpeed());
+        assertNull(vessel.getFuelConsumption());
+        assertNull(vessel.getDp());
+        assertNull(vessel.getId());
+    }
+
+    @Test
+    void testSetAndGetTargetSpeed() {
+        Vessel vessel = new Vessel();
         vessel.setTargetSpeed(12.0f);
         assertEquals(12.0f, vessel.getTargetSpeed());
+    }
+
+    @Test
+    void testSetAndGetFuelConsumption() {
+        Vessel vessel = new Vessel();
+        Fuel fuel = new Fuel();
+        vessel.setFuelConsumption(fuel);
+        assertEquals(fuel, vessel.getFuelConsumption());
+    }
+
+    @Test
+    void testSetAndGetDataPoint() {
+        Vessel vessel = new Vessel();
+        DataPoint dp = new DataPoint();
+        vessel.setDp(dp);
+        assertEquals(dp, vessel.getDp());
     }
 
     @Test

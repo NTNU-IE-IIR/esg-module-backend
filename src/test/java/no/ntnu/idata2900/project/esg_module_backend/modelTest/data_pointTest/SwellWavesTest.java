@@ -1,5 +1,6 @@
 package no.ntnu.idata2900.project.esg_module_backend.modelTest.data_pointTest;
 
+import no.ntnu.idata2900.project.esg_module_backend.models.data_points.MarineWeather;
 import no.ntnu.idata2900.project.esg_module_backend.models.data_points.SwellWaves;
 import org.junit.jupiter.api.Test;
 
@@ -8,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class SwellWavesTest {
 
     @Test
-    void testValidSwellWavesCreation() {
+    void testConstructorInitializesFields() {
         SwellWaves swellWaves = new SwellWaves(0.8f, 90.0f, 10.0f, 0.5f, 180.0f, 12.0f);
         assertEquals(0.8f, swellWaves.getSwell1Height());
         assertEquals(90.0f, swellWaves.getSwell1Direction());
@@ -16,6 +17,21 @@ class SwellWavesTest {
         assertEquals(0.5f, swellWaves.getSwell2Height());
         assertEquals(180.0f, swellWaves.getSwell2Direction());
         assertEquals(12.0f, swellWaves.getSwell2Period());
+        assertNull(swellWaves.getMarineWeather(), "Marine weather should be null by default");
+        assertNull(swellWaves.getId(), "ID should be null before persistence");
+    }
+
+    @Test
+    void testDefaultConstructor() {
+        SwellWaves swellWaves = new SwellWaves();
+        assertEquals(0.0f, swellWaves.getSwell1Height());
+        assertEquals(0.0f, swellWaves.getSwell1Direction());
+        assertEquals(0.0f, swellWaves.getSwell1Period());
+        assertEquals(0.0f, swellWaves.getSwell2Height());
+        assertEquals(0.0f, swellWaves.getSwell2Direction());
+        assertEquals(0.0f, swellWaves.getSwell2Period());
+        assertNull(swellWaves.getMarineWeather());
+        assertNull(swellWaves.getId());
     }
 
     @Test
@@ -76,5 +92,13 @@ class SwellWavesTest {
     void testIsGeneratedValidWithExcessiveSwell2Period() {
         SwellWaves swellWaves = new SwellWaves(0.8f, 90.0f, 10.0f, 0.5f, 180.0f, 16.0f);
         assertFalse(swellWaves.isGeneratedValid());
+    }
+
+    @Test
+    void testSetAndGetMarineWeather() {
+        SwellWaves swellWaves = new SwellWaves();
+        MarineWeather marineWeather = new MarineWeather();
+        swellWaves.setMarineWeather(marineWeather);
+        assertEquals(marineWeather, swellWaves.getMarineWeather());
     }
 }

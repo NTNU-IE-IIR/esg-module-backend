@@ -1,4 +1,4 @@
-package no.ntnu.idata2900.project.esg_module_backend.modelTest.data_pointTest;
+package no.ntnu.idata2900.project.esg_module_backend.modelTest.data_points;
 
 import no.ntnu.idata2900.project.esg_module_backend.models.data_points.WindWaves;
 import org.junit.jupiter.api.Test;
@@ -8,11 +8,23 @@ import static org.junit.jupiter.api.Assertions.*;
 class WindWavesTest {
 
     @Test
-    void testValidWindWavesCreation() {
+    void testConstructorInitializesFields() {
         WindWaves windWaves = new WindWaves(1.5f, 90.0f, 5.0f);
         assertEquals(1.5f, windWaves.getWwavesHeight());
         assertEquals(90.0f, windWaves.getWwavesDirection());
         assertEquals(5.0f, windWaves.getWwavesPeriod());
+        assertNull(windWaves.getMarineWeather(), "Marine weather should be null by default");
+        assertNull(windWaves.getId(), "ID should be null before persistence");
+    }
+
+    @Test
+    void testDefaultConstructor() {
+        WindWaves windWaves = new WindWaves();
+        assertEquals(0.0f, windWaves.getWwavesHeight());
+        assertEquals(0.0f, windWaves.getWwavesDirection());
+        assertEquals(0.0f, windWaves.getWwavesPeriod());
+        assertNull(windWaves.getMarineWeather());
+        assertNull(windWaves.getId());
     }
 
     @Test
@@ -52,14 +64,14 @@ class WindWavesTest {
     }
 
     @Test
-    void testisGeneratedValidWithExcessiveHeight() {
-        WindWaves windWaves = new WindWaves(100.0f, 90.0f, 5.0f);
+    void testIsGeneratedValidWithExcessiveHeight() {
+        WindWaves windWaves = new WindWaves(3.0f, 90.0f, 5.0f);
         assertFalse(windWaves.isGeneratedValid());
     }
 
     @Test
     void testIsGeneratedValidWithExcessivePeriod() {
-        WindWaves windWaves = new WindWaves(1.5f, 90.0f, 100.0f);
+        WindWaves windWaves = new WindWaves(1.5f, 90.0f, 15.0f);
         assertFalse(windWaves.isGeneratedValid());
     }
 

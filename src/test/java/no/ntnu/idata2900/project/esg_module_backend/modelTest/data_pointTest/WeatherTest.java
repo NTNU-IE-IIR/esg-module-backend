@@ -1,5 +1,6 @@
-package no.ntnu.idata2900.project.esg_module_backend.modelTest.data_pointTest;
+package no.ntnu.idata2900.project.esg_module_backend.modelTest.data_points;
 
+import no.ntnu.idata2900.project.esg_module_backend.models.data_points.DataPoint;
 import no.ntnu.idata2900.project.esg_module_backend.models.data_points.Weather;
 import org.junit.jupiter.api.Test;
 
@@ -8,11 +9,23 @@ import static org.junit.jupiter.api.Assertions.*;
 class WeatherTest {
 
     @Test
-    void testValidWeatherCreation() {
+    void testConstructorInitializesFields() {
         Weather weather = new Weather(10.0f, 5.0f, 15.0f);
         assertEquals(10.0f, weather.getWindU());
         assertEquals(5.0f, weather.getWindV());
         assertEquals(15.0f, weather.getGust());
+        assertNull(weather.getDp(), "Data point should be null by default");
+        assertNull(weather.getId(), "ID should be null before persistence");
+    }
+
+    @Test
+    void testDefaultConstructor() {
+        Weather weather = new Weather();
+        assertEquals(0.0f, weather.getWindU());
+        assertEquals(0.0f, weather.getWindV());
+        assertEquals(0.0f, weather.getGust());
+        assertNull(weather.getDp());
+        assertNull(weather.getId());
     }
 
     @Test
@@ -47,19 +60,27 @@ class WeatherTest {
 
     @Test
     void testIsGeneratedValidWithExcessiveWindU() {
-        Weather weather = new Weather(20f, 5.0f, 15.0f);
+        Weather weather = new Weather(20.0f, 5.0f, 15.0f);
         assertFalse(weather.isGeneratedValid());
     }
 
     @Test
     void testIsGeneratedValidWithExcessiveWindV() {
-        Weather weather = new Weather(10.0f, 20f, 15.0f);
+        Weather weather = new Weather(10.0f, 20.0f, 15.0f);
         assertFalse(weather.isGeneratedValid());
     }
 
     @Test
     void testIsGeneratedValidWithExcessiveGust() {
-        Weather weather = new Weather(10.0f, 5.0f, 25f);
+        Weather weather = new Weather(10.0f, 5.0f, 25.0f);
         assertFalse(weather.isGeneratedValid());
+    }
+
+    @Test
+    void testSetAndGetDataPoint() {
+        Weather weather = new Weather();
+        DataPoint dp = new DataPoint();
+        weather.setDp(dp);
+        assertEquals(dp, weather.getDp());
     }
 }
