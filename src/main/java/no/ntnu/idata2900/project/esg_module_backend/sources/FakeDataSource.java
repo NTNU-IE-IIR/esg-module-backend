@@ -66,7 +66,7 @@ public class FakeDataSource implements DataSource {
 
     scheduler.scheduleAtFixedRate(() -> {
       logger.info("start of scheduled task");
-      if (i < 200) {
+      if (true) {
           if (listener != null) {
             List<DataPoint> updatedClients = new ArrayList<>();
             for (DataPoint dp : clients) {
