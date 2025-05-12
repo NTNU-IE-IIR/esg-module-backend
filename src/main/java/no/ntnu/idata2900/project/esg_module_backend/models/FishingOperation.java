@@ -9,7 +9,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import java.util.Objects;
 
 /**
  * <p>Represents a specific fishing operation within a fishing session.
@@ -65,7 +64,7 @@ public class FishingOperation {
    */
   public FishingOperation(String startDate, String endDate, Long fuelConsumed, Long fishAmount,
                           String fishingMethod) {
-    this.startDate = Objects.requireNonNull(startDate, "Start date cannot be null");
+    this.startDate = startDate;
     this.endDate = endDate;
     this.fuelConsumed = fuelConsumed;
     this.fishAmount = fishAmount;
