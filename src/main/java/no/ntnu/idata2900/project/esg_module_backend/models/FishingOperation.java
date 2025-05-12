@@ -7,6 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
@@ -32,10 +33,10 @@ public class FishingOperation {
   private Long id;
   @Column(name = "start_date")
   @Schema(description = "Start date of the fishing operation")
-  private String startDate;
+  private long startDate;
   @Column(name = "end_date")
   @Schema(description = "End date of the fishing operation")
-  private String endDate;
+  private long endDate;
   @Column(name = "fuel_consumed")
   @Schema(description = "Amount of fuel consumed during the fishing operation in liters")
   private Long fuelConsumed;
@@ -47,6 +48,7 @@ public class FishingOperation {
   private String fishingMethod;
   @JsonIgnore
   @ManyToOne
+  @JoinColumn(name = "fishing_session_id")
   @Schema(description = "Fishing session this operation belongs to")
   private FishingSession fishingSession;
 
@@ -56,13 +58,13 @@ public class FishingOperation {
   /**
    * Constructor for the FishingOperation class.
    *
-   * @param startDate The start date of the fishing operation in the format "yyyy-MM-dd HH:mm:ss".
-   * @param endDate The end date of the fishing operation in the format "yyyy-MM-dd HH:mm:ss".
+   * @param startDate The start date of the fishing operation as a unix epoch timestamp.
+   * @param endDate The end date of the fishing operation as a unix epoch timestamp.
    * @param fuelConsumed The amount of fuel consumed during the fishing operation in liters.
    * @param fishAmount The amount of fish caught during the fishing operation in kilograms.
    * @param fishingMethod The fishing method used during the fishing operation.
    */
-  public FishingOperation(String startDate, String endDate, Long fuelConsumed, Long fishAmount,
+  public FishingOperation(long startDate, long endDate, Long fuelConsumed, Long fishAmount,
                           String fishingMethod) {
     this.startDate = startDate;
     this.endDate = endDate;
@@ -94,7 +96,7 @@ public class FishingOperation {
    *
    * @return The start date as a string
    */
-  public String getStartDate() {
+  public long getStartDate() {
     return startDate;
   }
 
@@ -103,7 +105,7 @@ public class FishingOperation {
    *
    * @return The end date as a string
    */
-  public String getEndDate() {
+  public long getEndDate() {
     return endDate;
   }
 

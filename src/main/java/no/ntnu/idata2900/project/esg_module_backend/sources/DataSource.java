@@ -1,5 +1,9 @@
 package no.ntnu.idata2900.project.esg_module_backend.sources;
 
+import java.util.List;
+import no.ntnu.idata2900.project.esg_module_backend.models.Trip;
+import no.ntnu.idata2900.project.esg_module_backend.models.data_points.DataPoint;
+
 /**
  * Represents a general interface for a data source, allowing the generation
  * and delivery of data to a registered listener. A class implementing
@@ -17,6 +21,12 @@ public interface DataSource {
    * should connect to the data source and start receiving data.
    */
   void start();
+
+  void addClient(Trip trip);
+
+  void removeClient(Trip trip);
+
+  void restoreClients(List<DataPoint> clients);
 
   /**
    * Stops the data source. If the implementation is a fake data source, then this method

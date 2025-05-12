@@ -19,13 +19,13 @@ import no.ntnu.idata2900.project.esg_module_backend.models.data_points.DataPoint
 @Schema(description = "Trip entity representing a fishing trip")
 public class Trip {
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.AUTO)
   @Column(name = "trip_id")
   @Schema(description = "Unique ID")
   private Long id;
 
   @Column(name = "name")
-  @Schema(description = "Name of the trip")
+  @Schema(description = "Name of the ship")
   private String name;
 
   @Column(name = "registration_mark")
@@ -64,11 +64,11 @@ public class Trip {
   @Schema(description = "Comments about the trip")
   private String comments;
 
-  @OneToMany(mappedBy = "trip")
+  @OneToMany(fetch = FetchType.EAGER, mappedBy = "trip")
   @Schema(description = "Set of fishing sessions during the trip")
   private Set<FishingSession> fishingSessions;
 
-  @OneToMany(mappedBy = "trip")
+  @OneToMany(fetch = FetchType.EAGER, mappedBy = "trip")
   @Schema(description = "List of data points collected during the trip")
   private List<DataPoint> dataPoints;
 
@@ -213,6 +213,14 @@ public class Trip {
     return registrationMark;
   }
 
+  public void setFuelConsumed(float fuelConsumed) {
+    this.fuelConsumed = fuelConsumed;
+  }
+
+  public void setTripDistance(float tripDistance) {
+    this.tripDistance = tripDistance;
+  }
+
   /**
    * Ends the current trip by setting the end date to the current time
    * and marking the trip as inactive.
@@ -221,5 +229,13 @@ public class Trip {
     this.endDate = Instant.now();
     this.active = false;
     //maybe calculate total fish and fuel here?
+  }
+
+  public List<DataPoint> getDataPoints() {
+    return dataPoints;
+  }
+
+  public Set<FishingSession> getFishingSessions() {
+    return fishingSessions;
   }
 }

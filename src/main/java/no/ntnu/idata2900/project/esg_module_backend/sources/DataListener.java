@@ -1,6 +1,6 @@
 package no.ntnu.idata2900.project.esg_module_backend.sources;
 
-import no.ntnu.idata2900.project.esg_module_backend.dtos.ShipDto;
+import no.ntnu.idata2900.project.esg_module_backend.models.data_points.DataPoint;
 
 /**
  * The DataListener interface defines a contract for objects that need to
@@ -18,7 +18,7 @@ public interface DataListener {
    * ShipDto object containing information about a specific ship.
    * Implementations of this method define how the received data is processed.
    *
-   * @param ship a ShipDto object representing the received ship data
+   * @param dataPoint a DataPoint object representing the received ship data
    */
-  void onDataReceived(ShipDto ship);
+  void onDataReceived(DataPoint dataPoint);
 }

@@ -84,6 +84,10 @@ public class Vessel {
     this.targetSpeed = 0.0f;
   }
 
+  public void setFuelConsumption(Fuel fuelConsumption) {
+    this.fuelConsumption = fuelConsumption;
+  }
+
   /**
    * Getter for ID.
    * 

@@ -17,7 +17,7 @@ import no.ntnu.idata2900.project.esg_module_backend.repositories.data_points.Dat
 @Service
 public class DataPointService {
 
-  private DataPointRepository repo;
+  private final DataPointRepository repo;
 
   /**
    * Constructor for the DataPointService class.

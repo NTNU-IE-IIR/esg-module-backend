@@ -7,6 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import java.util.Set;
@@ -34,10 +35,10 @@ public class FishingSession {
   private Long id;
   @Column(name = "start_date")
   @Schema(description = "Start date of the fishing session")
-  private String startDate;
+  private long startDate;
   @Column(name = "end_date")
   @Schema(description = "End date of the fishing session")
-  private String endDate;
+  private long endDate;
   @Column(name = "fuel_consumed")
   @Schema(description = "Amount of fuel that was consumed during the fishing session")
   private Long fuelConsumed;
@@ -45,6 +46,7 @@ public class FishingSession {
   @Schema(description = "Set of fishing operations performed during the fishing session")
   private Set<FishingOperation> operations;
   @ManyToOne
+  @JoinColumn(name = "trip_id")
   @Schema(description = "Trip this session belongs to")
   @JsonIgnore
   private Trip trip;
@@ -58,11 +60,11 @@ public class FishingSession {
 
   /**
    * Constructor for the FishingSession class.
-   * @param startDate The start date of the fishing session in the format "yyyy-MM-dd HH:mm:ss".
-   * @param endDate The end date of the fishing session in the format "yyyy-MM-dd HH:mm:ss".
+   * @param startDate The start date of the fishing session as a unix epoch timestamp.
+   * @param endDate The end date of the fishing session as a unix epoch timestamp.
    * @param fuelConsumed The amount of fuel consumed during the fishing session in liters.
    */
-  public FishingSession(String startDate, String endDate, Long fuelConsumed) {
+  public FishingSession(long startDate, long endDate, Long fuelConsumed) {
     this.startDate = startDate;
     this.endDate = endDate;
     this.fuelConsumed = fuelConsumed;
@@ -73,7 +75,7 @@ public class FishingSession {
    *
    * @return The start date as a string
    */
-  public String getStartDate() {
+  public long getStartDate() {
     return startDate;
   }
 
@@ -82,7 +84,7 @@ public class FishingSession {
    *
    * @return The end date as a string
    */
-  public String getEndDate() {
+  public long getEndDate() {
     return endDate;
   }
 

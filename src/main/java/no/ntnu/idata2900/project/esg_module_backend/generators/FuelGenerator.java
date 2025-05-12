@@ -27,11 +27,12 @@ public class FuelGenerator {
     this.fuelService = fuelService;
   }
 
-  public void generate(Weather weather, MarineWeather marineWeather, Vessel vessel) {
+  public Fuel generate(Weather weather, MarineWeather marineWeather, Vessel vessel) {
     Fuel fuel = this.calculateFuelConsumption(weather, marineWeather, vessel);
     fuel.setVessel(vessel);
     // Add fuel consumption to storage
     this.fuelService.add(fuel);
+    return fuel;
   }
 
   /**
@@ -147,6 +148,10 @@ public class FuelGenerator {
         consumption += RAN.nextFloat(0.42f, 0.59f);
         break;
     }
+
+    // Increase fuel consumption by vessel speed share
+    float speedShare = 1 + (vessel.getSpeed() / 15);
+    consumption = consumption * speedShare;
 
     // Calculate fuel consumption by posts
     float hotel = consumption / 3;
