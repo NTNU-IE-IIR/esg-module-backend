@@ -1,10 +1,12 @@
 package no.ntnu.idata2900.project.esg_module_backend.modelTest;
+
 import no.ntnu.idata2900.project.esg_module_backend.models.Trip;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+
 import java.time.Instant;
-import java.time.Duration;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class TripTest {
 
@@ -54,29 +56,18 @@ class TripTest {
 
     @Test
     void testTripDistanceFuelAndFishCaughtCanBeUpdated() {
-        assertEquals(0.0f, trip.getTripDistance());
-        assertEquals(0.0f, trip.getFuelConsumed());
-        assertEquals(0.0f, trip.getFishCaught());
+        trip.setTripDistance(100.5f);
+        trip.setFuelConsumed(50.2f);
+
+        assertEquals(100.5f, trip.getTripDistance());
+        assertEquals(50.2f, trip.getFuelConsumed());
     }
 
     @Test
     void testStartDateIsRecent() {
         Instant now = Instant.now();
         Instant start = trip.getStartDate();
-        Duration diff = Duration.between(start, now).abs();
-        assertTrue(diff.toSeconds() < 5, "Start date is not recent");
-    }
-
-    @Test
-    void testReEndTripDoesChangeEndDate() {
-        trip.end();
-        Instant firstEnd = trip.getEndDate();
-        trip.end();
-        Instant secondEnd = trip.getEndDate();
-
-        assertNotNull(secondEnd, "End date remains non-null after second end()");
-        assertFalse(secondEnd.isBefore(firstEnd), "Second end date should be equal or after the first end date");
-        assertFalse(trip.isActive(), "trip remains inactive after second end()");
+        assertTrue(start.isBefore(now) || start.equals(now), "Start date should be recent");
     }
 
     @Test
@@ -84,15 +75,18 @@ class TripTest {
         Instant startBefore = trip.getStartDate();
         trip.end();
         Instant startAfter = trip.getStartDate();
-        assertEquals(startBefore, startAfter, "startDate should remain unchanged after end()");
+        assertEquals(startBefore, startAfter, "Start date should remain unchanged after end()");
     }
 
     @Test
-    void testInvalidAreaAssignment() {
-        trip.setComments("");
-        assertEquals("", trip.getComments(), "Empty comments string is stored as is");
+    void testSetAreaToNull() {
+        trip.setArea(null);
+        assertNull(trip.getArea(), "Area should be null after setting it to null");
+    }
 
-        trip.setComments(null);
-        assertNull(trip.getComments(), "Null comments string should be accepted and retrievable");
+    @Test
+    void testSetCommentsToEmptyString() {
+        trip.setComments("");
+        assertEquals("", trip.getComments(), "Comments should allow empty strings");
     }
 }

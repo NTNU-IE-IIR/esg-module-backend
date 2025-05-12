@@ -5,20 +5,23 @@ import no.ntnu.idata2900.project.esg_module_backend.models.Trip;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Set;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class FishingSessionTest {
+
     private FishingSession fishingSession;
 
     @BeforeEach
     void setUp() {
-        fishingSession = new FishingSession("2025-05-07 06:00:00", "2025-05-07 12:00:00", 100L);
+        fishingSession = new FishingSession(1683897600L, 1683984000L, 100L);
     }
 
     @Test
-    void testParameterizedConstructorAndGetters() {
-        assertEquals("2025-05-07 06:00:00", fishingSession.getStartDate());
-        assertEquals("2025-05-07 12:00:00", fishingSession.getEndDate());
+    void testConstructorInitializesFields() {
+        assertEquals(1683897600L, fishingSession.getStartDate());
+        assertEquals(1683984000L, fishingSession.getEndDate());
         assertEquals(100L, fishingSession.getFuelConsumed());
         assertNull(fishingSession.getId(), "ID should be null before persistence");
         assertNull(fishingSession.getOperations(), "Operations should be null by default");
@@ -28,8 +31,8 @@ class FishingSessionTest {
     @Test
     void testDefaultConstructor() {
         FishingSession defaultSession = new FishingSession();
-        assertNull(defaultSession.getStartDate());
-        assertNull(defaultSession.getEndDate());
+        assertEquals(0L, defaultSession.getStartDate());
+        assertEquals(0L, defaultSession.getEndDate());
         assertNull(defaultSession.getFuelConsumed());
         assertNull(defaultSession.getId());
         assertNull(defaultSession.getOperations());
@@ -44,7 +47,13 @@ class FishingSessionTest {
     }
 
     @Test
-    void testSetAndGetOperations() {
+    void testGetOperations() {
         assertNull(fishingSession.getOperations(), "Operations should be null by default");
+    }
+
+    @Test
+    void testSetTripToNull() {
+        fishingSession.setTrip(null);
+        assertNull(fishingSession.getTrip(), "Trip should be null after setting it to null");
     }
 }
