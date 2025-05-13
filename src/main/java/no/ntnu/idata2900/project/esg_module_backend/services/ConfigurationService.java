@@ -17,7 +17,7 @@ import no.ntnu.idata2900.project.esg_module_backend.repositories.ConfigurationRe
  */
 @Service
 public class ConfigurationService {
-  private ConfigurationRepository configurationRepository;
+  private final ConfigurationRepository configurationRepository;
 
   /**
    * Constructor for the ConfigurationService class.
@@ -75,7 +75,9 @@ public class ConfigurationService {
     if (exist) {
       Configuration existingConfiguration = configuration.get();
       existingConfiguration.setName(configurationDto.getName());
+      existingConfiguration.setFuelType(configurationDto.getFuelType());
       existingConfiguration.setLevel1(configurationDto.isLevel1());
+      configurationRepository.save(existingConfiguration);
     }
     return exist;
   }

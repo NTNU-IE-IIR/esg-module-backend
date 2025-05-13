@@ -15,6 +15,7 @@ public class Configuration {
   @Id
   private String registrationMark;
   private String name;
+  private String fuelType;
   private boolean level1;
 
   /**
@@ -24,9 +25,10 @@ public class Configuration {
    * @param name             The specified name
    * @param level1           The specified level 1
    */
-  public Configuration(String registrationMark, String name, boolean level1) {
+  public Configuration(String registrationMark, String name, String fuelType, boolean level1) {
     this.registrationMark = registrationMark;
     this.name = name;
+    this.fuelType = fuelType;
     this.level1 = level1;
   }
 
@@ -92,5 +94,13 @@ public class Configuration {
   public boolean isValid() {
     return this.registrationMark != null && !this.registrationMark.isBlank() && this.name != null
         && !this.name.isBlank();
+  }
+
+  public String getFuelType() {
+    return fuelType;
+  }
+
+  public void setFuelType(String fuelType) {
+    this.fuelType = fuelType;
   }
 }

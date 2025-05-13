@@ -8,7 +8,6 @@ import java.util.concurrent.TimeUnit;
 import no.ntnu.idata2900.project.esg_module_backend.generators.DataPointGenerator;
 import no.ntnu.idata2900.project.esg_module_backend.models.Trip;
 import no.ntnu.idata2900.project.esg_module_backend.models.data_points.DataPoint;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,38 +65,22 @@ public class FakeDataSource implements DataSource {
 
     scheduler.scheduleAtFixedRate(() -> {
       logger.info("start of scheduled task");
-      if (i < 200) {
-          if (listener != null) {
-            List<DataPoint> updatedClients = new ArrayList<>();
-            for (DataPoint dp : clients) {
-              logger.info("processing a client datapoint");
-              DataPoint updatedDp = generator.generate(dp, dp.getTrip());
-              updatedClients.add(updatedDp);
-              logger.info("Client data point after update: {}", updatedDp);
-              listener.onDataReceived(updatedDp);
-            }
-            clients = updatedClients;
-          }
-          i = (i + 1);
-      } else {
-        stop();
+      if (listener != null) {
+        List<DataPoint> updatedClients = new ArrayList<>();
+        for (DataPoint dp : clients) {
+          logger.info("processing a client datapoint");
+          DataPoint updatedDp = generator.generate(dp, dp.getTrip());
+          updatedClients.add(updatedDp);
+          logger.info("Client data point after update: {}", updatedDp);
+          listener.onDataReceived(updatedDp);
+        }
+        clients = updatedClients;
       }
+      i = (i + 1);
     }, 0, 15, TimeUnit.SECONDS);
 
     System.out.println("FakeDataSource started");
   }
-
-  @Override
-  public void stop() {
-//    if (scheduler != null && !scheduler.isShutdown()) {
-//      scheduler.shutdownNow();
-//      scheduler = null;
-//    }
-//
-//    i = 0;
-//    System.out.println("FakeDataSource stopped");
-  }
-
 
   /**
    * Sets the data listener for this data source.

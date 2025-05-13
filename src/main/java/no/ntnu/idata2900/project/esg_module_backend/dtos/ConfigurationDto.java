@@ -10,6 +10,7 @@ package no.ntnu.idata2900.project.esg_module_backend.dtos;
 public class ConfigurationDto {
   private String name;
   private boolean level1;
+  private String fuelType;
 
   /**
    * Constructor for the ConfigurationDto class.
@@ -17,8 +18,9 @@ public class ConfigurationDto {
    * @param name    The specified name
    * @param level1  The specified level 1
    */
-  public ConfigurationDto(String name, boolean level1) {
+  public ConfigurationDto(String name, String fuelType, boolean level1) {
     this.name = name;
+    this.fuelType = fuelType;
     this.level1 = level1;
   }
 
@@ -47,5 +49,9 @@ public class ConfigurationDto {
    */
   public boolean isValid() {
     return this.name != null && !this.name.isBlank();
+  }
+
+  public String getFuelType() {
+    return fuelType;
   }
 }

@@ -29,14 +29,6 @@ public interface DataSource {
   void restoreClients(List<DataPoint> clients);
 
   /**
-   * Stops the data source. If the implementation is a fake data source, then this method
-   * should stop the data generation process. If the implementation is a real data source,
-   * then this method should disconnect from the data source and terminate the receipt
-   * of data.
-   */
-  void stop();
-
-  /**
    * Registers a DataListener to receive data events. The specified listener will be
    * notified whenever new data is available or an event occurs in the data source.
    * Only one DataListener instance can be set at a time.

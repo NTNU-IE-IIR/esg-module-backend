@@ -48,6 +48,7 @@ public class ConfigurationController {
     Optional<Configuration> configuration = this.configurationService.get(registrationMark);
     if (configuration.isPresent()) {
       logger.info("Configuration exists, sending configuration data...");
+      logger.info(configuration.get().getFuelType());
       response = ResponseEntity.ok().body(configuration.get());
     } else {
       logger.error("Configuration does not exist, sending error response...");
@@ -68,6 +69,7 @@ public class ConfigurationController {
   public ResponseEntity<String> add(@RequestBody Configuration configuration) {
     ResponseEntity<String> response;
     try {
+      logger.info("Adding config with fuel type: {}", configuration.getFuelType());
       this.configurationService.add(configuration);
       logger.info("Configuration added, sending success response...");
       response = ResponseEntity.ok().build();
@@ -96,6 +98,7 @@ public class ConfigurationController {
     @RequestBody ConfigurationDto configurationDto
   ) {
     ResponseEntity<String> response;
+    logger.info("Updating config with fuel type: {}", configurationDto.getFuelType());
     try {
       if (this.configurationService.update(registrationMark, configurationDto)) {
         logger.info("Configuration updated, sending success response...");
