@@ -1,5 +1,8 @@
 package no.ntnu.idata2900.project.esg_module_backend.services;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
@@ -10,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import no.ntnu.idata2900.project.esg_module_backend.RestTemplateResponseErrorHandler;
 import no.ntnu.idata2900.project.esg_module_backend.models.data_points.DataPoint;
 import no.ntnu.idata2900.project.esg_module_backend.repositories.data_points.DataPointRepository;
 
@@ -18,7 +22,7 @@ import no.ntnu.idata2900.project.esg_module_backend.repositories.data_points.Dat
  * service.
  * 
  * @author Group 14
- * @version v0.1.0 (2025.05.06)
+ * @version v0.2.0 (2025.05.13)
  */
 @Service
 public class ModelService {
@@ -36,7 +40,34 @@ public class ModelService {
   @Autowired
   public ModelService(DataPointRepository repo, RestTemplateBuilder restTemplateBuilder) {
     this.repo = repo;
-    this.restTemplate = restTemplateBuilder.build();
+    this.restTemplate = restTemplateBuilder
+        .errorHandler(new RestTemplateResponseErrorHandler())
+        .build();
+  }
+
+  /**
+   * Requests the machine learning model service to perform prediction on the specified data point.
+   * The specified data point is passed along in the request as input. The response to the request
+   * is returned, which contains the prediction output.
+   * 
+   * @param dp The specified data point
+   * @return Response containing prediction output
+   */
+  public ResponseEntity<String> predict(DataPoint dp) {
+    // Create collection containing single data point
+    List<DataPoint> dps = new ArrayList<>();
+    dps.add(dp);
+    // Create request headers
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    // Create full request
+    HttpEntity<Iterable<DataPoint>> request = new HttpEntity<>(dps, headers);
+    return restTemplate.exchange(
+      "http://127.0.0.1:5000/predict",
+      HttpMethod.POST,
+      request,
+      String.class
+    );
   }
 
   /**
