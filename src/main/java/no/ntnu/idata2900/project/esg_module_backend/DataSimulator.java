@@ -56,14 +56,15 @@ public class DataSimulator implements ApplicationListener<ApplicationReadyEvent>
   }
 
   public void onApplicationEvent(ApplicationReadyEvent event) {
-    this.logger.info("[SIMULATOR] Starting simulation...");
-    this.generateDataPoints();
-    boolean isTrained = this.trainModel();
-    if (isTrained) {
-      this.logger.info("[SIMULATOR] Simulation up-and-running");
-    } else {
-      this.logger.error("[SIMULATOR] Simulation could not start, please review error logs");
-    }
+    // Uncomment to activate simulator
+    //this.logger.info("[SIMULATOR] Starting simulation...");
+    //this.generateDataPoints();
+    //boolean isTrained = this.trainModel();
+    //if (isTrained) {
+    //  this.logger.info("[SIMULATOR] Simulation up-and-running");
+    //} else {
+    //  this.logger.error("[SIMULATOR] Simulation could not start, please review error logs");
+    //}
   }
 
   /**
