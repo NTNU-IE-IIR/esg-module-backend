@@ -19,7 +19,7 @@ import no.ntnu.idata2900.project.esg_module_backend.services.ModelService;
  * learning model service.
  * 
  * @author Group 14
- * @version v0.1.0 (2025.05.06)
+ * @version v0.1.1 (2025.05.13)
  */
 @RestController
 public class ModelController {
@@ -39,11 +39,12 @@ public class ModelController {
     this.modelService = modelService;
   }
 
-  // TODO Add remaining status codes to docs
   /**
    * Endpoint for training the model in the machine learning service.
    * 
    * @return <p><b>200 OK</b> if the model was successfully trained</p>
+   *         <li><p><b>500 INTERNAL SERVER ERROR</b> if an error occured while training
+   *         model</p></li>
    */
   @Operation(
     summary = "Train model",
@@ -53,6 +54,10 @@ public class ModelController {
     @ApiResponse(
       responseCode = "200",
       description = "Signals success"
+    ),
+    @ApiResponse(
+      responseCode = "500",
+      description = "Signals error"
     )
   })
   @CrossOrigin(origins = "http://localhost:5173")
