@@ -26,7 +26,7 @@ import jakarta.persistence.Table;
  * <p>The preceding constans are used to define boundaries for data generation.</p>
  *
  * @author Group 14
- * @version v0.4.0 (2025.05.02)
+ * @version v0.5.0 (2025.05.13)
  */
 @Entity
 @Table(name = "vessel")
@@ -55,6 +55,10 @@ public class Vessel {
   @Schema(description = "Fuel consumption over the last time interval")
   private Fuel fuelConsumption;
 
+  @Column(name = "target_fuel")
+  @Schema(description = "Target fuel consumption over the last time interval")
+  private float targetFuelConsumption;
+
   @JsonIgnore
   @OneToOne
   @JoinColumn(name = "data_point_id")
@@ -82,10 +86,7 @@ public class Vessel {
     this.heading = heading;
     this.speed = speed;
     this.targetSpeed = 0.0f;
-  }
-
-  public void setFuelConsumption(Fuel fuelConsumption) {
-    this.fuelConsumption = fuelConsumption;
+    this.targetFuelConsumption = 0.0f;
   }
 
   /**
@@ -140,6 +141,33 @@ public class Vessel {
    */
   public Fuel getFuelConsumption() {
     return this.fuelConsumption;
+  }
+
+  /**
+   * Setter for fuel consumption.
+   * 
+   * @param fuelConsumption The specified fuel consumption
+   */
+  public void setFuelConsumption(Fuel fuelConsumption) {
+    this.fuelConsumption = fuelConsumption;
+  }
+
+  /**
+   * Getter for target fuel consumption.
+   * 
+   * @return Target fuel consumption
+   */
+  public float getTargetFuelConsumption() {
+    return this.targetFuelConsumption;
+  }
+
+  /**
+   * Setter for target fuel consumption
+   * 
+   * @param targetFuelConsumption The specified target fuel consumption
+   */
+  public void setTargetFuelConsumption(float targetFuelConsumption) {
+    this.targetFuelConsumption = targetFuelConsumption;
   }
 
   /**
