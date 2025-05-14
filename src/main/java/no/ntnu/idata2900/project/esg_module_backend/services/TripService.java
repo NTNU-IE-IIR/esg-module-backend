@@ -85,7 +85,7 @@ public class TripService implements DataListener {
   private List<TripDto> createTripDtos(Trip trip) {
     return trip.getDataPoints().stream().map(dp ->
         new TripDto(new DataPointDto(dp), trip.getFishingSessions(), trip.getFuelConsumed(),
-            trip.getTripDistance())).toList();
+            trip.getTargetFuelConsumed(), trip.getTripDistance())).toList();
   }
 
 
@@ -164,7 +164,7 @@ public class TripService implements DataListener {
     Trip updatedTrip = updateTripValues(trip.get());
 
     TripDto tripDto = new TripDto(dpDto, updatedTrip.getFishingSessions(),
-        updatedTrip.getFuelConsumed(), updatedTrip.getTripDistance());
+        updatedTrip.getFuelConsumed(), updatedTrip.getTargetFuelConsumed(), updatedTrip.getTripDistance());
 
     logger.info("TripDto created: {}", tripDto);
 
@@ -176,8 +176,9 @@ public class TripService implements DataListener {
 
   protected Trip updateTripValues(Trip trip) {
     logger.info("Updating trip values");
-    float updatedTripDistance = 0;
-    float updatedFuelConsumed = 0;
+    float updatedTripDistance;
+    float updatedFuelConsumed;
+    float updatedTargetFuelConsumed;
     try {
       DataPoint lastDataPoint = trip.getDataPoints().getLast();
       DataPoint penultimateDataPoint = trip.getDataPoints().get(trip.getDataPoints().size() - 2);
@@ -185,9 +186,12 @@ public class TripService implements DataListener {
           + Distance.calculateDistance(lastDataPoint.getPos(), penultimateDataPoint.getPos());
       updatedFuelConsumed = trip.getFuelConsumed()
           + lastDataPoint.getVessel().getFuelConsumption().getTotal();
+      updatedTargetFuelConsumed = trip.getTargetFuelConsumed()
+          + lastDataPoint.getVessel().getTargetFuelConsumption();
 
       trip.setTripDistance(updatedTripDistance);
       trip.setFuelConsumed(updatedFuelConsumed);
+      trip.setTargetFuelConsumed(updatedTargetFuelConsumed);
 
       tripRepository.save(trip);
       logger.info("Trip values updated");

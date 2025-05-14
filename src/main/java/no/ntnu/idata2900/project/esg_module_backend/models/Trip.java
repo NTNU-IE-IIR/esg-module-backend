@@ -48,6 +48,10 @@ public class Trip {
   @Schema(description = "Total fuel consumed during the trip")
   private float fuelConsumed;
 
+  @Column(name = "target_fuel_consumed")
+  @Schema(description = "Target fuel consumption for the trip")
+  private float targetFuelConsumed;
+
   @Column(name = "fish_caught")
   @Schema(description = "Total amount of fish caught during the trip")
   private float fishCaught;
@@ -91,6 +95,7 @@ public class Trip {
     this.endDate = null;
     this.tripDistance = 0;
     this.fuelConsumed = 0;
+    this.targetFuelConsumed = 0;
     this.fishCaught = 0;
     this.active = true;
     this.area = null;
@@ -237,5 +242,13 @@ public class Trip {
 
   public Set<FishingSession> getFishingSessions() {
     return fishingSessions;
+  }
+
+  public float getTargetFuelConsumed() {
+    return targetFuelConsumed;
+  }
+
+  public void setTargetFuelConsumed(float targetFuelConsumed) {
+    this.targetFuelConsumed = targetFuelConsumed;
   }
 }

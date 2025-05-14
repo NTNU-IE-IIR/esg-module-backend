@@ -18,14 +18,16 @@ public class TripDto {
   private DataPointDto dataPointDto;
   private Set<FishingSession> fishingSessions;
   private float fuelConsumed;
+  private float targetFuelConsumed;
   private float totalDistance;
 
   public TripDto(DataPointDto dataPointDto, Set<FishingSession> fishingSessions,
-                 float fuelConsumed, float totalDistance) {
+                 float fuelConsumed, float targetFuelConsumed, float totalDistance) {
     this.id = dataPointDto.getId();
     this.dataPointDto = dataPointDto;
     this.fishingSessions = fishingSessions;
     this.fuelConsumed = fuelConsumed;
+    this.targetFuelConsumed = targetFuelConsumed;
     this.totalDistance = totalDistance;
   }
 
@@ -121,5 +123,13 @@ public class TripDto {
         ", fuelConsumed=" + fuelConsumed +
         ", totalDistance=" + totalDistance +
         '}';
+  }
+
+  public float getTargetFuelConsumed() {
+    return targetFuelConsumed;
+  }
+
+  public void setTargetFuelConsumed(float targetFuelConsumed) {
+    this.targetFuelConsumed = targetFuelConsumed;
   }
 }
