@@ -3,6 +3,7 @@ package no.ntnu.idata2900.project.esg_module_backend.models.data_points;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -51,7 +52,7 @@ public class Vessel {
   @Schema(description = "Vessel target speed")
   private float targetSpeed;
 
-  @OneToOne(mappedBy = "vessel")
+  @OneToOne(mappedBy = "vessel", cascade = CascadeType.ALL, orphanRemoval = true)
   @Schema(description = "Fuel consumption over the last time interval")
   private Fuel fuelConsumption;
 
