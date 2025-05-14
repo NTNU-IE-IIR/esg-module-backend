@@ -59,7 +59,7 @@ public class FakeDataSource implements DataSource {
 
   @Override
   public void start() {
-    logger.info("Starting FakeDataSource...");
+    logger.debug("Starting FakeDataSource...");
     // Make sure any existing scheduler is shut down
     if (scheduler != null && !scheduler.isShutdown()) {
       scheduler.shutdownNow();
@@ -68,7 +68,7 @@ public class FakeDataSource implements DataSource {
     scheduler = Executors.newSingleThreadScheduledExecutor();
 
     scheduler.scheduleAtFixedRate(() -> {
-      logger.info("start of scheduled task");
+      logger.debug("start of scheduled task");
       if (listener != null) {
         List<DataPoint> updatedClients = new ArrayList<>();
         for (DataPoint dp : clients) {
