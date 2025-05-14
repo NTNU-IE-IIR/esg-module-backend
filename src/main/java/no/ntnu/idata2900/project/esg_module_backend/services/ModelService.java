@@ -3,6 +3,7 @@ package no.ntnu.idata2900.project.esg_module_backend.services;
 import java.util.ArrayList;
 import java.util.List;
 
+import no.ntnu.idata2900.project.esg_module_backend.repositories.data_points.VesselRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,7 @@ import no.ntnu.idata2900.project.esg_module_backend.repositories.data_points.Dat
 @Service
 public class ModelService {
   private DataPointRepository repo;
+  private VesselRepository vesselRepo;
   private RestTemplate restTemplate;
 
   private final Logger logger = LoggerFactory.getLogger(ModelService.class);
@@ -43,8 +45,10 @@ public class ModelService {
    * @param restTemplateBuilder The specified rest template builder
    */
   @Autowired
-  public ModelService(DataPointRepository repo, RestTemplateBuilder restTemplateBuilder) {
+  public ModelService(DataPointRepository repo, VesselRepository vesselRepo,
+                      RestTemplateBuilder restTemplateBuilder) {
     this.repo = repo;
+    this.vesselRepo = vesselRepo;
     this.restTemplate = restTemplateBuilder
         .errorHandler(new RestTemplateResponseErrorHandler())
         .build();
@@ -77,8 +81,8 @@ public class ModelService {
       dp.getVessel().setTargetSpeed(targetSpeed);
       dp.getVessel().setTargetFuelConsumption(targetFuelConsumption);
 
-      // Update data point in storage
-      repo.save(dp);
+      // Update vessel data in storage
+      vesselRepo.save(dp.getVessel());
     } else {
       logger.error("Could not make prediction on data point");
     }
