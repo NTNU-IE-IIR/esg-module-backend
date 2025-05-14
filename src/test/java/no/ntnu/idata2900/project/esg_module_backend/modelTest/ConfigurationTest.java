@@ -9,9 +9,10 @@ class ConfigurationTest {
 
     @Test
     void testConstructorInitializesFields() {
-        Configuration config = new Configuration("REG123", "VesselName", true);
+        Configuration config = new Configuration("REG123", "VesselName", "Diesel", true);
         assertEquals("REG123", config.getRegistrationMark());
         assertEquals("VesselName", config.getName());
+        assertEquals("Diesel", config.getFuelType());
         assertTrue(config.isLevel1());
     }
 
@@ -20,6 +21,7 @@ class ConfigurationTest {
         Configuration config = new Configuration();
         assertNull(config.getRegistrationMark());
         assertNull(config.getName());
+        assertNull(config.getFuelType());
         assertFalse(config.isLevel1());
     }
 
@@ -31,6 +33,13 @@ class ConfigurationTest {
     }
 
     @Test
+    void testSetFuelType() {
+        Configuration config = new Configuration();
+        config.setFuelType("Electric");
+        assertEquals("Electric", config.getFuelType());
+    }
+
+    @Test
     void testSetLevel1() {
         Configuration config = new Configuration();
         config.setLevel1(true);
@@ -39,31 +48,31 @@ class ConfigurationTest {
 
     @Test
     void testIsValidWithValidData() {
-        Configuration config = new Configuration("REG123", "VesselName", true);
+        Configuration config = new Configuration("REG123", "VesselName", "Diesel", true);
         assertTrue(config.isValid());
     }
 
     @Test
     void testIsValidWithInvalidRegistrationMark() {
-        Configuration config = new Configuration(null, "VesselName", true);
+        Configuration config = new Configuration(null, "VesselName", "Diesel", true);
         assertFalse(config.isValid());
     }
 
     @Test
     void testIsValidWithInvalidName() {
-        Configuration config = new Configuration("REG123", null, true);
+        Configuration config = new Configuration("REG123", null, "Diesel", true);
         assertFalse(config.isValid());
     }
 
     @Test
     void testIsValidWithBlankRegistrationMark() {
-        Configuration config = new Configuration("   ", "VesselName", true);
+        Configuration config = new Configuration("   ", "VesselName", "Diesel", true);
         assertFalse(config.isValid());
     }
 
     @Test
     void testIsValidWithBlankName() {
-        Configuration config = new Configuration("REG123", "   ", true);
+        Configuration config = new Configuration("REG123", "   ", "Diesel", true);
         assertFalse(config.isValid());
     }
 }
