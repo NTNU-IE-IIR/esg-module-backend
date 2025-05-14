@@ -8,6 +8,8 @@ import java.util.concurrent.TimeUnit;
 import no.ntnu.idata2900.project.esg_module_backend.generators.DataPointGenerator;
 import no.ntnu.idata2900.project.esg_module_backend.models.Trip;
 import no.ntnu.idata2900.project.esg_module_backend.models.data_points.DataPoint;
+import no.ntnu.idata2900.project.esg_module_backend.services.ModelService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +21,7 @@ import org.springframework.stereotype.Component;
  * This class is primarily designed for testing or simulation purposes where no actual data source exists.
  *
  * @author Group 14
- * @version v0.2.1 (2025.05.05)
+ * @version v0.2.2 (2025.05.13)
  */
 @Component
 public class FakeDataSource implements DataSource {
@@ -29,10 +31,12 @@ public class FakeDataSource implements DataSource {
   private int i = 0;
   private List<DataPoint> clients; //Contains the last dp of each client.
   private final DataPointGenerator generator;
+  private final ModelService modelService;
 
   @Autowired
-  public FakeDataSource(DataPointGenerator generator) {
+  public FakeDataSource(DataPointGenerator generator, ModelService modelService) {
     this.generator = generator;
+    this.modelService = modelService;
     this.clients = new ArrayList<>();
   }
 
@@ -70,9 +74,10 @@ public class FakeDataSource implements DataSource {
         for (DataPoint dp : clients) {
           logger.info("processing a client datapoint");
           DataPoint updatedDp = generator.generate(dp, dp.getTrip());
-          updatedClients.add(updatedDp);
-          logger.info("Client data point after update: {}", updatedDp);
-          listener.onDataReceived(updatedDp);
+          DataPoint predictedDp = modelService.fetchTargetValues(updatedDp);
+          updatedClients.add(predictedDp);
+          logger.info("Client data point after update: {}", predictedDp);
+          listener.onDataReceived(predictedDp);
         }
         clients = updatedClients;
       }

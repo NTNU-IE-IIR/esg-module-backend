@@ -19,6 +19,7 @@ public class FuelGenerator {
   private FuelService fuelService;
 
   private static final float INTERVAL = 90.0f;
+  private static final float BASE = 6.67f;
 
   private static final Random RAN = new Random();
 
@@ -50,10 +51,8 @@ public class FuelGenerator {
    * negative resistance, goes under here.</p>
    *
    * <p>The amount of parameters who go under either of the resistance types makes up a resistance
-   * factor. The factor is used to define the interval of which random fuel consumption can be
-   * generated (e.g. bigger resistance factor implies greater fuel consumption).</p>
-   * 
-   * <p>In the end, the randomly generated fuel consumption is divided among posts.</p>
+   * factor. The factor is used to determine a resistance multiplier, which is used along with the
+   * calculated base consumption to calculate the resulting fuel consumption.</p>
    *
    * @return Calculated fuel consumption based on directional weather and marine weather parameters
    */
@@ -74,19 +73,16 @@ public class FuelGenerator {
     if (upperPositive > 360.0f) {
       upperPositive -= 360.0f;
     }
-
     // Lower bound for positive resistance interval
     float lowerPositive = vessel.getHeading() - (INTERVAL / 2) + 180.0f;
     if (lowerPositive < 0.0f) {
       lowerPositive += 360.0f;
     }
-
     // Upper bound for negative resistance interval
     float upperNegative = vessel.getHeading() + INTERVAL / 2;
     if (upperNegative > 360.0f) {
       upperNegative -= 360.0f;
     }
-
     // Lower bound for negative resistance interval
     float lowerNegative = vessel.getHeading() - INTERVAL / 2;
     if (lowerNegative < 0.0f) {
@@ -94,7 +90,6 @@ public class FuelGenerator {
     }
 
     int resist = 0;
-
     // Adjust resistance factor
     for (float param : resistParams) {
       if (param <= upperPositive || param >= lowerPositive) {
@@ -104,60 +99,55 @@ public class FuelGenerator {
       }
     }
 
-    float consumption = 0.0f;
+    float baseConsumption =
+        BASE * (float) Math.pow(vessel.getSpeed() / 12, 3);
 
-    // Random fuel consumption based on resistance factor
+    float resistanceMultiplier;
+
     switch (resist) {
       case -6:
-        consumption += RAN.nextFloat(0.06f, 0.12f);
+        resistanceMultiplier = 0.6f;
         break;
       case -5:
-        consumption += RAN.nextFloat(0.12f, 0.18f);
+        resistanceMultiplier = 0.65f;
         break;
       case -4:
-        consumption += RAN.nextFloat(0.18f, 0.24f);
+        resistanceMultiplier = 0.7f;
         break;
       case -3:
-        consumption += RAN.nextFloat(0.24f, 0.30f);
+        resistanceMultiplier = 0.75f;
         break;
       case -2:
-        consumption += RAN.nextFloat(0.30f, 0.36f);
+        resistanceMultiplier = 0.8f;
         break;
       case -1:
-        consumption += RAN.nextFloat(0.36f, 0.42f);
+        resistanceMultiplier = 0.9f;
         break;
       case 1:
-        consumption += RAN.nextFloat(0.59f, 0.65f);
+        resistanceMultiplier = 1.1f;
         break;
       case 2:
-        consumption += RAN.nextFloat(0.65f, 0.71f);
+        resistanceMultiplier = 1.2f;
         break;
       case 3:
-        consumption += RAN.nextFloat(0.71f, 0.77f);
+        resistanceMultiplier = 1.4f;
         break;
       case 4:
-        consumption += RAN.nextFloat(0.77f, 0.83f);
+        resistanceMultiplier = 1.6f;
         break;
       case 5:
-        consumption += RAN.nextFloat(0.83f, 0.89f);
+        resistanceMultiplier = 1.8f;
         break;
       case 6:
-        consumption += RAN.nextFloat(0.89f, 0.95f);
+        resistanceMultiplier = 2.0f;
         break;
       default:
-        consumption += RAN.nextFloat(0.42f, 0.59f);
+        resistanceMultiplier = 1.0f;
         break;
     }
 
-    // Increase fuel consumption by vessel speed share
-    float speedShare = 1 + (vessel.getSpeed() / 15);
-    consumption = consumption * speedShare;
+    float consumption = baseConsumption * resistanceMultiplier;
 
-    // Calculate fuel consumption by posts
-    float hotel = consumption / 3;
-    float production = 0;
-    float drift = consumption - hotel;
-
-    return new Fuel(drift, production, hotel);
+    return new Fuel(consumption, 0.0f, 0.0f);
   }
 }
