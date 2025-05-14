@@ -64,11 +64,11 @@ public class Trip {
   @Schema(description = "Comments about the trip")
   private String comments;
 
-  @OneToMany(fetch = FetchType.EAGER, mappedBy = "trip")
+  @OneToMany(fetch = FetchType.EAGER, mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
   @Schema(description = "Set of fishing sessions during the trip")
   private Set<FishingSession> fishingSessions;
 
-  @OneToMany(fetch = FetchType.EAGER, mappedBy = "trip")
+  @OneToMany(fetch = FetchType.EAGER, mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
   @Schema(description = "List of data points collected during the trip")
   private List<DataPoint> dataPoints;
 

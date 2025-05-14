@@ -3,6 +3,7 @@ package no.ntnu.idata2900.project.esg_module_backend.models.data_points;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -60,15 +61,15 @@ public class MarineWeather {
   @Schema(description = "Unique ID")
   private Long id;
 
-  @OneToOne(mappedBy = "marineWeather")
+  @OneToOne(mappedBy = "marineWeather", cascade = CascadeType.ALL, orphanRemoval = true)
   @Schema(description = "Waves data")
   private Waves waves;
 
-  @OneToOne(mappedBy = "marineWeather")
+  @OneToOne(mappedBy = "marineWeather", cascade = CascadeType.ALL, orphanRemoval = true)
   @Schema(description = "Wind waves data")
   private WindWaves wwaves;
 
-  @OneToOne(mappedBy = "marineWeather")
+  @OneToOne(mappedBy = "marineWeather", cascade = CascadeType.ALL, orphanRemoval = true)
   @Schema(description = "Swell waves data")
   private SwellWaves swellWaves;
 

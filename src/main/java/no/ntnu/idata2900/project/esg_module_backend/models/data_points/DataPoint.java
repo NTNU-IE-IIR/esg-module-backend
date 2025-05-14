@@ -3,6 +3,7 @@ package no.ntnu.idata2900.project.esg_module_backend.models.data_points;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -36,19 +37,19 @@ public class DataPoint {
   @Schema(description = "Timestamp")
   private long ts;
 
-  @OneToOne(mappedBy = "dp")
+  @OneToOne(mappedBy = "dp", cascade = CascadeType.ALL, orphanRemoval = true)
   @Schema(description = "Position represented as coordinates")
   private Position pos;
 
-  @OneToOne(mappedBy = "dp")
+  @OneToOne(mappedBy = "dp", cascade = CascadeType.ALL, orphanRemoval = true)
   @Schema(description = "Vessel data")
   private Vessel vessel;
 
-  @OneToOne(mappedBy = "dp")
+  @OneToOne(mappedBy = "dp", cascade = CascadeType.ALL, orphanRemoval = true)
   @Schema(description = "Weather data (wind)")
   private Weather weather;
 
-  @OneToOne(mappedBy = "dp")
+  @OneToOne(mappedBy = "dp", cascade = CascadeType.ALL, orphanRemoval = true)
   @Schema(description = "Marine weather data (waves and ocean current)")
   private MarineWeather marineWeather;
 
