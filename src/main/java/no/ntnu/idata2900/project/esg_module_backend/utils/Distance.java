@@ -5,10 +5,11 @@ import no.ntnu.idata2900.project.esg_module_backend.models.data_points.Position;
 
 /**
  * The Distance class provides methods to calculate the geographical distance between two points
- * and the total distance traveled based on a list of positions.
+ * and the total distance traveled based on a list of positions Using the Haversine formula
  */
 public class Distance {
-    private static final double EARCH_RADIUS_NM = 3440.065; // Radius of the Earth in nautical miles
+    private static final double EARCH_RADIUS_NM = 3440.064795
+    ; // Radius of the Earth in nautical miles
 
     /**
      * Returns the calculated geographical distance between two individual data points.
