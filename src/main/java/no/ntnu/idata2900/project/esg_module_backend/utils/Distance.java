@@ -8,8 +8,7 @@ import no.ntnu.idata2900.project.esg_module_backend.models.data_points.Position;
  * and the total distance traveled based on a list of positions Using the Haversine formula
  */
 public class Distance {
-    private static final double EARCH_RADIUS_NM = 3440.064795
-    ; // Radius of the Earth in nautical miles
+    private static final double EARTH_RADIUS_NM = 3440.064795; // Radius of the Earth in nautical miles
 
     /**
      * Returns the calculated geographical distance between two individual data points.
@@ -33,7 +32,7 @@ public class Distance {
 
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
-        double distance = EARCH_RADIUS_NM * c;
+        double distance = EARTH_RADIUS_NM * c;
 
         return (float) distance;
     }
