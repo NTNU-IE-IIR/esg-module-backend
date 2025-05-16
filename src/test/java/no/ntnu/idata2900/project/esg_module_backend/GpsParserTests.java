@@ -11,7 +11,6 @@ import net.sf.marineapi.nmea.sentence.ZDASentence;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
 class GpsParserTests {
 
     @Test

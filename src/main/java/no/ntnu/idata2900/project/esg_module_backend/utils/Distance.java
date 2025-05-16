@@ -5,9 +5,11 @@ import no.ntnu.idata2900.project.esg_module_backend.models.data_points.Position;
 
 /**
  * The Distance class provides methods to calculate the geographical distance between two points
- * and the total distance traveled based on a list of positions.
+ * and the total distance traveled based on a list of positions Using the Haversine formula
  */
 public class Distance {
+    private static final double EARTH_RADIUS_NM = 3440.064795; // Radius of the Earth in nautical miles
+
     /**
      * Returns the calculated geographical distance between two individual data points.
      *
@@ -16,25 +18,23 @@ public class Distance {
      * @return Calculated geographical distance between two points
      */
     public static float calculateDistance(Position p1, Position p2) {
-        float lat1 = p1.getLat();
-        float lon1 = p1.getLng();
-        float lat2 = p2.getLat();
-        float lon2 = p2.getLng();
+        double lat1 = Math.toRadians(p1.getLat());
+        double lon1 = Math.toRadians(p1.getLng());
+        double lat2 = Math.toRadians(p2.getLat());
+        double lon2 = Math.toRadians(p2.getLng());
 
-        float theta = lon1 - lon2;
+        double dLat = lat2 - lat1;
+        double dLon = lon2 - lon1;
 
-        double dist =
-                Math.sin(Math.toRadians(lat1)) *
-                        Math.sin(Math.toRadians(lat2)) +
-                        Math.cos(Math.toRadians(lat1)) *
-                                Math.cos(Math.toRadians(lat2)) *
-                                Math.cos(Math.toRadians(theta));
-        dist = Math.acos(dist);
-        dist = Math.toDegrees(dist);
-        dist = dist * 60 * 1.1515;
-        dist = dist * 0.8684;
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(lat1) * Math.cos(lat2) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
 
-        return (float) dist;
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        double distance = EARTH_RADIUS_NM * c;
+
+        return (float) distance;
     }
 
     /**
