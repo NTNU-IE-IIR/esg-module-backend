@@ -4,8 +4,11 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import no.ntnu.idata2900.project.esg_module_backend.dtos.EsgDto;
+import no.ntnu.idata2900.project.esg_module_backend.models.Configuration;
 import no.ntnu.idata2900.project.esg_module_backend.models.Trip;
+import no.ntnu.idata2900.project.esg_module_backend.repositories.ConfigurationRepository;
 import no.ntnu.idata2900.project.esg_module_backend.repositories.TripRepository;
+import no.ntnu.idata2900.project.esg_module_backend.utils.Fuel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +22,7 @@ public class EsgService {
    * Repository for accessing trip data.
    */
   private final TripRepository tripRepository;
+  private final ConfigurationRepository configurationRepository;
 
   /**
    * Constructs a new EsgService with the specified TripRepository.
@@ -26,8 +30,10 @@ public class EsgService {
    * @param tripRepository The repository for accessing trip data
    */
   @Autowired
-  public EsgService(TripRepository tripRepository) {
+  public EsgService(TripRepository tripRepository,
+                    ConfigurationRepository configurationRepository) {
     this.tripRepository = tripRepository;
+    this.configurationRepository = configurationRepository;
   }
 
   /**
@@ -57,8 +63,8 @@ public class EsgService {
    * and calculates the ESG data.
    *
    * @param registrationMark The registration mark of the vessel
-   * @param start The start timestamp in milliseconds since epoch
-   * @param end The end timestamp in milliseconds since epoch
+   * @param start            The start timestamp in milliseconds since epoch
+   * @param end              The end timestamp in milliseconds since epoch
    * @return Optional containing the ESG data if trips are found, or an empty Optional if no trips exist
    */
   public Optional<EsgDto> esgFromVesselTime(String registrationMark, long start, long end) {
@@ -85,7 +91,7 @@ public class EsgService {
    *
    * @param trips The list of trips to calculate ESG data from
    * @return Optional containing the calculated ESG data if the list is not empty,
-   *         or an empty Optional if the list is empty
+   * or an empty Optional if the list is empty
    */
   public Optional<EsgDto> esgFromTrips(List<Trip> trips) {
     Optional<EsgDto> esgDto;
@@ -93,12 +99,22 @@ public class EsgService {
     float fuelConsumption = 0;
     float fishWeight = 0;
 
+
     if (!trips.isEmpty()) {
       for (Trip trip : trips) {
         fuelConsumption = fuelConsumption + trip.getFuelConsumed();
         fishWeight = fishWeight + trip.getFishWeight();
       }
-      esgDto = Optional.of(new EsgDto(fuelConsumption, fishWeight));
+      Optional<Configuration> configuration =
+          configurationRepository.findById(trips.getFirst().getRegistrationMark());
+      if (configuration.isPresent()) {
+        String fuelType = configuration.get().getFuelType();
+        float co2 = Fuel.co2FromFuel(fuelConsumption, fuelType);
+        esgDto = Optional.of(new EsgDto(co2, fishWeight));
+      } else {
+        esgDto = Optional.empty();
+      }
+
     } else {
       esgDto = Optional.empty();
     }
