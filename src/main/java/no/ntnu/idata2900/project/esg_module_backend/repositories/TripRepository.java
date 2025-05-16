@@ -1,7 +1,9 @@
 package no.ntnu.idata2900.project.esg_module_backend.repositories;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
+import no.ntnu.idata2900.project.esg_module_backend.dtos.EsgDto;
 import no.ntnu.idata2900.project.esg_module_backend.models.Trip;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -19,4 +21,8 @@ public interface TripRepository extends CrudRepository<Trip, Long> {
     void deactivateActiveTripsByRegistrationMark(@Param("registrationMark") String registrationMark);
 
     List<Trip> findByActiveTrue();
+
+    List<Trip> findByRegistrationMarkAndStartDateBetween(String registrationMark, Instant startDateAfter, Instant startDateBefore);
+
+    List<Trip> findByRegistrationMark(String registrationMark);
 }
