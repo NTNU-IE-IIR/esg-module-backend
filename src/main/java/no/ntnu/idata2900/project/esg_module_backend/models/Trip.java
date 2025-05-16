@@ -236,6 +236,23 @@ public class Trip {
     //maybe calculate total fish and fuel here?
   }
 
+  /**
+   * Calculates the total weight of fish caught during all fishing sessions in the trip.
+   *
+   * @return The total weight of fish caught as a float.
+   */
+  public float getFishWeight() {
+    float fishWeight = 0;
+
+    for (FishingSession fishingSession : fishingSessions) {
+      for (FishingOperation fishingOperation : fishingSession.getOperations()) {
+        fishWeight = fishWeight + fishingOperation.getFishAmount();
+      }
+    }
+
+    return fishWeight;
+  }
+
   public List<DataPoint> getDataPoints() {
     return dataPoints;
   }
