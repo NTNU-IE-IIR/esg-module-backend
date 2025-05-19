@@ -1,4 +1,4 @@
-package no.ntnu.idata2900.project.esg_module_backend.modelTest.data_points;
+package no.ntnu.idata2900.project.esg_module_backend.modelTest.data_pointTest;
 
 import no.ntnu.idata2900.project.esg_module_backend.models.data_points.WindWaves;
 import org.junit.jupiter.api.Test;
